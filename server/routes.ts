@@ -3,102 +3,25 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertBusinessProfileSchema, insertInvestmentProgramSchema } from "@shared/schema";
 import { logger } from "./logger";
-import {
-  createSession,
-  deleteSession,
-  createEmailUser,
-  loginEmailUser,
-  updateUserPassword,
-  verifyPassword,
-} from "./auth";
-import {
-  requireAuth,
-  requireAdmin,
-  getSessionId,
-  setSessionCookie,
-  clearSessionCookie,
-} from "./auth-middleware";
-import { getSessionUser } from "./auth";
+import { requireAuth, requireAdmin } from "./auth-middleware";
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
   // =====================
-  // Auth Routes
+  // Auth (static default user)
   // =====================
 
-  app.get("/api/auth/me", async (req, res) => {
-    try {
-      const sid = getSessionId(req);
-      if (!sid) return res.json(null);
-      const user = await getSessionUser(sid);
-      if (!user) {
-        clearSessionCookie(res);
-        return res.json(null);
-      }
-      const { passwordHash, ...safeUser } = user;
-      res.json(safeUser);
-    } catch (err) {
-      logger.error("GET /api/auth/me 실패", err);
-      res.json(null);
-    }
-  });
-
-  app.post("/api/auth/register", async (req, res) => {
-    try {
-      const { email, password, name } = req.body as {
-        email?: string;
-        password?: string;
-        name?: string;
-      };
-      if (!email || !password) {
-        return res.status(400).json({ message: "이메일과 비밀번호를 입력하세요." });
-      }
-      if (password.length < 6) {
-        return res.status(400).json({ message: "비밀번호는 6자 이상이어야 합니다." });
-      }
-      const user = await createEmailUser(email, password, name);
-      const sessionId = await createSession(user.id);
-      setSessionCookie(res, sessionId);
-      const { passwordHash, ...safeUser } = user;
-      res.status(201).json(safeUser);
-    } catch (err: any) {
-      logger.error("POST /api/auth/register 실패", err);
-      res.status(400).json({ message: err.message || "회원가입에 실패했습니다." });
-    }
-  });
-
-  app.post("/api/auth/login", async (req, res) => {
-    try {
-      const { email, password } = req.body as {
-        email?: string;
-        password?: string;
-      };
-      if (!email || !password) {
-        return res.status(400).json({ message: "이메일과 비밀번호를 입력하세요." });
-      }
-      const user = await loginEmailUser(email, password);
-      const sessionId = await createSession(user.id);
-      setSessionCookie(res, sessionId);
-      const { passwordHash, ...safeUser } = user;
-      res.json(safeUser);
-    } catch (err: any) {
-      logger.error("POST /api/auth/login 실패", err);
-      res.status(401).json({ message: err.message || "로그인에 실패했습니다." });
-    }
-  });
-
-  app.post("/api/auth/logout", async (req, res) => {
-    try {
-      const sid = getSessionId(req);
-      if (sid) await deleteSession(sid);
-      clearSessionCookie(res);
-      res.json({ success: true });
-    } catch (err) {
-      logger.error("POST /api/auth/logout 실패", err);
-      res.json({ success: true });
-    }
+  app.get("/api/auth/me", (_req, res) => {
+    res.json({
+      id: 1,
+      email: "user@all-flatform.kr",
+      name: "기본 사용자",
+      isAdmin: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
   });
 
   // =====================
@@ -345,37 +268,6 @@ export async function registerRoutes(
     } catch (err) {
       logger.error("POST /api/admin/investment-programs 실패", err);
       res.status(500).json({ message: "투자 프로그램 생성에 실패했습니다." });
-    }
-  });
-
-  // =====================
-  // Settings
-  // =====================
-
-  app.put("/api/settings/password", requireAuth, async (req, res) => {
-    try {
-      const { currentPassword, newPassword } = req.body as {
-        currentPassword?: string;
-        newPassword?: string;
-      };
-      if (!currentPassword || !newPassword) {
-        return res.status(400).json({ message: "현재 비밀번호와 새 비밀번호를 입력하세요." });
-      }
-      if (newPassword.length < 6) {
-        return res.status(400).json({ message: "비밀번호는 6자 이상이어야 합니다." });
-      }
-      if (!req.user!.passwordHash) {
-        return res.status(400).json({ message: "비밀번호가 설정되지 않은 계정입니다." });
-      }
-      const valid = await verifyPassword(currentPassword, req.user!.passwordHash);
-      if (!valid) {
-        return res.status(401).json({ message: "현재 비밀번호가 올바르지 않습니다." });
-      }
-      await updateUserPassword(req.user!.id, newPassword);
-      res.json({ success: true });
-    } catch (err) {
-      logger.error("PUT /api/settings/password 실패", err);
-      res.status(500).json({ message: "비밀번호 변경에 실패했습니다." });
     }
   });
 

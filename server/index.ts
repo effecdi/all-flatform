@@ -1,10 +1,10 @@
 import express, { type Request, Response, NextFunction } from "express";
-import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { logger } from "./logger";
 import { validateProductionConfig } from "./config";
+import { ensureDefaultUser } from "./auth";
 
 validateProductionConfig();
 
@@ -13,7 +13,6 @@ const httpServer = createServer(app);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -53,6 +52,14 @@ app.use((req, res, next) => {
 
 (async () => {
   try {
+    // Ensure default user exists
+    try {
+      await ensureDefaultUser();
+      logger.info("기본 사용자 확인 완료");
+    } catch (err) {
+      logger.warn("기본 사용자 생성 실패 (무시하고 계속)", err);
+    }
+
     await registerRoutes(httpServer, app);
 
     const { storage } = await import("./storage");

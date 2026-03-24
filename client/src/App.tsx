@@ -4,10 +4,7 @@ import { queryClient } from "@/lib/queryClient";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/toaster";
-import { AuthGuard } from "@/components/auth-guard";
 
-import LoginPage from "@/pages/login";
-import RegisterPage from "@/pages/register";
 import DashboardPage from "@/pages/dashboard";
 import OnboardingPage from "@/pages/onboarding";
 import GovProgramsPage from "@/pages/gov-programs";
@@ -18,37 +15,23 @@ import BookmarksPage from "@/pages/bookmarks";
 import SettingsPage from "@/pages/settings";
 import NotFound from "@/pages/not-found";
 
-function ProtectedRouter() {
-  return (
-    <AuthGuard>
-      <Navbar />
-      <Switch>
-        <Route path="/" component={DashboardPage} />
-        <Route path="/onboarding" component={OnboardingPage} />
-        <Route path="/programs/government" component={GovProgramsPage} />
-        <Route path="/programs/investment" component={InvestmentProgramsPage} />
-        <Route path="/programs/government/:id" component={ProgramDetailPage} />
-        <Route path="/programs/investment/:id" component={ProgramDetailPage} />
-        <Route path="/recommendations" component={RecommendationsPage} />
-        <Route path="/bookmarks" component={BookmarksPage} />
-        <Route path="/settings" component={SettingsPage} />
-        <Route component={NotFound} />
-      </Switch>
-    </AuthGuard>
-  );
-}
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <div className="min-h-screen bg-background text-foreground">
+          <Navbar />
           <Switch>
-            <Route path="/login" component={LoginPage} />
-            <Route path="/register" component={RegisterPage} />
-            <Route>
-              <ProtectedRouter />
-            </Route>
+            <Route path="/" component={DashboardPage} />
+            <Route path="/onboarding" component={OnboardingPage} />
+            <Route path="/programs/government" component={GovProgramsPage} />
+            <Route path="/programs/investment" component={InvestmentProgramsPage} />
+            <Route path="/programs/government/:id" component={ProgramDetailPage} />
+            <Route path="/programs/investment/:id" component={ProgramDetailPage} />
+            <Route path="/recommendations" component={RecommendationsPage} />
+            <Route path="/bookmarks" component={BookmarksPage} />
+            <Route path="/settings" component={SettingsPage} />
+            <Route component={NotFound} />
           </Switch>
           <Toaster />
         </div>

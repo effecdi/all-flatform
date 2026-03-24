@@ -1,16 +1,13 @@
 import { Link, useLocation } from "wouter";
-import { Menu, X, LogOut, Search } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { useState } from "react";
 import { NAV_ITEMS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useAuth, useLogout } from "@/hooks/use-auth";
 
 export function Navbar() {
   const [location] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { data: user } = useAuth();
-  const logout = useLogout();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
@@ -47,29 +44,14 @@ export function Navbar() {
             })}
           </div>
 
-          <div className="flex items-center gap-2">
-            {user && (
-              <div className="hidden md:flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">{user.name || user.email}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => logout.mutate()}
-                  title="로그아웃"
-                >
-                  <LogOut className="w-4 h-4" />
-                </Button>
-              </div>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </Button>
         </div>
       </div>
 
@@ -91,14 +73,6 @@ export function Navbar() {
                 </div>
               </Link>
             ))}
-            {user && (
-              <button
-                onClick={() => { logout.mutate(); setMobileOpen(false); }}
-                className="block w-full text-left px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-accent"
-              >
-                로그아웃
-              </button>
-            )}
           </div>
         </div>
       )}
