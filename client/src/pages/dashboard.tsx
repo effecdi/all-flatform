@@ -1,170 +1,180 @@
-import { motion } from "framer-motion";
-import {
-  User,
-  CreditCard,
-  Wallet,
-  Star,
-  Plus,
-  Loader2,
-} from "lucide-react";
-import { useState } from "react";
-import { Link } from "wouter";
 import { PageTransition } from "@/components/page-transition";
-import { BentoGrid, BentoItem } from "@/components/bento-grid";
-import { StatsWidget } from "@/components/stats-widget";
-import { CategoryChart } from "@/components/category-chart";
-import { CostChart } from "@/components/cost-chart";
-import { GlassCard } from "@/components/glass-card";
-import { AccountFormDialog } from "@/components/account-form-dialog";
+import { useAuth } from "@/hooks/use-auth";
+import { useBusinessProfile } from "@/hooks/use-business-profile";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { useDashboardStats, useAccounts } from "@/hooks/use-accounts";
-import { formatCurrency } from "@/lib/utils";
-import { CategoryBadge } from "@/components/category-badge";
-import { getFaviconUrl } from "@/lib/favicon-fetcher";
+import {
+  FileText,
+  TrendingUp,
+  Clock,
+  Bookmark,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
+import type { DashboardStats } from "@shared/types";
+import type { RecommendationItem } from "@shared/schema";
+import { RecommendationCard } from "@/components/recommendation-card";
 
 export default function DashboardPage() {
-  const { data: stats, isLoading: statsLoading } = useDashboardStats();
-  const { data: accounts, isLoading: accountsLoading } = useAccounts();
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const { data: user } = useAuth();
+  const { data: profile, isLoading: profileLoading } = useBusinessProfile();
+  const { data: stats } = useQuery<DashboardStats>({
+    queryKey: ["/api/dashboard/stats"],
+  });
+  const { data: recommendations } = useQuery<Array<{
+    id: number;
+    recommendations: RecommendationItem[];
+    createdAt: string;
+  }>>({
+    queryKey: ["/api/recommendations"],
+  });
 
-  const isLoading = statsLoading || accountsLoading;
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-neon-purple" />
-      </div>
-    );
-  }
-
-  const favoriteAccounts = accounts?.filter((a) => a.isFavorite).slice(0, 6) || [];
-  const recentAccounts = accounts?.slice(0, 5) || [];
+  const latestRecs = recommendations?.[0]?.recommendations?.slice(0, 5);
 
   return (
     <PageTransition>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-12">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold font-heading gradient-text">대시보드</h1>
-            <p className="text-sm text-muted-foreground mt-1">모든 계정을 한눈에 관리하세요</p>
-          </div>
-          <Button
-            onClick={() => setDialogOpen(true)}
-            className="gap-1.5 bg-gradient-to-r from-neon-purple to-neon-blue hover:opacity-90"
-          >
-            <Plus className="w-4 h-4" /> 계정 추가
-          </Button>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-10">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold">
+            안녕하세요, {user?.name || user?.email}님
+          </h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            오늘의 지원사업과 투자유치 정보를 확인하세요
+          </p>
         </div>
 
-        {/* Stats row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <StatsWidget
-            icon={User}
-            label="전체 계정"
-            value={stats?.totalAccounts || 0}
-            color="#a855f7"
-            index={0}
-          />
-          <StatsWidget
-            icon={CreditCard}
-            label="구독 서비스"
-            value={stats?.subscriptionAccounts || 0}
-            color="#3b82f6"
-            index={1}
-          />
-          <StatsWidget
-            icon={Wallet}
-            label="월 구독 비용"
-            value={formatCurrency(stats?.monthlyCost || 0)}
-            color="#22c55e"
-            index={2}
-          />
-        </div>
-
-        {/* Bento grid */}
-        <BentoGrid className="md:grid-cols-2 lg:grid-cols-3">
-          {/* Category chart */}
-          <BentoItem className="lg:col-span-1">
-            <CategoryChart data={stats?.categoryBreakdown || []} />
-          </BentoItem>
-
-          {/* Cost chart */}
-          <BentoItem className="lg:col-span-2">
-            <CostChart accounts={accounts || []} />
-          </BentoItem>
-
-          {/* Favorites */}
-          <BentoItem className="md:col-span-2 lg:col-span-2">
-            <GlassCard hover={false}>
-              <div className="flex items-center gap-2 mb-4">
-                <Star className="w-4 h-4 text-yellow-400" />
-                <h3 className="text-sm font-medium">즐겨찾기</h3>
+        {/* Onboarding prompt */}
+        {!profileLoading && !profile && (
+          <Link href="/onboarding">
+            <div className="rounded-lg border border-primary/30 bg-primary/5 p-5 mb-6 cursor-pointer hover:bg-primary/10 transition-colors">
+              <div className="flex items-center gap-3">
+                <Sparkles className="w-5 h-5 text-primary shrink-0" />
+                <div>
+                  <p className="font-medium text-sm">사업 프로필을 작성하세요</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    프로필을 작성하면 AI가 맞춤형 지원사업을 추천해드립니다
+                  </p>
+                </div>
+                <ArrowRight className="w-4 h-4 text-primary shrink-0 ml-auto" />
               </div>
-              {favoriteAccounts.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  즐겨찾기한 계정이 없습니다
-                </p>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {favoriteAccounts.map((account) => {
-                    const favicon = getFaviconUrl(account.serviceUrl) || account.logoUrl;
-                    return (
-                      <div
-                        key={account.id}
-                        className="flex items-center gap-2 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                      >
-                        <div className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center">
-                          {favicon ? (
-                            <img src={favicon} alt="" className="w-4 h-4" />
-                          ) : (
-                            <span className="text-xs font-bold text-muted-foreground">
-                              {account.serviceName.charAt(0)}
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-xs truncate">{account.serviceName}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </GlassCard>
-          </BentoItem>
+            </div>
+          </Link>
+        )}
 
-          {/* Recent */}
-          <BentoItem className="lg:col-span-1">
-            <GlassCard hover={false}>
-              <h3 className="text-sm font-medium mb-3">최근 추가</h3>
-              {recentAccounts.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  아직 계정이 없습니다
-                </p>
-              ) : (
-                <div className="space-y-2">
-                  {recentAccounts.map((a) => (
-                    <div key={a.id} className="flex items-center gap-2 text-xs">
-                      <div className="w-5 h-5 rounded bg-white/5 flex items-center justify-center">
-                        <span className="text-[10px] font-bold text-muted-foreground">
-                          {a.serviceName.charAt(0)}
-                        </span>
-                      </div>
-                      <span className="truncate flex-1">{a.serviceName}</span>
-                      <CategoryBadge category={a.category} />
-                    </div>
-                  ))}
-                </div>
-              )}
-              <Link href="/accounts">
-                <Button variant="ghost" size="sm" className="w-full mt-3 text-xs">
-                  전체 보기
+        {/* Stats cards */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+          <StatCard
+            icon={<FileText className="w-5 h-5" />}
+            label="전체 사업"
+            value={stats?.totalGovernmentPrograms ?? 0}
+            color="text-blue-600"
+            bg="bg-blue-50"
+          />
+          <StatCard
+            icon={<TrendingUp className="w-5 h-5" />}
+            label="모집중"
+            value={stats?.activeGovernmentPrograms ?? 0}
+            color="text-emerald-600"
+            bg="bg-emerald-50"
+          />
+          <StatCard
+            icon={<TrendingUp className="w-5 h-5" />}
+            label="투자 프로그램"
+            value={stats?.totalInvestmentPrograms ?? 0}
+            color="text-teal-600"
+            bg="bg-teal-50"
+          />
+          <StatCard
+            icon={<Clock className="w-5 h-5" />}
+            label="마감임박"
+            value={stats?.upcomingDeadlines ?? 0}
+            color="text-red-600"
+            bg="bg-red-50"
+          />
+          <StatCard
+            icon={<Bookmark className="w-5 h-5" />}
+            label="북마크"
+            value={stats?.bookmarkCount ?? 0}
+            color="text-amber-600"
+            bg="bg-amber-50"
+          />
+        </div>
+
+        {/* Quick actions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Link href="/programs/government">
+            <div className="bg-white rounded-lg border border-border p-5 hover:shadow-md hover:border-primary/30 transition-all cursor-pointer">
+              <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-3">
+                <FileText className="w-4 h-4 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-sm">정부지원사업</h3>
+              <p className="text-xs text-muted-foreground mt-1">지원사업 목록 보기</p>
+            </div>
+          </Link>
+          <Link href="/programs/investment">
+            <div className="bg-white rounded-lg border border-border p-5 hover:shadow-md hover:border-primary/30 transition-all cursor-pointer">
+              <div className="w-9 h-9 rounded-lg bg-teal-50 flex items-center justify-center mb-3">
+                <TrendingUp className="w-4 h-4 text-teal-600" />
+              </div>
+              <h3 className="font-semibold text-sm">투자유치</h3>
+              <p className="text-xs text-muted-foreground mt-1">투자 프로그램 보기</p>
+            </div>
+          </Link>
+          <Link href="/recommendations">
+            <div className="bg-white rounded-lg border border-border p-5 hover:shadow-md hover:border-primary/30 transition-all cursor-pointer">
+              <div className="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center mb-3">
+                <Sparkles className="w-4 h-4 text-amber-600" />
+              </div>
+              <h3 className="font-semibold text-sm">AI 맞춤 추천</h3>
+              <p className="text-xs text-muted-foreground mt-1">나에게 맞는 사업 찾기</p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Latest recommendations */}
+        {latestRecs && latestRecs.length > 0 && (
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold">AI 추천 사업</h2>
+              <Link href="/recommendations">
+                <Button variant="ghost" size="sm" className="gap-1 text-xs">
+                  전체보기 <ArrowRight className="w-3 h-3" />
                 </Button>
               </Link>
-            </GlassCard>
-          </BentoItem>
-        </BentoGrid>
-
-        <AccountFormDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {latestRecs.map((rec, i) => (
+                <RecommendationCard key={i} {...rec} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </PageTransition>
+  );
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+  color,
+  bg,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  color: string;
+  bg: string;
+}) {
+  return (
+    <div className="bg-white rounded-lg border border-border p-4">
+      <div className={`w-8 h-8 rounded-lg ${bg} flex items-center justify-center mb-2`}>
+        <div className={color}>{icon}</div>
+      </div>
+      <p className="text-2xl font-bold">{value}</p>
+      <p className="text-xs text-muted-foreground">{label}</p>
+    </div>
   );
 }

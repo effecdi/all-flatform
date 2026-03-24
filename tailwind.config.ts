@@ -40,12 +40,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        neon: {
-          purple: "#a855f7",
-          blue: "#3b82f6",
-          pink: "#ec4899",
-          green: "#22c55e",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -54,7 +48,7 @@ export default {
       },
       fontFamily: {
         sans: ["Pretendard", "sans-serif"],
-        heading: ["Space Grotesk", "Pretendard", "sans-serif"],
+        heading: ["Pretendard", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {

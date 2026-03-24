@@ -1,14 +1,19 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { logger } from "./logger";
+import { validateProductionConfig } from "./config";
+
+validateProductionConfig();
 
 const app = express();
 const httpServer = createServer(app);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -49,6 +54,24 @@ app.use((req, res, next) => {
 (async () => {
   try {
     await registerRoutes(httpServer, app);
+
+    const { storage } = await import("./storage");
+
+    // 실제 프로그램 데이터 시드 (최초 실행 시)
+    try {
+      const { seedRealData } = await import("./seed");
+      await seedRealData(storage);
+    } catch (err) {
+      logger.warn("데이터 시드 실패 (무시하고 계속)", err);
+    }
+
+    // 크롤링 스케줄러 등록 (production + development 모두)
+    try {
+      const { startCrawlScheduler } = await import("./crawlers/index");
+      startCrawlScheduler(storage);
+    } catch (err) {
+      logger.warn("크롤링 스케줄러 시작 실패 (무시하고 계속)", err);
+    }
   } catch (error: any) {
     logger.error("라우트 등록 중 오류 발생", error);
     if (!process.env.DATABASE_URL && process.env.NODE_ENV === "development") {
