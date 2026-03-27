@@ -439,6 +439,82 @@
 .pf-stagger > *:nth-child(5) { animation-delay: 320ms; }
 .pf-stagger > *:nth-child(6) { animation-delay: 400ms; }
 
+/* ── Portfolio Public View ── */
+.pf-view-section {
+  opacity: 0;
+  animation: pf-fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both;
+}
+
+@keyframes pf-fade-up {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.pf-view-section:nth-child(1) { animation-delay: 0ms; }
+.pf-view-section:nth-child(2) { animation-delay: 120ms; }
+.pf-view-section:nth-child(3) { animation-delay: 240ms; }
+.pf-view-section:nth-child(4) { animation-delay: 360ms; }
+.pf-view-section:nth-child(5) { animation-delay: 480ms; }
+.pf-view-section:nth-child(6) { animation-delay: 600ms; }
+.pf-view-section:nth-child(7) { animation-delay: 720ms; }
+.pf-view-section:nth-child(8) { animation-delay: 840ms; }
+
+/* Portfolio timeline connector */
+.pf-timeline-item {
+  @apply relative pl-8;
+}
+.pf-timeline-item::before {
+  content: '';
+  @apply absolute left-[11px] top-8 bottom-0 w-px;
+  background: linear-gradient(180deg, hsl(var(--pf-border)) 0%, transparent 100%);
+}
+.pf-timeline-item:last-child::before {
+  display: none;
+}
+.pf-timeline-dot {
+  @apply absolute left-0 top-1 w-6 h-6 rounded-full border-2 flex items-center justify-center;
+  border-color: hsl(var(--pf-primary));
+  background: hsl(var(--pf-surface));
+}
+.pf-timeline-dot-inner {
+  @apply w-2 h-2 rounded-full;
+  background: hsl(var(--pf-primary));
+}
+
+/* Portfolio metric counter */
+.pf-metric-value {
+  @apply text-4xl sm:text-5xl font-extrabold tracking-tight;
+  background: linear-gradient(135deg, hsl(var(--pf-primary)), hsl(var(--pf-accent)));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Portfolio project hover card */
+.pf-project-card {
+  @apply rounded-2xl overflow-hidden pf-surface pf-border border transition-all duration-300;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.pf-project-card:hover {
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.05);
+  transform: translateY(-4px);
+}
+
+/* Portfolio team member avatar ring */
+.pf-avatar-ring {
+  @apply relative;
+}
+.pf-avatar-ring::after {
+  content: '';
+  @apply absolute inset-0 rounded-full;
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, hsl(var(--pf-primary)), hsl(var(--pf-accent))) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
 /* ── Selection ── */
 ::selection {
   background-color: hsl(var(--primary) / 0.15);
