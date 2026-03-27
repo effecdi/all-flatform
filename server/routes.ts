@@ -11,17 +11,18 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   // =====================
-  // Auth (static default user)
+  // Auth (anonymous cookie-based user)
   // =====================
 
-  app.get("/api/auth/me", (_req, res) => {
+  app.get("/api/auth/me", requireAuth, (req, res) => {
+    const user = req.user!;
     res.json({
-      id: 1,
-      email: "user@all-flatform.kr",
-      name: "기본 사용자",
-      isAdmin: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      isAdmin: user.isAdmin,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     });
   });
 

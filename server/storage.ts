@@ -1,4 +1,5 @@
 import {
+  users,
   governmentPrograms,
   investmentPrograms,
   bookmarks,
@@ -6,6 +7,7 @@ import {
   aiRecommendations,
   crawlLogs,
   portfolios,
+  type User,
   type GovernmentProgram,
   type InsertGovernmentProgram,
   type InvestmentProgram,
@@ -26,6 +28,9 @@ import { requireDb } from "./db";
 import { eq, desc, ilike, and, sql, count, or } from "drizzle-orm";
 
 export interface IStorage {
+  // Anonymous Users
+  findOrCreateUserByAnonId(anonId: string): Promise<User>;
+
   // Government Programs
   getGovernmentPrograms(filters: ProgramFilters): Promise<PaginatedResult<GovernmentProgram>>;
   getGovernmentProgram(id: number): Promise<GovernmentProgram | undefined>;
@@ -68,6 +73,7 @@ export interface IStorage {
 }
 
 export class MemoryStorage implements IStorage {
+  private usersList: User[] = [];
   private govPrograms: GovernmentProgram[] = [];
   private invPrograms: InvestmentProgram[] = [];
   private bookmarksList: Bookmark[] = [];
@@ -75,6 +81,7 @@ export class MemoryStorage implements IStorage {
   private recommendations: AiRecommendation[] = [];
   private crawlLogsList: CrawlLog[] = [];
   private portfoliosList: Portfolio[] = [];
+  private nextUserId = 1;
   private nextGovId = 1;
   private nextInvId = 1;
   private nextBookmarkId = 1;
@@ -82,6 +89,26 @@ export class MemoryStorage implements IStorage {
   private nextRecId = 1;
   private nextLogId = 1;
   private nextPortfolioId = 1;
+
+  async findOrCreateUserByAnonId(anonId: string): Promise<User> {
+    const email = `anon_${anonId}@anonymous`;
+    let user = this.usersList.find(u => u.email === email);
+    if (!user) {
+      const now = new Date();
+      const isFirst = this.usersList.length === 0;
+      user = {
+        id: this.nextUserId++,
+        email,
+        name: `사용자 ${this.nextUserId - 1}`,
+        passwordHash: null,
+        isAdmin: isFirst, // 첫 번째 사용자만 admin
+        createdAt: now,
+        updatedAt: now,
+      };
+      this.usersList.push(user);
+    }
+    return user;
+  }
 
   async getGovernmentPrograms(filters: ProgramFilters): Promise<PaginatedResult<GovernmentProgram>> {
     let result = [...this.govPrograms];
@@ -428,6 +455,29 @@ export class MemoryStorage implements IStorage {
 export class DatabaseStorage implements IStorage {
   private get db() {
     return requireDb().db;
+  }
+
+  async findOrCreateUserByAnonId(anonId: string): Promise<User> {
+    const email = `anon_${anonId}@anonymous`;
+    const [existing] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.email, email));
+    if (existing) return existing;
+
+    // 첫 번째 사용자인지 확인 (admin 부여용)
+    const [userCount] = await this.db.select({ count: count() }).from(users);
+    const isFirst = (userCount?.count ?? 0) === 0;
+
+    const [created] = await this.db
+      .insert(users)
+      .values({
+        email,
+        name: `사용자`,
+        isAdmin: isFirst,
+      })
+      .returning();
+    return created;
   }
 
   async getGovernmentPrograms(filters: ProgramFilters): Promise<PaginatedResult<GovernmentProgram>> {

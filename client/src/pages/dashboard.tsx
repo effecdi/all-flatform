@@ -1,4 +1,3 @@
-// /client/src/pages/dashboard.tsx
 import { useState } from "react";
 import { PageTransition } from "@/components/page-transition";
 import { useAuth } from "@/hooks/use-auth";
@@ -26,27 +25,31 @@ import {
   Building2,
   Megaphone,
   Lightbulb,
+  User, // 개인 포트폴리오에 어울리는 아이콘 추가
+  Code, // 기술 스택 또는 프로젝트 아이콘
 } from "lucide-react";
 import type { DashboardStats } from "@shared/types";
 import type { RecommendationItem } from "@shared/schema";
 
 export default function DashboardPage() {
   const { data: user } = useAuth();
-  const { data: profile, isLoading: profileLoading } = useBusinessProfile();
+  const { data: profile, isLoading: profileLoading } = useBusinessProfile(); // 비즈니스 프로필 대신 개인 프로필로 가정
   const [, navigate] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
+  // 포트폴리오 관련 통계 데이터 (가정)
   const { data: stats, isLoading: statsLoading } = useQuery<DashboardStats>({
-    queryKey: ["/api/dashboard/stats"],
+    queryKey: ["/api/dashboard/stats"], // 실제 데이터는 백엔드 구현에 따라 변경 필요
   });
 
+  // 투자 프로그램 및 정부 사업 데이터를 포트폴리오 프로젝트로 사용
   const { data: govPrograms, isLoading: govLoading } = useGovernmentPrograms({
-    status: "모집중",
+    status: "완료", // 완료된 프로젝트 위주로 보여주기
     limit: 6,
   });
 
   const { data: invPrograms, isLoading: invLoading } = useInvestmentPrograms({
-    status: "모집중",
+    status: "완료", // 완료된 프로젝트 위주로 보여주기
     limit: 4,
   });
 
@@ -64,12 +67,12 @@ export default function DashboardPage() {
     e.preventDefault();
     const trimmed = searchQuery.trim();
     if (trimmed) {
-      navigate(`/discover?q=${encodeURIComponent(trimmed)}`);
+      navigate(`/portfolio?q=${encodeURIComponent(trimmed)}`); // 검색 경로 변경
     }
   };
 
   const handleTagClick = (tag: string) => {
-    navigate(`/discover?q=${encodeURIComponent(tag)}`);
+    navigate(`/portfolio?q=${encodeURIComponent(tag)}`); // 태그 검색 경로 변경
   };
 
   const today = new Date();
@@ -82,39 +85,45 @@ export default function DashboardPage() {
 
   return (
     <PageTransition>
-      <div className="page-container space-y-8 pb-10">
-        {/* Hero Section */}
-        <section className="relative py-8 md:py-10 px-6 md:px-10 rounded-2xl bg-gradient-to-br from-background via-card to-primary/5 border border-border/60 shadow-soft overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.02] to-transparent pointer-events-none" />
-          <div className="relative z-10">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight leading-tight text-foreground">
-              안녕하세요, <span className="gradient-text bg-gradient-to-r from-primary to-violet-500 text-transparent bg-clip-text">{user?.name || user?.email}</span>님
+      <div className="page-container space-y-12 pb-16 bg-portfolio-background text-portfolio-text font-sans">
+        {/* Hero Section - 개인 소개 및 핵심 역량 */}
+        <section className="relative py-12 md:py-20 px-6 md:px-10 rounded-2xl bg-portfolio-card shadow-elevated overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-portfolio-primary/[0.05] to-transparent pointer-events-none" />
+          <div className="relative z-10 text-center max-w-4xl mx-auto">
+            <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-portfolio-primary to-portfolio-secondary flex items-center justify-center text-white text-5xl font-bold border-4 border-white shadow-lg">
+              {user?.name ? user.name.charAt(0) : (user?.email ? user.email.charAt(0).toUpperCase() : '' )}
+            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight text-portfolio-text mb-4">
+              안녕하세요, <span className="gradient-text bg-gradient-to-r from-portfolio-primary to-portfolio-secondary text-transparent bg-clip-text">{user?.name || user?.email}</span>입니다.
             </h1>
-            <p className="text-md text-muted-foreground mt-3">{dateStr}</p>
+            <p className="text-lg text-portfolio-text-light mt-3 max-w-2xl mx-auto">
+              UX/UI 디자인, 프론트엔드 개발, 그리고 반응형 웹 전문가로서 사용자 중심의 인터페이스를 구축합니다. 
+              다양한 프로젝트 경험을 통해 얻은 인사이트로 탁월한 사용자 경험을 제공합니다.
+            </p>
 
-            <form onSubmit={handleSearch} className="flex gap-3 max-w-2xl mt-6">
+            <form onSubmit={handleSearch} className="flex gap-3 max-w-2xl mt-8 mx-auto">
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-portfolio-text-light" />
                 <Input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="다양한 지원사업을 검색해보세요 (예: 청년 창업, AI 스타트업)"
-                  className="pl-12 h-14 rounded-full shadow-md text-base border-border/80 focus:border-primary/50"
+                  placeholder="관심 있는 프로젝트나 기술 스택을 검색해보세요 (예: React, Figma, 모바일 앱)"
+                  className="pl-12 h-14 rounded-full shadow-md text-base border-portfolio-border focus:border-portfolio-primary/50 bg-white"
                 />
               </div>
-              <Button type="submit" disabled={!searchQuery.trim()} size="lg" className="px-8 h-14 rounded-full text-base font-semibold shadow-md">
+              <Button type="submit" disabled={!searchQuery.trim()} size="lg" className="px-8 h-14 rounded-full text-base font-semibold shadow-md bg-portfolio-primary hover:bg-portfolio-primary-dark text-white">
                 검색
               </Button>
             </form>
-            <div className="flex flex-wrap gap-2 mt-4">
-              {["청년 창업", "소상공인 지원", "기술 사업화", "AI 스타트업", "디지털 전환"].map(
+            <div className="flex flex-wrap gap-2 justify-center mt-4">
+              {["React", "TypeScript", "Tailwind CSS", "UX/UI 디자인", "모바일 앱"].map(
                 (tag) => (
                   <button
                     key={tag}
                     type="button"
                     onClick={() => handleTagClick(tag)}
-                    className="px-4 py-2 text-sm rounded-full border border-primary/20 bg-primary/5 text-primary-dark hover:bg-primary/15 hover:border-primary/40 transition-colors cursor-pointer"
+                    className="px-4 py-2 text-sm rounded-full border border-portfolio-primary/20 bg-portfolio-primary/5 text-portfolio-primary hover:bg-portfolio-primary/15 hover:border-portfolio-primary/40 transition-colors cursor-pointer"
                   >
                     #{tag}
                   </button>
@@ -124,99 +133,41 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        {/* Onboarding CTA */}
-        {!profileLoading && !profile && (
-          <Link href="/onboarding">
-            <Card className="cursor-pointer group overflow-hidden border-primary/30 hover:border-primary transition-all shadow-md hover:shadow-lg hover:shadow-primary/5">
-              <div className="h-1 bg-gradient-to-r from-primary to-violet-500" />
-              <CardContent className="p-5 pt-4">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-violet-500/10 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-                    <Lightbulb className="w-7 h-7 text-primary" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-lg text-foreground">사업 프로필을 작성하고 맞춤형 추천을 받아보세요!</p>
-                    <p className="text-sm text-muted-foreground mt-0.5">
-                      프로필을 작성하면 AI가 귀사에 딱 맞는 지원사업을 찾아드립니다.
-                    </p>
-                  </div>
-                  <ChevronRight className="w-6 h-6 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all shrink-0" />
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        )}
-
-        {/* Statistics */}
-        <section className="space-y-6">
-          <h2 className="text-2xl font-bold flex items-center gap-3 text-foreground">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-              <TrendingUp className="w-5 h-5 text-primary" />
+        {/* 핵심 역량 (Statistics 대체) */}
+        <section className="space-y-8">
+          <h2 className="text-3xl font-bold flex items-center gap-4 text-portfolio-text">
+            <div className="w-12 h-12 rounded-xl bg-portfolio-secondary/10 flex items-center justify-center shrink-0">
+              <Code className="w-6 h-6 text-portfolio-secondary" />
             </div>
-            한눈에 보는 현황
+            핵심 역량 및 기술 스택
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {statsLoading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <Card key={i} className="h-full"><CardContent className="p-5">
-                  <Skeleton className="w-10 h-10 rounded-xl mb-4" />
-                  <Skeleton className="w-20 h-8 mb-2" />
-                  <Skeleton className="w-16 h-5" />
-                </CardContent></Card>
-              ))
-            ) : (
-              <>
-                <StatCard icon={<FileText className="w-5 h-5" />} label="전체 사업" value={stats?.totalGovernmentPrograms ?? 0} color="text-gov-primary dark:text-gov-primary-light" bg="bg-gov-primary/10" href="/programs/government" />
-                <StatCard icon={<TrendingUp className="w-5 h-5" />} label="모집중 사업" value={stats?.activeGovernmentPrograms ?? 0} color="text-success dark:text-success-light" bg="bg-success/10" href="/programs/government?status=모집중" />
-                <StatCard icon={<Clock className="w-5 h-5" />} label="마감임박" value={stats?.upcomingDeadlines ?? 0} color="text-error dark:text-error-light" bg="bg-error/10" href="/programs/government?deadline=true" />
-                <StatCard icon={<Bookmark className="w-5 h-5" />} label="북마크" value={stats?.bookmarkCount ?? 0} color="text-warning dark:text-warning-light" bg="bg-warning/10" href="/bookmarks" />
-              </>
-            )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <SkillCard icon={<Lightbulb className="w-6 h-6" />} label="UX/UI 디자인" description="사용자 중심의 직관적이고 매력적인 인터페이스 설계" color="text-portfolio-primary" bg="bg-portfolio-primary/10" />
+            <SkillCard icon={<Code className="w-6 h-6" />} label="프론트엔드 개발" description="React, TypeScript, Tailwind CSS를 활용한 반응형 웹 구현" color="text-portfolio-secondary" bg="bg-portfolio-secondary/10" />
+            <SkillCard icon={<TrendingUp className="w-6 h-6" />} label="반응형 웹" description="모든 디바이스에서 최적화된 사용자 경험 제공" color="text-portfolio-accent" bg="bg-portfolio-accent/10" />
+            <SkillCard icon={<Sparkles className="w-6 h-6" />} label="인터랙션 디자인" description="애니메이션과 전환 효과를 통한 동적 UI 구현" color="text-violet-500" bg="bg-violet-500/10" />
           </div>
         </section>
 
-        {/* Deadline Alert */}
-        {stats && stats.upcomingDeadlines > 0 && (
-          <Link href="/programs/government?deadline=true">
-            <Card className="cursor-pointer group overflow-hidden border-error/30 hover:border-error transition-all hover:shadow-lg hover:shadow-error/5">
-              <div className="h-1 bg-gradient-to-r from-error to-error-light" />
-              <CardContent className="p-4 pt-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-error/10 flex items-center justify-center shrink-0">
-                    <AlertTriangle className="w-5 h-5 text-error dark:text-error-light" />
-                  </div>
-                  <p className="text-base font-medium flex-1 text-foreground">
-                    마감임박 사업 <span className="font-bold text-error dark:text-error-light">{stats.upcomingDeadlines}건</span>이 있습니다. 지금 바로 확인하세요!
-                  </p>
-                  <ChevronRight className="w-5 h-5 text-error/60 group-hover:translate-x-1 transition-transform shrink-0" />
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        )}
-
-        {/* Government Programs */}
-        <section className="space-y-6">
+        {/* 주요 프로젝트 (Government Programs 대체) */}
+        <section className="space-y-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold flex items-center gap-3 text-foreground">
-              <div className="w-10 h-10 rounded-xl bg-gov-primary/10 flex items-center justify-center shrink-0">
-                <Building2 className="w-5 h-5 text-gov-primary" />
+            <h2 className="text-3xl font-bold flex items-center gap-4 text-portfolio-text">
+              <div className="w-12 h-12 rounded-xl bg-portfolio-primary/10 flex items-center justify-center shrink-0">
+                <Building2 className="w-6 h-6 text-portfolio-primary" />
               </div>
-              모집중 정부지원사업
+              주요 프로젝트 (정부지원사업 기반)
             </h2>
-            <Link href="/programs/government">
-              <Button variant="ghost" size="sm" className="gap-1 text-sm font-medium text-gov-primary hover:text-gov-primary-dark hover:bg-gov-primary/10 transition-colors">
-                전체보기 <ArrowRight className="w-4 h-4" />
+            <Link href="/portfolio/government">
+              <Button variant="ghost" size="sm" className="gap-1 text-base font-medium text-portfolio-primary hover:text-portfolio-primary-dark hover:bg-portfolio-primary/10 transition-colors">
+                전체 프로젝트 보기 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
           </div>
           {govLoading ? (
             <CardGrid cols={3}>
               {Array.from({ length: 6 }).map((_, i) => (
-                <Card key={i}><div className="h-2 bg-muted rounded-t-xl" /><CardContent className="p-5 pt-4">
-                  <div className="flex gap-2 mb-3"><Skeleton className="w-16 h-6 rounded-full" /><Skeleton className="w-12 h-6 rounded-full" /></div>
-                  <Skeleton className="w-full h-5 mb-2" /><Skeleton className="w-3/4 h-5 mb-4" /><Skeleton className="w-1/2 h-4" />
-                </CardContent></Card>
+                <SkeletonCard key={i} />
               ))}
             </CardGrid>
           ) : govPrograms && govPrograms.data.length > 0 ? (
@@ -226,32 +177,29 @@ export default function DashboardPage() {
               ))}
             </CardGrid>
           ) : (
-            <EmptySection text="현재 모집중인 정부지원사업이 없습니다." icon={<Building2 className="w-6 h-6 text-muted-foreground/60" />} />
+            <EmptySection text="표시할 정부지원사업 기반 프로젝트가 없습니다." icon={<Building2 className="w-6 h-6 text-portfolio-text-light" />} />
           )}
         </section>
 
-        {/* Investment Programs */}
-        <section className="space-y-6">
+        {/* 투자유치 프로젝트 (Investment Programs 대체) */}
+        <section className="space-y-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold flex items-center gap-3 text-foreground">
-              <div className="w-10 h-10 rounded-xl bg-invest-primary/10 flex items-center justify-center shrink-0">
-                <Megaphone className="w-5 h-5 text-invest-primary" />
+            <h2 className="text-3xl font-bold flex items-center gap-4 text-portfolio-text">
+              <div className="w-12 h-12 rounded-xl bg-portfolio-secondary/10 flex items-center justify-center shrink-0">
+                <Megaphone className="w-6 h-6 text-portfolio-secondary" />
               </div>
-              모집중 투자유치 프로그램
+              주요 프로젝트 (투자유치 프로그램 기반)
             </h2>
-            <Link href="/programs/investment">
-              <Button variant="ghost" size="sm" className="gap-1 text-sm font-medium text-invest-primary hover:text-invest-primary-dark hover:bg-invest-primary/10 transition-colors">
-                전체보기 <ArrowRight className="w-4 h-4" />
+            <Link href="/portfolio/investment">
+              <Button variant="ghost" size="sm" className="gap-1 text-base font-medium text-portfolio-secondary hover:text-portfolio-secondary-dark hover:bg-portfolio-secondary/10 transition-colors">
+                전체 프로젝트 보기 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
           </div>
           {invLoading ? (
             <CardGrid cols={2}>
               {Array.from({ length: 4 }).map((_, i) => (
-                <Card key={i}><div className="h-2 bg-muted rounded-t-xl" /><CardContent className="p-5 pt-4">
-                  <div className="flex gap-2 mb-3"><Skeleton className="w-16 h-6 rounded-full" /><Skeleton className="w-12 h-6 rounded-full" /></div>
-                  <Skeleton className="w-full h-5 mb-2" /><Skeleton className="w-3/4 h-5 mb-4" /><Skeleton className="w-1/2 h-4" />
-                </CardContent></Card>
+                <SkeletonCard key={i} />
               ))}
             </CardGrid>
           ) : invPrograms && invPrograms.data.length > 0 ? (
@@ -261,31 +209,29 @@ export default function DashboardPage() {
               ))}
             </CardGrid>
           ) : (
-            <EmptySection text="현재 모집중인 투자유치 프로그램이 없습니다." icon={<Megaphone className="w-6 h-6 text-muted-foreground/60" />} />
+            <EmptySection text="표시할 투자유치 프로그램 기반 프로젝트가 없습니다." icon={<Megaphone className="w-6 h-6 text-portfolio-text-light" />} />
           )}
         </section>
 
-        {/* AI Recommendations */}
-        <section className="space-y-6">
+        {/* 맞춤 추천 (AI Recommendations 대체) */}
+        <section className="space-y-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold flex items-center gap-3 text-foreground">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
-                <Sparkles className="w-5 h-5 text-amber-500" />
+            <h2 className="text-3xl font-bold flex items-center gap-4 text-portfolio-text">
+              <div className="w-12 h-12 rounded-xl bg-portfolio-accent/10 flex items-center justify-center shrink-0">
+                <Sparkles className="w-6 h-6 text-portfolio-accent" />
               </div>
-              AI 맞춤 추천
+              AI 기반 맞춤형 제안 (협업, 기술 스택)
             </h2>
             <Link href="/recommendations">
-              <Button variant="ghost" size="sm" className="gap-1 text-sm font-medium text-amber-500 hover:text-amber-600 hover:bg-amber-500/10 transition-colors">
-                전체보기 <ArrowRight className="w-4 h-4" />
+              <Button variant="ghost" size="sm" className="gap-1 text-base font-medium text-portfolio-accent hover:text-portfolio-accent/80 hover:bg-portfolio-accent/10 transition-colors">
+                자세히 보기 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
           </div>
           {recsLoading ? (
             <CardGrid cols={3}>
               {Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i}><div className="h-2 bg-muted rounded-t-xl" /><CardContent className="p-5 pt-4">
-                  <Skeleton className="w-28 h-6 mb-3" /><Skeleton className="w-full h-5 mb-2" /><Skeleton className="w-full h-4 mb-1" /><Skeleton className="w-2/3 h-4" />
-                </CardContent></Card>
+                <SkeletonCard key={i} />
               ))}
             </CardGrid>
           ) : latestRecs && latestRecs.length > 0 ? (
@@ -296,8 +242,8 @@ export default function DashboardPage() {
             </CardGrid>
           ) : (
             <EmptySection
-              text={profile ? "AI 추천을 받으려면 추천 페이지에서 분석을 요청하세요." : "사업 프로필을 작성하면 AI 맞춤 추천을 받을 수 있습니다."}
-              icon={<Sparkles className="w-6 h-6 text-muted-foreground/60" />}
+              text={profile ? "AI 추천을 받으려면 추천 페이지에서 분석을 요청하세요." : "개인 프로필을 작성하면 AI 맞춤 제안을 받을 수 있습니다."}
+              icon={<Sparkles className="w-6 h-6 text-portfolio-text-light" />}
             />
           )}
         </section>
@@ -306,31 +252,44 @@ export default function DashboardPage() {
   );
 }
 
+// 카드 그리드 컴포넌트
 function CardGrid({ cols, children }: { cols: 2 | 3; children: React.ReactNode }) {
-  return <div className={cols === 3 ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3" : "grid gap-4 sm:grid-cols-2"}>{children}</div>;
+  return <div className={cols === 3 ? "grid gap-6 sm:grid-cols-2 lg:grid-cols-3" : "grid gap-6 sm:grid-cols-2"}>{children}</div>;
 }
 
+// 빈 섹션 컴포넌트
 function EmptySection({ text, icon }: { text: string, icon?: React.ReactNode }) {
   return (
-    <div className="text-center py-12 rounded-xl border border-dashed border-border bg-card/50 flex flex-col items-center justify-center gap-3">
-      {icon && <div className="text-muted-foreground/80">{icon}</div>}
-      <p className="text-base text-muted-foreground font-medium">{text}</p>
+    <div className="text-center py-16 rounded-2xl border border-dashed border-portfolio-border bg-portfolio-card/50 flex flex-col items-center justify-center gap-4 text-portfolio-text-light">
+      {icon && <div className="text-portfolio-text-light/80">{icon}</div>}
+      <p className="text-lg font-medium">{text}</p>
     </div>
   );
 }
 
-function StatCard({ icon, label, value, color, bg, href }: { icon: React.ReactNode; label: string; value: number; color: string; bg: string; href: string }) {
+// 통계 카드 대신 핵심 역량 카드로 변경
+function SkillCard({ icon, label, description, color, bg }: { icon: React.ReactNode; label: string; description: string; color: string; bg: string }) {
   return (
-    <Link href={href}>
-      <Card className="cursor-pointer card-interactive group h-full transition-all duration-200 hover:border-primary/50 hover:shadow-md hover:shadow-primary/5">
-        <CardContent className="p-5">
-          <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200`}>
-            <div className={color}>{icon}</div>
-          </div>
-          <p className="text-3xl font-extrabold tabular-nums text-foreground">{value}</p>
-          <p className="text-sm text-muted-foreground mt-1">{label}</p>
-        </CardContent>
-      </Card>
-    </Link>
+    <Card className="h-full border-portfolio-border bg-portfolio-card shadow-card-soft hover:shadow-card-hover transition-all duration-300 group">
+      <CardContent className="p-6 flex flex-col items-start">
+        <div className={`w-12 h-12 rounded-xl ${bg} flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-200`}>
+          <div className={`${color} text-2xl`}>{icon}</div>
+        </div>
+        <h3 className="text-xl font-bold text-portfolio-text mb-2">{label}</h3>
+        <p className="text-sm text-portfolio-text-light leading-relaxed">{description}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+// 스켈레톤 카드 컴포넌트 (로딩 중 UI)
+function SkeletonCard() {
+  return (
+    <Card className="h-full border-portfolio-border bg-portfolio-card p-6 rounded-xl">
+      <div className="h-4 w-1/4 bg-gray-200 rounded mb-4"></div>
+      <div className="h-6 w-3/4 bg-gray-200 rounded mb-3"></div>
+      <div className="h-4 w-full bg-gray-100 rounded mb-2"></div>
+      <div className="h-4 w-2/3 bg-gray-100 rounded"></div>
+    </Card>
   );
 }
