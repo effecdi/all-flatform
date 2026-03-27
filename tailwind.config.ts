@@ -148,10 +148,52 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "pf-fade-up": {
+          "0%": { opacity: "0", transform: "translateY(30px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "pf-fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "pf-scale-in": {
+          "0%": { opacity: "0", transform: "scale(0.9)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "pf-slide-left": {
+          "0%": { opacity: "0", transform: "translateX(40px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "pf-slide-right": {
+          "0%": { opacity: "0", transform: "translateX(-40px)" },
+          "100%": { opacity: "1", transform: "translateX(0)" },
+        },
+        "pf-counter": {
+          "0%": { opacity: "0", transform: "translateY(12px) scale(0.95)" },
+          "60%": { opacity: "1", transform: "translateY(-2px) scale(1.02)" },
+          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
+        },
+        "pf-draw-line": {
+          "0%": { width: "0%" },
+          "100%": { width: "100%" },
+        },
+        "pf-pulse-ring": {
+          "0%": { transform: "scale(1)", opacity: "0.6" },
+          "50%": { transform: "scale(1.15)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pf-fade-up": "pf-fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both",
+        "pf-fade-in": "pf-fade-in 0.6s ease-out both",
+        "pf-scale-in": "pf-scale-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
+        "pf-slide-left": "pf-slide-left 0.6s cubic-bezier(0.16,1,0.3,1) both",
+        "pf-slide-right": "pf-slide-right 0.6s cubic-bezier(0.16,1,0.3,1) both",
+        "pf-counter": "pf-counter 0.8s cubic-bezier(0.16,1,0.3,1) both",
+        "pf-draw-line": "pf-draw-line 1s ease-out both",
+        "pf-pulse-ring": "pf-pulse-ring 2s ease-out infinite",
       },
     },
   },
