@@ -83,6 +83,19 @@ const config: Config = {
           light: "hsl(var(--info-light))",
           dark: "hsl(var(--info-dark))",
         },
+        // 포트폴리오 전용 색상 추가
+        portfolio: {
+          background: "hsl(220 20% 98%)", // 아주 밝은 회색 배경
+          text: "hsl(220 20% 20%)",       // 어두운 회색 텍스트
+          'text-light': "hsl(220 10% 40%)", // 보조 텍스트
+          primary: "hsl(210 90% 45%)",    // 메인 강조색 (청색 계열)
+          'primary-light': "hsl(210 90% 65%)",
+          'primary-dark': "hsl(210 90% 35%)",
+          secondary: "hsl(170 60% 45%)",   // 보조 강조색 (청록색 계열)
+          accent: "hsl(30 90% 60%)",      // 포인트 색상 (주황색 계열)
+          card: "hsl(0 0% 100%)",         // 카드 배경색 (흰색)
+          border: "hsl(220 10% 90%)",     // 경계선 색상
+        }
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -96,6 +109,14 @@ const config: Config = {
         soft: "0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)",
         "soft-hover": "0 6px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)",
         elevated: "0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.05)",
+        // 포트폴리오 카드 전용 그림자 추가
+        'card-soft': '0 4px 12px rgba(0, 0, 0, 0.05)',
+        'card-hover': '0 8px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05)',
+      },
+      fontFamily: {
+        sans: ['Inter', 'Pretendard', 'sans-serif'], // 모던한 sans-serif 폰트 추가
+        serif: ['serif'],
+        mono: ['monospace'],
       },
       keyframes: {
         "accordion-down": {

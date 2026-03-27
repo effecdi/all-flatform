@@ -5,6 +5,7 @@ import {
   businessProfiles,
   aiRecommendations,
   crawlLogs,
+  portfolios,
   type GovernmentProgram,
   type InsertGovernmentProgram,
   type InvestmentProgram,
@@ -17,6 +18,8 @@ import {
   type InsertAiRecommendation,
   type CrawlLog,
   type RecommendationItem,
+  type Portfolio,
+  type InsertPortfolio,
 } from "@shared/schema";
 import type { ProgramFilters, PaginatedResult, DashboardStats, InvestmentFilters } from "@shared/types";
 import { requireDb } from "./db";
@@ -55,6 +58,11 @@ export interface IStorage {
   createCrawlLog(data: Omit<CrawlLog, "id" | "createdAt">): Promise<CrawlLog>;
   getCrawlLogs(limit?: number): Promise<CrawlLog[]>;
 
+  // Portfolio
+  getPortfolio(userId: number): Promise<Portfolio | undefined>;
+  getPortfolioBySlug(slug: string): Promise<Portfolio | undefined>;
+  upsertPortfolio(data: InsertPortfolio): Promise<Portfolio>;
+
   // Dashboard
   getDashboardStats(userId: number): Promise<DashboardStats>;
 }
@@ -66,12 +74,14 @@ export class MemoryStorage implements IStorage {
   private profiles: BusinessProfile[] = [];
   private recommendations: AiRecommendation[] = [];
   private crawlLogsList: CrawlLog[] = [];
+  private portfoliosList: Portfolio[] = [];
   private nextGovId = 1;
   private nextInvId = 1;
   private nextBookmarkId = 1;
   private nextProfileId = 1;
   private nextRecId = 1;
   private nextLogId = 1;
+  private nextPortfolioId = 1;
 
   async getGovernmentPrograms(filters: ProgramFilters): Promise<PaginatedResult<GovernmentProgram>> {
     let result = [...this.govPrograms];
@@ -341,6 +351,57 @@ export class MemoryStorage implements IStorage {
     return this.crawlLogsList
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, limit);
+  }
+
+  async getPortfolio(userId: number): Promise<Portfolio | undefined> {
+    return this.portfoliosList.find(p => p.userId === userId);
+  }
+
+  async getPortfolioBySlug(slug: string): Promise<Portfolio | undefined> {
+    return this.portfoliosList.find(p => p.slug === slug);
+  }
+
+  async upsertPortfolio(data: InsertPortfolio): Promise<Portfolio> {
+    const existing = this.portfoliosList.find(p => p.userId === data.userId);
+    if (existing) {
+      Object.assign(existing, data, { updatedAt: new Date() });
+      return existing;
+    }
+    const now = new Date();
+    const portfolio: Portfolio = {
+      id: this.nextPortfolioId++,
+      userId: data.userId,
+      companyName: data.companyName,
+      tagline: data.tagline ?? null,
+      mission: data.mission ?? null,
+      vision: data.vision ?? null,
+      logoUrl: data.logoUrl ?? null,
+      coverImageUrl: data.coverImageUrl ?? null,
+      brandColor: data.brandColor ?? null,
+      accentColor: data.accentColor ?? null,
+      industrySector: data.industrySector ?? null,
+      businessStage: data.businessStage ?? null,
+      foundedYear: data.foundedYear ?? null,
+      region: data.region ?? null,
+      employeeCount: data.employeeCount ?? null,
+      website: data.website ?? null,
+      teamMembers: (data.teamMembers as any) ?? null,
+      projects: (data.projects as any) ?? null,
+      milestones: (data.milestones as any) ?? null,
+      metrics: (data.metrics as any) ?? null,
+      contactEmail: data.contactEmail ?? null,
+      contactPhone: data.contactPhone ?? null,
+      socialLinks: (data.socialLinks as any) ?? null,
+      aboutUs: data.aboutUs ?? null,
+      techStack: (data.techStack as any) ?? null,
+      awards: (data.awards as any) ?? null,
+      isPublic: data.isPublic ?? 0,
+      slug: data.slug ?? null,
+      createdAt: now,
+      updatedAt: now,
+    };
+    this.portfoliosList.push(portfolio);
+    return portfolio;
   }
 
   async getDashboardStats(userId: number): Promise<DashboardStats> {
@@ -687,6 +748,44 @@ export class DatabaseStorage implements IStorage {
       .from(crawlLogs)
       .orderBy(desc(crawlLogs.createdAt))
       .limit(limit);
+  }
+
+  async getPortfolio(userId: number): Promise<Portfolio | undefined> {
+    const [portfolio] = await this.db
+      .select()
+      .from(portfolios)
+      .where(eq(portfolios.userId, userId));
+    return portfolio;
+  }
+
+  async getPortfolioBySlug(slug: string): Promise<Portfolio | undefined> {
+    const [portfolio] = await this.db
+      .select()
+      .from(portfolios)
+      .where(eq(portfolios.slug, slug));
+    return portfolio;
+  }
+
+  async upsertPortfolio(data: InsertPortfolio): Promise<Portfolio> {
+    const [existing] = await this.db
+      .select()
+      .from(portfolios)
+      .where(eq(portfolios.userId, data.userId));
+
+    if (existing) {
+      const [updated] = await this.db
+        .update(portfolios)
+        .set({ ...data, updatedAt: new Date() })
+        .where(eq(portfolios.id, existing.id))
+        .returning();
+      return updated;
+    }
+
+    const [created] = await this.db
+      .insert(portfolios)
+      .values(data)
+      .returning();
+    return created;
   }
 
   async getDashboardStats(userId: number): Promise<DashboardStats> {
