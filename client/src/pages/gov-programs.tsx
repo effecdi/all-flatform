@@ -70,7 +70,7 @@ export default function GovProgramsPage() {
           </div>
         )}
 
-        <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           <div className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-64 shrink-0`}>
             <Card className="sticky top-20">
               <CardContent className="p-4">

@@ -47,7 +47,7 @@ export default function InvestmentProgramsPage() {
           </Button>
         </div>
 
-        <div className="flex gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           {/* Sidebar filters - matching gov-programs layout */}
           <div className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-64 shrink-0`}>
             <Card className="sticky top-20">
