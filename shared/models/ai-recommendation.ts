@@ -16,6 +16,11 @@ export interface RecommendationItem {
   matchScore: number;
   reasoning: string;
   title: string;
+  urgency?: "high" | "medium" | "low";
+  benefits?: string;
+  preparationTips?: string;
+  applicationUrl?: string | null;
+  difficulty?: "easy" | "medium" | "hard";
 }
 
 export const aiRecommendations = pgTable("ai_recommendations", {

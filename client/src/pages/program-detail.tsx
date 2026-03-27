@@ -3,7 +3,9 @@ import { PageTransition } from "@/components/page-transition";
 import { useGovernmentProgram, useInvestmentProgram } from "@/hooks/use-programs";
 import { BookmarkButton } from "@/components/bookmark-button";
 import { DeadlineBadge } from "@/components/deadline-badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   ArrowLeft,
   Building2,
@@ -22,15 +24,17 @@ import {
 import { SUPPORT_TYPE_LABELS, INVESTOR_TYPE_LABELS } from "@shared/constants";
 import { formatDate } from "@/lib/utils";
 
+const STATUS_VARIANT: Record<string, "success" | "info" | "secondary"> = {
+  "모집중": "success",
+  "모집예정": "info",
+  "모집마감": "secondary",
+};
+
 function GovProgramDetail({ id }: { id: number }) {
   const { data: program, isLoading } = useGovernmentProgram(id);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>;
   }
 
   if (!program) {
@@ -39,95 +43,57 @@ function GovProgramDetail({ id }: { id: number }) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-              {program.status}
-            </span>
-            <span className="px-2 py-0.5 rounded text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
-              {SUPPORT_TYPE_LABELS[program.supportType] || program.supportType}
-            </span>
+          <div className="flex flex-wrap items-center gap-1.5 mb-3">
+            <Badge variant={STATUS_VARIANT[program.status] ?? "secondary"}>{program.status}</Badge>
+            <Badge variant="gov">{SUPPORT_TYPE_LABELS[program.supportType] || program.supportType}</Badge>
             <DeadlineBadge endDate={program.endDate} />
           </div>
-          <h1 className="text-xl font-bold leading-snug">{program.title}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold leading-snug">{program.title}</h1>
         </div>
         <BookmarkButton programType="government" programId={id} className="shrink-0" />
       </div>
 
-      {/* Meta info */}
-      <div className="grid gap-3 text-sm">
+      <div className="grid gap-2.5 text-sm">
         {program.organization && (
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Building2 className="w-4 h-4 shrink-0" />
-            <span>{program.organization}</span>
+          <div className="flex items-center gap-2.5 text-muted-foreground">
+            <div className="w-7 h-7 rounded-lg bg-gov-primary/10 flex items-center justify-center shrink-0"><Building2 className="w-3.5 h-3.5 text-gov-primary" /></div>
+            <span className="font-medium">{program.organization}</span>
           </div>
         )}
         {program.region && (
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <MapPin className="w-4 h-4 shrink-0" />
+          <div className="flex items-center gap-2.5 text-muted-foreground">
+            <div className="w-7 h-7 rounded-lg bg-gov-primary/10 flex items-center justify-center shrink-0"><MapPin className="w-3.5 h-3.5 text-gov-primary" /></div>
             <span>{program.region}</span>
           </div>
         )}
         {(program.startDate || program.endDate) && (
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Calendar className="w-4 h-4 shrink-0" />
-            <span>
-              {program.startDate ? formatDate(program.startDate) : "미정"} ~{" "}
-              {program.endDate ? formatDate(program.endDate) : "미정"}
-            </span>
+          <div className="flex items-center gap-2.5 text-muted-foreground">
+            <div className="w-7 h-7 rounded-lg bg-gov-primary/10 flex items-center justify-center shrink-0"><Calendar className="w-3.5 h-3.5 text-gov-primary" /></div>
+            <span>{program.startDate ? formatDate(program.startDate) : "미정"} ~ {program.endDate ? formatDate(program.endDate) : "미정"}</span>
           </div>
         )}
       </div>
 
-      {/* Content sections */}
-      <div className="space-y-4">
-        {program.description && (
-          <DetailSection icon={<FileText className="w-4 h-4" />} title="사업 개요" content={program.description} />
-        )}
+      <div className="section-divider" />
 
-        {program.targetAudience && (
-          <DetailSection icon={<CheckCircle2 className="w-4 h-4" />} title="신청 대상" content={program.targetAudience} />
-        )}
-
-        {program.excludedTargets && (
-          <DetailSection icon={<AlertTriangle className="w-4 h-4" />} title="제외 대상" content={program.excludedTargets} highlight="warning" />
-        )}
-
-        {program.supportAmount && (
-          <DetailSection icon={<Banknote className="w-4 h-4" />} title="지원 금액" content={program.supportAmount} />
-        )}
-
-        {program.supportDetails && (
-          <DetailSection icon={<ClipboardList className="w-4 h-4" />} title="지원 내용" content={program.supportDetails} />
-        )}
-
-        {program.applicationMethod && (
-          <DetailSection icon={<ExternalLink className="w-4 h-4" />} title="신청 방법" content={program.applicationMethod} />
-        )}
-
-        {program.requiredDocuments && (
-          <DetailSection icon={<FileText className="w-4 h-4" />} title="제출 서류" content={program.requiredDocuments} highlight="info" />
-        )}
-
-        {program.selectionProcess && (
-          <DetailSection icon={<CheckCircle2 className="w-4 h-4" />} title="선정 절차 및 평가" content={program.selectionProcess} />
-        )}
-
-        {program.contactInfo && (
-          <DetailSection icon={<Phone className="w-4 h-4" />} title="문의처" content={program.contactInfo} />
-        )}
-
-        {program.attachmentUrls && (
-          <DetailSection icon={<Paperclip className="w-4 h-4" />} title="첨부파일" content={program.attachmentUrls} />
-        )}
+      <div className="space-y-3">
+        {program.description && <DetailSection icon={<FileText className="w-4 h-4" />} title="사업 개요" content={program.description} />}
+        {program.targetAudience && <DetailSection icon={<CheckCircle2 className="w-4 h-4" />} title="신청 대상" content={program.targetAudience} />}
+        {program.excludedTargets && <DetailSection icon={<AlertTriangle className="w-4 h-4" />} title="제외 대상" content={program.excludedTargets} highlight="warning" />}
+        {program.supportAmount && <DetailSection icon={<Banknote className="w-4 h-4" />} title="지원 금액" content={program.supportAmount} highlight="info" />}
+        {program.supportDetails && <DetailSection icon={<ClipboardList className="w-4 h-4" />} title="지원 내용" content={program.supportDetails} />}
+        {program.applicationMethod && <DetailSection icon={<ExternalLink className="w-4 h-4" />} title="신청 방법" content={program.applicationMethod} />}
+        {program.requiredDocuments && <DetailSection icon={<FileText className="w-4 h-4" />} title="제출 서류" content={program.requiredDocuments} />}
+        {program.selectionProcess && <DetailSection icon={<CheckCircle2 className="w-4 h-4" />} title="선정 절차 및 평가" content={program.selectionProcess} />}
+        {program.contactInfo && <DetailSection icon={<Phone className="w-4 h-4" />} title="문의처" content={program.contactInfo} />}
+        {program.attachmentUrls && <DetailSection icon={<Paperclip className="w-4 h-4" />} title="첨부파일" content={program.attachmentUrls} />}
       </div>
 
-      {/* Action button */}
       {program.applicationUrl && (
         <a href={program.applicationUrl} target="_blank" rel="noopener noreferrer">
-          <Button className="gap-2 w-full sm:w-auto">
+          <Button size="lg" className="gap-2 w-full sm:w-auto">
             <ExternalLink className="w-4 h-4" />
             신청 페이지 바로가기
           </Button>
@@ -141,11 +107,7 @@ function InvProgramDetail({ id }: { id: number }) {
   const { data: program, isLoading } = useInvestmentProgram(id);
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <div className="flex items-center justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-muted-foreground" /></div>;
   }
 
   if (!program) {
@@ -156,72 +118,51 @@ function InvProgramDetail({ id }: { id: number }) {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-              {program.status}
-            </span>
-            <span className="px-2 py-0.5 rounded text-xs font-medium bg-teal-50 text-teal-700 border border-teal-200">
-              {INVESTOR_TYPE_LABELS[program.investorType] || program.investorType}
-            </span>
+          <div className="flex flex-wrap items-center gap-1.5 mb-3">
+            <Badge variant={STATUS_VARIANT[program.status] ?? "secondary"}>{program.status}</Badge>
+            <Badge variant="invest">{INVESTOR_TYPE_LABELS[program.investorType] || program.investorType}</Badge>
             <DeadlineBadge endDate={program.endDate} />
           </div>
-          <h1 className="text-xl font-bold leading-snug">{program.title}</h1>
+          <h1 className="text-xl sm:text-2xl font-bold leading-snug">{program.title}</h1>
         </div>
         <BookmarkButton programType="investment" programId={id} className="shrink-0" />
       </div>
 
-      <div className="grid gap-3 text-sm text-muted-foreground">
+      <div className="grid gap-2.5 text-sm text-muted-foreground">
         {program.organization && (
-          <div className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 shrink-0" />
-            <span>{program.organization}</span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-invest-primary/10 flex items-center justify-center shrink-0"><Building2 className="w-3.5 h-3.5 text-invest-primary" /></div>
+            <span className="font-medium">{program.organization}</span>
           </div>
         )}
         {(program.startDate || program.endDate) && (
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 shrink-0" />
-            <span>
-              {program.startDate ? formatDate(program.startDate) : "미정"} ~{" "}
-              {program.endDate ? formatDate(program.endDate) : "미정"}
-            </span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-invest-primary/10 flex items-center justify-center shrink-0"><Calendar className="w-3.5 h-3.5 text-invest-primary" /></div>
+            <span>{program.startDate ? formatDate(program.startDate) : "미정"} ~ {program.endDate ? formatDate(program.endDate) : "미정"}</span>
           </div>
         )}
       </div>
 
-      <div className="space-y-4">
-        {program.description && (
-          <DetailSection icon={<FileText className="w-4 h-4" />} title="개요" content={program.description} />
-        )}
-        {program.investmentScale && (
-          <DetailSection icon={<Banknote className="w-4 h-4" />} title="투자 규모" content={program.investmentScale} />
-        )}
-        {program.targetStage && (
-          <DetailSection icon={<CheckCircle2 className="w-4 h-4" />} title="대상 단계" content={program.targetStage} />
-        )}
-        {program.targetIndustry && (
-          <DetailSection icon={<ClipboardList className="w-4 h-4" />} title="대상 업종" content={program.targetIndustry} />
-        )}
-        {program.contactInfo && (
-          <DetailSection icon={<Phone className="w-4 h-4" />} title="연락처" content={program.contactInfo} />
-        )}
+      <div className="section-divider" />
+
+      <div className="space-y-3">
+        {program.description && <DetailSection icon={<FileText className="w-4 h-4" />} title="개요" content={program.description} />}
+        {program.investmentScale && <DetailSection icon={<Banknote className="w-4 h-4" />} title="투자 규모" content={program.investmentScale} highlight="info" />}
+        {program.targetStage && <DetailSection icon={<CheckCircle2 className="w-4 h-4" />} title="대상 단계" content={program.targetStage} />}
+        {program.targetIndustry && <DetailSection icon={<ClipboardList className="w-4 h-4" />} title="대상 업종" content={program.targetIndustry} />}
+        {program.contactInfo && <DetailSection icon={<Phone className="w-4 h-4" />} title="연락처" content={program.contactInfo} />}
       </div>
 
       {(program.applicationUrl || program.websiteUrl) && (
         <div className="flex gap-3">
           {program.applicationUrl && (
             <a href={program.applicationUrl} target="_blank" rel="noopener noreferrer">
-              <Button className="gap-2">
-                <ExternalLink className="w-4 h-4" />
-                신청하기
-              </Button>
+              <Button size="lg" className="gap-2"><ExternalLink className="w-4 h-4" />신청하기</Button>
             </a>
           )}
           {program.websiteUrl && (
             <a href={program.websiteUrl} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="gap-2">
-                <ExternalLink className="w-4 h-4" />
-                웹사이트
-              </Button>
+              <Button variant="outline" size="lg" className="gap-2"><ExternalLink className="w-4 h-4" />웹사이트</Button>
             </a>
           )}
         </div>
@@ -230,29 +171,19 @@ function InvProgramDetail({ id }: { id: number }) {
   );
 }
 
-function DetailSection({
-  icon,
-  title,
-  content,
-  highlight,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  content: string;
-  highlight?: "info" | "warning";
-}) {
+function DetailSection({ icon, title, content, highlight }: { icon: React.ReactNode; title: string; content: string; highlight?: "info" | "warning" }) {
   const bgClass =
     highlight === "info"
-      ? "bg-blue-50 border-blue-200"
+      ? "bg-info/5 border-info/20"
       : highlight === "warning"
-      ? "bg-amber-50 border-amber-200"
-      : "bg-gray-50 border-border";
+      ? "bg-amber-500/5 border-amber-500/20"
+      : "bg-muted/30 border-border/60";
 
   return (
-    <div className={`rounded-lg border p-4 ${bgClass}`}>
+    <div className={`rounded-xl border p-4 ${bgClass}`}>
       <div className="flex items-center gap-2 mb-2">
         <span className="text-muted-foreground">{icon}</span>
-        <h3 className="text-sm font-semibold">{title}</h3>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       </div>
       <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{content}</p>
     </div>
@@ -268,17 +199,20 @@ export default function ProgramDetailPage() {
 
   return (
     <PageTransition>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-20 pb-10">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-20 pb-12">
         <Link href={isGov ? "/programs/government" : "/programs/investment"}>
-          <Button variant="ghost" size="sm" className="gap-1 mb-4">
+          <Button variant="ghost" size="sm" className="gap-1.5 mb-6 text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-4 h-4" />
             목록으로
           </Button>
         </Link>
 
-        <div className="bg-white rounded-lg border border-border p-6">
-          {isGov ? <GovProgramDetail id={id} /> : <InvProgramDetail id={id} />}
-        </div>
+        <Card className="overflow-hidden">
+          <div className={isGov ? "card-top-bar-gov" : "card-top-bar-invest"} />
+          <CardContent className="p-6 sm:p-8">
+            {isGov ? <GovProgramDetail id={id} /> : <InvProgramDetail id={id} />}
+          </CardContent>
+        </Card>
       </div>
     </PageTransition>
   );

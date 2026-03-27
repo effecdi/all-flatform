@@ -51,6 +51,7 @@ export function useGovernmentPrograms(filters: {
   status?: string;
   region?: string;
   search?: string;
+  deadline?: boolean;
   page?: number;
   limit?: number;
 }) {
@@ -59,6 +60,7 @@ export function useGovernmentPrograms(filters: {
   if (filters.status) params.set("status", filters.status);
   if (filters.region) params.set("region", filters.region);
   if (filters.search) params.set("search", filters.search);
+  if (filters.deadline) params.set("deadline", "true");
   if (filters.page) params.set("page", String(filters.page));
   if (filters.limit) params.set("limit", String(filters.limit));
 

@@ -1,3 +1,5 @@
+import { Badge } from "./ui/badge";
+import { Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface DeadlineBadgeProps {
@@ -14,29 +16,17 @@ export function DeadlineBadge({ endDate, className }: DeadlineBadgeProps) {
   const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffDays < 0) {
-    return (
-      <span className={cn("inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-500 border border-gray-200", className)}>
-        마감
-      </span>
-    );
+    return <Badge variant="secondary" className={className}>마감</Badge>;
   }
 
   const isUrgent = diffDays <= 7;
   const isSoon = diffDays <= 14;
+  const variant = isUrgent ? "error" : isSoon ? "warning" : "info";
 
   return (
-    <span
-      className={cn(
-        "inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border",
-        isUrgent
-          ? "bg-red-50 text-red-700 border-red-200"
-          : isSoon
-          ? "bg-amber-50 text-amber-700 border-amber-200"
-          : "bg-blue-50 text-blue-700 border-blue-200",
-        className
-      )}
-    >
+    <Badge variant={variant} className={cn("gap-0.5", className)}>
+      <Clock className="w-3 h-3" />
       D-{diffDays}
-    </span>
+    </Badge>
   );
 }

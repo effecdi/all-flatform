@@ -1,50 +1,284 @@
+/* Web Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Pretendard CDN */
-@font-face { font-family: 'Pretendard'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'Pretendard'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
-@font-face { font-family: 'Pretendard'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
-@font-face { font-family: 'Pretendard'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
-
-/* ---- Light-first professional design tokens ---- */
+/* ── Design Tokens (Light) ── */
 :root {
-  --background: 210 20% 98%;
-  --foreground: 220 20% 10%;
+  --background: 220 20% 97%;
+  --foreground: 222 25% 10%;
+
   --card: 0 0% 100%;
-  --card-foreground: 220 20% 10%;
+  --card-foreground: 222 25% 10%;
   --popover: 0 0% 100%;
-  --popover-foreground: 220 20% 10%;
-  --primary: 220 80% 50%;
+  --popover-foreground: 222 25% 10%;
+
+  --primary: 240 55% 48%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 220 14% 96%;
-  --secondary-foreground: 220 20% 25%;
-  --muted: 220 14% 96%;
-  --muted-foreground: 220 10% 46%;
-  --accent: 220 14% 93%;
-  --accent-foreground: 220 20% 10%;
+  --primary-light: 240 60% 55%;
+  --primary-dark: 240 60% 40%;
+
+  --gov-primary: 220 70% 50%;
+  --gov-primary-light: 220 80% 60%;
+  --gov-primary-dark: 220 70% 40%;
+
+  --invest-primary: 160 60% 40%;
+  --invest-primary-light: 160 70% 50%;
+  --invest-primary-dark: 160 60% 30%;
+
+  --secondary: 220 16% 93%;
+  --secondary-foreground: 220 20% 30%;
+
+  --muted: 220 16% 93%;
+  --muted-foreground: 220 12% 46%;
+
+  --accent: 240 60% 96%;
+  --accent-foreground: 240 60% 40%;
+
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
-  --border: 220 13% 91%;
-  --input: 220 13% 91%;
-  --ring: 220 80% 50%;
-  --radius: 0.5rem;
+
+  --border: 220 16% 88%;
+  --input: 220 16% 86%;
+  --ring: 240 60% 50%;
+  --radius: 0.625rem;
+
+  --success: 152 76% 36%;
+  --success-foreground: 0 0% 100%;
+  --success-light: 152 60% 48%;
+  --success-dark: 152 76% 30%;
+
+  --warning: 38 92% 50%;
+  --warning-foreground: 38 92% 14%;
+  --warning-light: 45 93% 58%;
+  --warning-dark: 32 95% 44%;
+
+  --error: 0 72% 55%;
+  --error-foreground: 0 0% 100%;
+  --error-light: 0 86% 70%;
+  --error-dark: 0 72% 45%;
+
+  --info: 210 80% 52%;
+  --info-foreground: 0 0% 100%;
+  --info-light: 210 80% 62%;
+  --info-dark: 210 80% 42%;
 }
 
-/* ---- Scrollbar ---- */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: hsl(220 13% 80%); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: hsl(220 13% 70%); }
+/* ── Design Tokens (Dark) ── */
+.dark {
+  --background: 225 20% 7%;
+  --foreground: 220 16% 93%;
 
-/* ---- Base ---- */
+  --card: 225 16% 13%;
+  --card-foreground: 220 16% 93%;
+  --popover: 225 18% 16%;
+  --popover-foreground: 220 16% 93%;
+
+  --primary: 240 55% 65%;
+  --primary-foreground: 0 0% 100%;
+  --primary-light: 240 70% 72%;
+  --primary-dark: 240 60% 50%;
+
+  --gov-primary: 220 70% 60%;
+  --gov-primary-light: 220 80% 70%;
+  --gov-primary-dark: 220 70% 50%;
+
+  --invest-primary: 160 60% 50%;
+  --invest-primary-light: 160 70% 60%;
+  --invest-primary-dark: 160 60% 40%;
+
+  --secondary: 225 14% 18%;
+  --secondary-foreground: 220 14% 78%;
+
+  --muted: 225 14% 18%;
+  --muted-foreground: 220 10% 55%;
+
+  --accent: 240 30% 22%;
+  --accent-foreground: 240 70% 70%;
+
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 225 14% 22%;
+  --input: 225 14% 20%;
+  --ring: 240 60% 60%;
+
+  --success: 152 76% 40%;
+  --success-foreground: 0 0% 100%;
+  --success-light: 152 60% 52%;
+  --success-dark: 152 76% 55%;
+
+  --warning: 38 92% 50%;
+  --warning-foreground: 38 92% 14%;
+  --warning-light: 45 93% 58%;
+  --warning-dark: 38 92% 60%;
+
+  --error: 0 72% 58%;
+  --error-foreground: 0 0% 100%;
+  --error-light: 0 86% 70%;
+  --error-dark: 0 72% 65%;
+
+  --info: 210 80% 60%;
+  --info-foreground: 0 0% 100%;
+  --info-light: 210 80% 70%;
+  --info-dark: 210 80% 65%;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.4); }
+
+/* ── Base Layer ── */
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-feature-settings: 'cv11';
+    letter-spacing: -0.01em;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    @apply text-foreground;
+    letter-spacing: -0.025em;
+  }
+
+  h1 { @apply text-2xl sm:text-3xl lg:text-4xl font-bold; }
+  h2 { @apply text-xl sm:text-2xl lg:text-3xl font-bold; }
+  h3 { @apply text-lg sm:text-xl font-semibold; }
+  h4 { @apply text-base sm:text-lg font-semibold; }
+}
+
+/* ── Component Classes ── */
+@layer components {
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12;
+  }
+
+  .glass {
+    @apply bg-card/80 backdrop-blur-xl border border-border/50;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-violet-500 to-primary-light;
+  }
+
+  .card-interactive {
+    @apply transition-all duration-200 hover:shadow-elevated hover:-translate-y-1 hover:border-primary/20;
+  }
+
+  .section-divider {
+    @apply h-px bg-gradient-to-r from-transparent via-border to-transparent;
+  }
+
+  .gradient-gov-primary {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-gov-primary to-gov-primary-light;
+  }
+
+  .gradient-invest-primary {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-invest-primary to-invest-primary-light;
+  }
+
+  .card-top-bar-gov {
+    @apply h-1.5 w-full rounded-t-xl bg-gradient-to-r from-gov-primary to-gov-primary-light;
+  }
+
+  .card-top-bar-invest {
+    @apply h-1.5 w-full rounded-t-xl bg-gradient-to-r from-invest-primary to-invest-primary-light;
+  }
+
+  .card-top-bar-ai {
+    @apply h-1.5 w-full rounded-t-xl bg-gradient-to-r from-amber-500 to-orange-400;
+  }
+}
+
+/* ── Animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+  .animate-slide-in-right {
+    animation: slideInRight 0.35s ease-out;
+  }
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent 0%, hsl(var(--muted)) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+}
+
+/* ── Stagger animations for grids ── */
+.stagger-children > * {
+  animation: slideUp 0.4s ease-out backwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 480ms; }
+
+/* ── Selection ── */
+::selection {
+  background-color: hsl(var(--primary) / 0.15);
+  color: hsl(var(--primary));
 }

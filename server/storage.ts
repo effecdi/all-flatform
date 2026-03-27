@@ -86,6 +86,15 @@ export class MemoryStorage implements IStorage {
         p.description?.toLowerCase().includes(q)
       );
     }
+    if (filters.deadline) {
+      const now = new Date();
+      const weekLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      result = result.filter(p => {
+        if (!p.endDate) return false;
+        const end = new Date(p.endDate);
+        return end >= now && end <= weekLater;
+      });
+    }
     const total = result.length;
     const page = filters.page || 1;
     const limit = filters.limit || 20;
@@ -376,6 +385,18 @@ export class DatabaseStorage implements IStorage {
         or(
           ilike(governmentPrograms.title, `%${filters.search}%`),
           ilike(governmentPrograms.organization, `%${filters.search}%`)
+        )
+      );
+    }
+    if (filters.deadline) {
+      const now = new Date();
+      const weekLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      const nowStr = now.toISOString().split("T")[0];
+      const weekLaterStr = weekLater.toISOString().split("T")[0];
+      conditions.push(
+        and(
+          sql`${governmentPrograms.endDate} >= ${nowStr}`,
+          sql`${governmentPrograms.endDate} <= ${weekLaterStr}`
         )
       );
     }

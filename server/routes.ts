@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { insertBusinessProfileSchema, insertInvestmentProgramSchema } from "@shared/schema";
 import { logger } from "./logger";
 import { requireAuth, requireAdmin } from "./auth-middleware";
+import { DESIGN_TOKENS } from "@shared/design-tokens";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -64,12 +65,13 @@ export async function registerRoutes(
 
   app.get("/api/programs/government", async (req, res) => {
     try {
-      const { supportType, status, region, search, page, limit } = req.query as Record<string, string | undefined>;
+      const { supportType, status, region, search, deadline, page, limit } = req.query as Record<string, string | undefined>;
       const result = await storage.getGovernmentPrograms({
         supportType,
         status,
         region,
         search,
+        deadline: deadline === "true",
         page: page ? parseInt(page, 10) : undefined,
         limit: limit ? parseInt(limit, 10) : undefined,
       });
@@ -210,6 +212,42 @@ export async function registerRoutes(
   });
 
   // =====================
+  // Discover (Search + Web)
+  // =====================
+
+  // Fast: internal DB search only
+  app.get("/api/discover/programs", async (req, res) => {
+    try {
+      const query = (req.query.query as string || "").trim();
+      if (!query) {
+        return res.status(400).json({ message: "검색어를 입력해주세요." });
+      }
+      const { searchPrograms } = await import("./search-service");
+      const result = await searchPrograms(query, storage);
+      res.json(result);
+    } catch (err: any) {
+      logger.error("GET /api/discover/programs 실패", err);
+      res.status(500).json({ message: err.message || "프로그램 검색에 실패했습니다." });
+    }
+  });
+
+  // Slower: AI-powered web search
+  app.get("/api/discover/web", async (req, res) => {
+    try {
+      const query = (req.query.query as string || "").trim();
+      if (!query) {
+        return res.status(400).json({ message: "검색어를 입력해주세요." });
+      }
+      const { searchWeb } = await import("./search-service");
+      const results = await searchWeb(query);
+      res.json({ webResults: results });
+    } catch (err: any) {
+      logger.error("GET /api/discover/web 실패", err);
+      res.status(500).json({ message: err.message || "웹 검색에 실패했습니다." });
+    }
+  });
+
+  // =====================
   // Dashboard Stats
   // =====================
 
@@ -274,6 +312,14 @@ export async function registerRoutes(
   // =====================
   // Health
   // =====================
+
+  // =====================
+  // Design Tokens
+  // =====================
+
+  app.get("/api/design-tokens", (_req, res) => {
+    res.json(DESIGN_TOKENS);
+  });
 
   app.get("/api/health", (_req, res) => {
     res.json({ ok: true, timestamp: new Date().toISOString() });

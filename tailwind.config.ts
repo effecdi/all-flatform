@@ -1,10 +1,17 @@
 import type { Config } from "tailwindcss";
 import animate from "tailwindcss-animate";
 
-export default {
-  darkMode: "class",
+const config: Config = {
+  darkMode: ["class"],
   content: ["./client/index.html", "./client/src/**/*.{ts,tsx}"],
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
       colors: {
         border: "hsl(var(--border))",
@@ -15,6 +22,18 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          light: "hsl(var(--primary-light))",
+          dark: "hsl(var(--primary-dark))",
+        },
+        "gov-primary": {
+          DEFAULT: "hsl(var(--gov-primary))",
+          light: "hsl(var(--gov-primary-light))",
+          dark: "hsl(var(--gov-primary-dark))",
+        },
+        "invest-primary": {
+          DEFAULT: "hsl(var(--invest-primary))",
+          light: "hsl(var(--invest-primary-light))",
+          dark: "hsl(var(--invest-primary-dark))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -40,15 +59,43 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+          light: "hsl(var(--success-light))",
+          dark: "hsl(var(--success-dark))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+          light: "hsl(var(--warning-light))",
+          dark: "hsl(var(--warning-dark))",
+        },
+        error: {
+          DEFAULT: "hsl(var(--error))",
+          foreground: "hsl(var(--error-foreground))",
+          light: "hsl(var(--error-light))",
+          dark: "hsl(var(--error-dark))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          foreground: "hsl(var(--info-foreground))",
+          light: "hsl(var(--info-light))",
+          dark: "hsl(var(--info-dark))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "calc(var(--radius) + 0.25rem)",
+        "2xl": "calc(var(--radius) + 0.5rem)",
       },
-      fontFamily: {
-        sans: ["Pretendard", "sans-serif"],
-        heading: ["Pretendard", "sans-serif"],
+      boxShadow: {
+        /* 기존 shadow-soft보다 약간 더 강한 그림자로 변경 */
+        soft: "0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)",
+        "soft-hover": "0 6px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)",
+        elevated: "0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.05)",
       },
       keyframes: {
         "accordion-down": {
@@ -67,4 +114,6 @@ export default {
     },
   },
   plugins: [animate],
-} satisfies Config;
+};
+
+export default config;

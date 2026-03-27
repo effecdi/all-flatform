@@ -1,44 +1,53 @@
-import { spawn } from "node:child_process";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { logger } from "./logger";
 import type { BusinessProfile, AiRecommendation, RecommendationItem } from "@shared/schema";
 import type { IStorage } from "./storage";
 
-function runClaude(prompt: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const env = { ...process.env };
-    delete env.ANTHROPIC_API_KEY;
-    delete env.CLAUDECODE;
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
-    const child = spawn("claude", ["-p", "--output-format", "text"], {
-      env,
-      stdio: ["pipe", "pipe", "pipe"],
-    });
+interface GeminiResult {
+  text: string;
+  promptTokens: number;
+  completionTokens: number;
+}
 
-    let stdout = "";
-    let stderr = "";
+async function runGemini(prompt: string, maxRetries = 3): Promise<GeminiResult> {
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    child.stdout.on("data", (chunk: Buffer) => { stdout += chunk.toString(); });
-    child.stderr.on("data", (chunk: Buffer) => { stderr += chunk.toString(); });
-
-    child.on("error", (err) => reject(err));
-    child.on("close", (code) => {
-      if (code !== 0) {
-        reject(new Error(stderr || `claude exited with code ${code}`));
-      } else {
-        resolve(stdout);
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      const result = await model.generateContent(prompt);
+      const text = result.response.text();
+      if (!text) {
+        throw new Error("AI 응답에 텍스트가 없습니다.");
       }
-    });
 
-    // Write prompt to stdin and close
-    child.stdin.write(prompt);
-    child.stdin.end();
+      // Extract token usage from response metadata
+      const usage = result.response.usageMetadata;
+      const promptTokens = usage?.promptTokenCount ?? 0;
+      const completionTokens = usage?.candidatesTokenCount ?? 0;
 
-    // Timeout after 120s
-    setTimeout(() => {
-      child.kill();
-      reject(new Error("claude CLI timeout (120s)"));
-    }, 120_000);
-  });
+      return { text, promptTokens, completionTokens };
+    } catch (err: any) {
+      const isLastAttempt = attempt === maxRetries - 1;
+      if (isLastAttempt) throw err;
+
+      // Exponential backoff: 1s, 2s, 4s
+      const delay = Math.pow(2, attempt) * 1000;
+      logger.warn(`Gemini API 재시도 ${attempt + 1}/${maxRetries} (${delay}ms 후): ${err.message}`);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  throw new Error("Gemini API 최대 재시도 횟수 초과");
+}
+
+function computeDaysRemaining(endDate: string | Date | null | undefined): number | null {
+  if (!endDate) return null;
+  const end = new Date(endDate);
+  const now = new Date();
+  const diff = Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+  return diff > 0 ? diff : 0;
 }
 
 export async function generateRecommendations(
@@ -50,6 +59,15 @@ export async function generateRecommendations(
   const govResult = await storage.getGovernmentPrograms({ status: "모집중", limit: 100 });
   const invResult = await storage.getInvestmentPrograms({ status: "모집중", limit: 50 });
 
+  // Build applicationUrl lookup map (server-side, prevents AI hallucination)
+  const applicationUrlMap = new Map<string, string | null>();
+  for (const p of govResult.data) {
+    applicationUrlMap.set(`government:${p.id}`, p.applicationUrl || null);
+  }
+  for (const p of invResult.data) {
+    applicationUrlMap.set(`investment:${p.id}`, p.applicationUrl || null);
+  }
+
   const programList = [
     ...govResult.data.map(p => ({
       id: p.id,
@@ -57,12 +75,13 @@ export async function generateRecommendations(
       title: p.title,
       organization: p.organization,
       supportType: p.supportType,
-      description: p.description?.substring(0, 300) || "",
+      description: p.description?.substring(0, 500) || "",
       targetAudience: p.targetAudience || "",
       excludedTargets: p.excludedTargets || "",
       region: p.region,
       startDate: p.startDate,
       endDate: p.endDate,
+      daysRemaining: computeDaysRemaining(p.endDate),
       supportAmount: p.supportAmount,
     })),
     ...invResult.data.map(p => ({
@@ -71,12 +90,13 @@ export async function generateRecommendations(
       title: p.title,
       organization: p.organization,
       investorType: p.investorType,
-      description: p.description?.substring(0, 300) || "",
+      description: p.description?.substring(0, 500) || "",
       targetStage: p.targetStage,
       targetIndustry: p.targetIndustry || "",
       investmentScale: p.investmentScale,
       startDate: p.startDate,
       endDate: p.endDate,
+      daysRemaining: computeDaysRemaining(p.endDate),
     })),
   ];
 
@@ -88,6 +108,23 @@ export async function generateRecommendations(
   const validIds = new Map<string, number[]>();
   validIds.set("government", govResult.data.map(p => p.id));
   validIds.set("investment", invResult.data.map(p => p.id));
+
+  // Fetch user bookmarks as implicit preference signal
+  const bookmarks = await storage.getBookmarks(userId);
+  let bookmarkContext = "";
+  if (bookmarks.length > 0) {
+    const bookmarkedTitles: string[] = [];
+    for (const bm of bookmarks) {
+      const prog = programList.find(p => p.id === bm.programId && p.type === bm.programType);
+      if (prog) bookmarkedTitles.push(`${prog.title} (${prog.type})`);
+    }
+    if (bookmarkedTitles.length > 0) {
+      bookmarkContext = `\n## 사용자가 관심 표시한 프로그램 (북마크)
+이 목록은 사용자의 관심사를 파악하는 참고 자료입니다:
+${bookmarkedTitles.map(t => `- ${t}`).join("\n")}
+`;
+    }
+  }
 
   // Map enum values to readable descriptions for the AI
   const stageDescriptions: Record<string, string> = {
@@ -125,7 +162,7 @@ export async function generateRecommendations(
 - 기술 분야: ${profile.techField || "미입력"}
 - 희망 자금: ${profile.desiredFunding || "미입력"}
 - 사업 설명: ${profile.businessDescription || "미입력"}
-
+${bookmarkContext}
 ## 모집중인 프로그램 목록
 ${JSON.stringify(programList, null, 2)}
 
@@ -157,12 +194,6 @@ ${JSON.stringify(programList, null, 2)}
 - 사용자의 희망 자금과 프로그램 지원 금액이 현실적으로 맞아야 함
 - 희망 자금 5천만원 이하인데 최소 10억 이상 투자 프로그램은 추천 금지
 
-## reasoning 작성 가이드 (현실적 조언 포함)
-각 추천의 reasoning에 반드시 포함할 내용:
-1. 이 사업이 사용자에게 적합한 구체적 이유 (단계, 업종, 지역 매칭 근거)
-2. 실질적 혜택 (자금 규모, 멘토링, 공간 등)
-3. 준비 팁 또는 유의사항 (예: "사업계획서와 기술 설명 자료 준비 필요", "마감이 임박하여 서둘러 신청하세요", "경쟁률이 높으니 차별화 포인트 강조 필요")
-
 ## 출력 형식
 반드시 아래 JSON 형식으로만 응답하세요 (다른 텍스트 없이 순수 JSON만):
 [
@@ -170,10 +201,20 @@ ${JSON.stringify(programList, null, 2)}
     "programId": <number>,
     "programType": "government" | "investment",
     "matchScore": <0-100>,
-    "reasoning": "<한국어 2-3문장: 적합 이유 + 실질 혜택 + 준비 팁>",
-    "title": "<위 목록의 정확한 프로그램 제목>"
+    "reasoning": "<한국어 2-3문장: 이 사업이 사용자에게 적합한 구체적 이유>",
+    "title": "<위 목록의 정확한 프로그램 제목>",
+    "urgency": "high" | "medium" | "low",
+    "benefits": "<예상 혜택: 자금 규모, 멘토링, 공간 등 1-2문장>",
+    "preparationTips": "<준비사항: 필요 서류, 유의점, 경쟁력 확보 팁 등 2-3문장>",
+    "difficulty": "easy" | "medium" | "hard"
   }
 ]
+
+## 각 필드 가이드
+- urgency: daysRemaining 기준. 7일 이하="high", 30일 이하="medium", 그 외="low". daysRemaining이 null이면 "low"
+- benefits: 실질적 혜택을 구체적으로 (예: "최대 1억원 사업화 자금 + 전담 멘토링 6개월")
+- preparationTips: 신청 준비에 도움이 되는 실질 조언 (예: "사업계획서와 기술 설명 자료 필수, IR 피칭 준비 권장")
+- difficulty: 신청 절차 복잡도. easy=간단한 서류 제출, medium=사업계획서 + 발표, hard=다단계 심사 + 현장실사
 
 matchScore 기준:
 - 90-100: 단계·업종·지역 모두 정확히 일치, 신청 자격 완벽 충족
@@ -181,18 +222,18 @@ matchScore 기준:
 - 50-69: 일부 조건 일치, 신청은 가능하나 경쟁력 낮을 수 있음
 - 50 미만: 추천하지 마세요`;
 
-  let responseText: string;
+  let geminiResult: GeminiResult;
   try {
-    responseText = await runClaude(prompt);
+    geminiResult = await runGemini(prompt);
   } catch (err: any) {
-    logger.error("claude CLI 호출 실패", err.message);
+    logger.error("Gemini API 호출 실패", err.message);
     throw new Error("AI 추천 생성에 실패했습니다: " + err.message);
   }
 
   let recommendations: RecommendationItem[];
   try {
     // Extract JSON from response (handle markdown code blocks and extra text)
-    let jsonStr = responseText.trim();
+    let jsonStr = geminiResult.text.trim();
     // Remove markdown code fences
     if (jsonStr.startsWith("```")) {
       jsonStr = jsonStr.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
@@ -204,7 +245,7 @@ matchScore 기준:
     }
     recommendations = JSON.parse(jsonStr);
   } catch {
-    logger.error("AI 응답 파싱 실패", responseText);
+    logger.error("AI 응답 파싱 실패", geminiResult.text);
     throw new Error("AI 응답을 파싱할 수 없습니다.");
   }
 
@@ -217,6 +258,12 @@ matchScore 기준:
       programType: String(r.programType) as "government" | "investment",
       reasoning: String(r.reasoning || ""),
       title: String(r.title || ""),
+      urgency: (["high", "medium", "low"].includes(r.urgency as string) ? r.urgency : undefined) as RecommendationItem["urgency"],
+      benefits: r.benefits ? String(r.benefits) : undefined,
+      preparationTips: r.preparationTips ? String(r.preparationTips) : undefined,
+      difficulty: (["easy", "medium", "hard"].includes(r.difficulty as string) ? r.difficulty : undefined) as RecommendationItem["difficulty"],
+      // applicationUrl is set server-side below, not from AI
+      applicationUrl: undefined as string | null | undefined,
     }))
     .filter(r => {
       if (isNaN(r.programId) || r.programId <= 0) return false;
@@ -230,6 +277,11 @@ matchScore 기준:
         return false;
       }
       return true;
+    })
+    .map(r => {
+      // Attach applicationUrl from server-side lookup (prevents AI hallucination)
+      const url = applicationUrlMap.get(`${r.programType}:${r.programId}`);
+      return { ...r, applicationUrl: url ?? null };
     })
     .sort((a, b) => b.matchScore - a.matchScore)
     .slice(0, 10);
@@ -251,9 +303,9 @@ matchScore 기준:
       techField: profile.techField,
       desiredFunding: profile.desiredFunding,
     },
-    modelUsed: "claude-cli",
-    promptTokens: 0,
-    completionTokens: 0,
+    modelUsed: "gemini-2.5-flash",
+    promptTokens: geminiResult.promptTokens,
+    completionTokens: geminiResult.completionTokens,
   });
 
   return result;
