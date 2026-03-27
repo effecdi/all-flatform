@@ -65,6 +65,30 @@
   --info-foreground: 0 0% 100%;
   --info-light: 210 80% 62%;
   --info-dark: 210 80% 42%;
+
+  /* Portfolio Design System */
+  --pf-bg: 220 20% 97%;
+  --pf-surface: 0 0% 100%;
+  --pf-surface-elevated: 0 0% 100%;
+  --pf-text: 222 25% 10%;
+  --pf-text-secondary: 220 12% 46%;
+  --pf-text-muted: 220 10% 60%;
+  --pf-border: 220 16% 90%;
+  --pf-border-subtle: 220 16% 94%;
+  --pf-primary: 225 73% 57%;
+  --pf-primary-light: 225 80% 66%;
+  --pf-primary-dark: 225 73% 47%;
+  --pf-secondary: 160 60% 42%;
+  --pf-secondary-light: 160 65% 52%;
+  --pf-accent: 280 67% 55%;
+  --pf-accent-light: 280 70% 66%;
+  --pf-warm: 24 90% 58%;
+  --pf-warm-light: 24 92% 68%;
+  --pf-gradient-start: 225 73% 57%;
+  --pf-gradient-end: 280 67% 55%;
+  --pf-hero-from: 225 50% 96%;
+  --pf-hero-to: 280 40% 96%;
+  --pf-glow: 225 73% 57%;
 }
 
 /* ── Design Tokens (Dark) ── */
@@ -125,6 +149,30 @@
   --info-foreground: 0 0% 100%;
   --info-light: 210 80% 70%;
   --info-dark: 210 80% 65%;
+
+  /* Portfolio Design System (Dark) */
+  --pf-bg: 225 20% 7%;
+  --pf-surface: 225 16% 12%;
+  --pf-surface-elevated: 225 16% 15%;
+  --pf-text: 220 16% 93%;
+  --pf-text-secondary: 220 10% 60%;
+  --pf-text-muted: 220 8% 45%;
+  --pf-border: 225 14% 20%;
+  --pf-border-subtle: 225 14% 16%;
+  --pf-primary: 225 80% 66%;
+  --pf-primary-light: 225 85% 74%;
+  --pf-primary-dark: 225 73% 55%;
+  --pf-secondary: 160 60% 50%;
+  --pf-secondary-light: 160 65% 58%;
+  --pf-accent: 280 70% 66%;
+  --pf-accent-light: 280 75% 74%;
+  --pf-warm: 24 92% 62%;
+  --pf-warm-light: 24 94% 70%;
+  --pf-gradient-start: 225 80% 66%;
+  --pf-gradient-end: 280 70% 66%;
+  --pf-hero-from: 225 30% 10%;
+  --pf-hero-to: 280 20% 10%;
+  --pf-glow: 225 80% 66%;
 }
 
 /* ── Scrollbar ── */
@@ -276,6 +324,120 @@
 .stagger-children > *:nth-child(7) { animation-delay: 360ms; }
 .stagger-children > *:nth-child(8) { animation-delay: 420ms; }
 .stagger-children > *:nth-child(9) { animation-delay: 480ms; }
+
+/* ── Portfolio Specific ── */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 20px hsl(var(--pf-glow) / 0.15); }
+  50% { box-shadow: 0 0 40px hsl(var(--pf-glow) / 0.25); }
+}
+
+@keyframes morphBlob {
+  0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer components {
+  .pf-surface {
+    @apply bg-[hsl(var(--pf-surface))] text-[hsl(var(--pf-text))];
+  }
+  .pf-surface-elevated {
+    @apply bg-[hsl(var(--pf-surface-elevated))];
+  }
+  .pf-border {
+    @apply border-[hsl(var(--pf-border))];
+  }
+  .pf-border-subtle {
+    @apply border-[hsl(var(--pf-border-subtle))];
+  }
+  .pf-text {
+    @apply text-[hsl(var(--pf-text))];
+  }
+  .pf-text-secondary {
+    @apply text-[hsl(var(--pf-text-secondary))];
+  }
+  .pf-text-muted {
+    @apply text-[hsl(var(--pf-text-muted))];
+  }
+
+  .pf-gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--pf-gradient-start))] to-[hsl(var(--pf-gradient-end))];
+  }
+
+  .pf-hero-bg {
+    background: linear-gradient(135deg, hsl(var(--pf-hero-from)), hsl(var(--pf-hero-to)));
+  }
+
+  .pf-card {
+    @apply rounded-2xl pf-surface pf-border border transition-all duration-300;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  }
+  .pf-card:hover {
+    box-shadow: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+    transform: translateY(-2px);
+  }
+
+  .pf-card-highlight {
+    @apply pf-card relative overflow-hidden;
+  }
+  .pf-card-highlight::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-1;
+    background: linear-gradient(90deg, hsl(var(--pf-gradient-start)), hsl(var(--pf-gradient-end)));
+  }
+
+  .pf-badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  .pf-blob {
+    animation: morphBlob 8s ease-in-out infinite;
+    background: linear-gradient(135deg, hsl(var(--pf-primary) / 0.12), hsl(var(--pf-accent) / 0.12));
+  }
+
+  .pf-glow {
+    animation: pulseGlow 3s ease-in-out infinite;
+  }
+
+  .pf-gradient-bg {
+    background: linear-gradient(135deg, hsl(var(--pf-gradient-start)), hsl(var(--pf-gradient-end)));
+    background-size: 200% 200%;
+    animation: gradientShift 6s ease infinite;
+  }
+
+  .pf-count-up {
+    animation: countUp 0.6s ease-out forwards;
+  }
+
+  .pf-section-title {
+    @apply text-2xl sm:text-3xl font-bold pf-text tracking-tight;
+  }
+
+  .pf-section-subtitle {
+    @apply text-sm sm:text-base pf-text-secondary mt-2;
+  }
+}
+
+/* Portfolio stagger grid */
+.pf-stagger > * {
+  animation: slideUp 0.5s ease-out backwards;
+}
+.pf-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.pf-stagger > *:nth-child(2) { animation-delay: 80ms; }
+.pf-stagger > *:nth-child(3) { animation-delay: 160ms; }
+.pf-stagger > *:nth-child(4) { animation-delay: 240ms; }
+.pf-stagger > *:nth-child(5) { animation-delay: 320ms; }
+.pf-stagger > *:nth-child(6) { animation-delay: 400ms; }
 
 /* ── Selection ── */
 ::selection {

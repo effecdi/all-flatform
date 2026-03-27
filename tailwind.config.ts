@@ -83,18 +83,38 @@ const config: Config = {
           light: "hsl(var(--info-light))",
           dark: "hsl(var(--info-dark))",
         },
-        // 포트폴리오 전용 색상 추가
+        // 포트폴리오 디자인 시스템 (CSS 변수 기반 - 다크모드 자동 지원)
+        pf: {
+          bg: "hsl(var(--pf-bg))",
+          surface: "hsl(var(--pf-surface))",
+          "surface-el": "hsl(var(--pf-surface-elevated))",
+          text: "hsl(var(--pf-text))",
+          "text-2": "hsl(var(--pf-text-secondary))",
+          "text-m": "hsl(var(--pf-text-muted))",
+          border: "hsl(var(--pf-border))",
+          "border-s": "hsl(var(--pf-border-subtle))",
+          primary: "hsl(var(--pf-primary))",
+          "primary-l": "hsl(var(--pf-primary-light))",
+          "primary-d": "hsl(var(--pf-primary-dark))",
+          secondary: "hsl(var(--pf-secondary))",
+          "secondary-l": "hsl(var(--pf-secondary-light))",
+          accent: "hsl(var(--pf-accent))",
+          "accent-l": "hsl(var(--pf-accent-light))",
+          warm: "hsl(var(--pf-warm))",
+          "warm-l": "hsl(var(--pf-warm-light))",
+        },
+        // 하위 호환 (기존 코드가 portfolio.* 으로 참조하는 곳 대응)
         portfolio: {
-          background: "hsl(220 20% 98%)", // 아주 밝은 회색 배경
-          text: "hsl(220 20% 20%)",       // 어두운 회색 텍스트
-          'text-light': "hsl(220 10% 40%)", // 보조 텍스트
-          primary: "hsl(210 90% 45%)",    // 메인 강조색 (청색 계열)
-          'primary-light': "hsl(210 90% 65%)",
-          'primary-dark': "hsl(210 90% 35%)",
-          secondary: "hsl(170 60% 45%)",   // 보조 강조색 (청록색 계열)
-          accent: "hsl(30 90% 60%)",      // 포인트 색상 (주황색 계열)
-          card: "hsl(0 0% 100%)",         // 카드 배경색 (흰색)
-          border: "hsl(220 10% 90%)",     // 경계선 색상
+          background: "hsl(var(--pf-bg))",
+          text: "hsl(var(--pf-text))",
+          'text-light': "hsl(var(--pf-text-secondary))",
+          primary: "hsl(var(--pf-primary))",
+          'primary-light': "hsl(var(--pf-primary-light))",
+          'primary-dark': "hsl(var(--pf-primary-dark))",
+          secondary: "hsl(var(--pf-secondary))",
+          accent: "hsl(var(--pf-accent))",
+          card: "hsl(var(--pf-surface))",
+          border: "hsl(var(--pf-border))",
         }
       },
       borderRadius: {
@@ -105,13 +125,14 @@ const config: Config = {
         "2xl": "calc(var(--radius) + 0.5rem)",
       },
       boxShadow: {
-        /* 기존 shadow-soft보다 약간 더 강한 그림자로 변경 */
         soft: "0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)",
         "soft-hover": "0 6px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)",
         elevated: "0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.05)",
-        // 포트폴리오 카드 전용 그림자 추가
-        'card-soft': '0 4px 12px rgba(0, 0, 0, 0.05)',
-        'card-hover': '0 8px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.05)',
+        'card-soft': '0 2px 8px rgba(0, 0, 0, 0.04)',
+        'card-hover': '0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04)',
+        'pf-glow': '0 0 20px hsl(var(--pf-glow) / 0.15)',
+        'pf-card': '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)',
+        'pf-card-hover': '0 20px 60px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.06)',
       },
       fontFamily: {
         sans: ['Inter', 'Pretendard', 'sans-serif'], // 모던한 sans-serif 폰트 추가
