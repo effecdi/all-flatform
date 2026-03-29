@@ -8,6 +8,13 @@
       "when": 1774352557690,
       "tag": "0000_hard_nuke",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1774767044346,
+      "tag": "0001_complete_mister_sinister",
+      "breakpoints": true
     }
   ]
 }

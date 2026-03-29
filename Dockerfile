@@ -9,6 +9,9 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
+# 마이그레이션 스크립트도 빌드
+RUN npx esbuild server/migrate.ts --bundle --platform=node --format=cjs --outfile=dist/migrate.cjs --external:pg --external:pg-native
+
 # ---- Production Stage ----
 FROM node:20-alpine AS runner
 
@@ -21,7 +24,6 @@ RUN npm ci --omit=dev
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/migrations ./migrations
-COPY drizzle.config.ts ./
 
 EXPOSE 5000
 
