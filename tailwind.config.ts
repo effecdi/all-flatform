@@ -35,6 +35,11 @@ const config: Config = {
           light: "hsl(var(--invest-primary-light))",
           dark: "hsl(var(--invest-primary-dark))",
         },
+        "ai-primary": {
+          DEFAULT: "hsl(var(--ai-primary))",
+          light: "hsl(var(--ai-primary-light))",
+          dark: "hsl(var(--ai-primary-dark))",
+        },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -98,6 +103,7 @@ const config: Config = {
         elevated: "0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)",
         hero: "0 20px 60px rgba(0, 0, 0, 0.15), 0 6px 16px rgba(0, 0, 0, 0.08)",
         glass: "0 4px 24px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+        glow: "0 0 20px rgba(0, 0, 0, 0.1), 0 8px 32px rgba(0, 0, 0, 0.08)",
       },
       fontFamily: {
         sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],

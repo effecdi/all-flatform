@@ -6,10 +6,10 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════
-   Design Tokens (Light)
+   Design Tokens (Light) — 2026 Redesign
    ══════════════════════════════════════════ */
 :root {
-  --background: 220 20% 97%;
+  --background: 220 14% 96%;
   --foreground: 222 28% 8%;
 
   --card: 0 0% 100%;
@@ -17,21 +17,26 @@
   --popover: 0 0% 100%;
   --popover-foreground: 222 28% 8%;
 
-  /* 메인: 깊은 네이비 (정부 권위감) */
-  --primary: 222 72% 38%;
+  /* 메인: 로열 블루 */
+  --primary: 224 76% 48%;
   --primary-foreground: 0 0% 100%;
-  --primary-light: 222 58% 52%;
-  --primary-dark: 222 76% 28%;
+  --primary-light: 224 68% 58%;
+  --primary-dark: 224 80% 36%;
 
-  /* 정부사업 */
-  --gov-primary: 222 72% 38%;
-  --gov-primary-light: 222 58% 52%;
-  --gov-primary-dark: 222 76% 28%;
+  /* 정부사업 — 네이비 블루 */
+  --gov-primary: 224 76% 48%;
+  --gov-primary-light: 224 68% 58%;
+  --gov-primary-dark: 224 80% 36%;
 
-  /* 투자 */
-  --invest-primary: 164 58% 32%;
-  --invest-primary-light: 164 48% 42%;
-  --invest-primary-dark: 164 58% 24%;
+  /* 투자 — 에메랄드 그린 */
+  --invest-primary: 158 64% 36%;
+  --invest-primary-light: 158 54% 46%;
+  --invest-primary-dark: 158 64% 28%;
+
+  /* AI — 골드 앰버 */
+  --ai-primary: 36 100% 50%;
+  --ai-primary-light: 40 100% 60%;
+  --ai-primary-dark: 32 100% 42%;
 
   --secondary: 220 18% 93%;
   --secondary-foreground: 220 18% 26%;
@@ -39,15 +44,15 @@
   --muted: 220 16% 93%;
   --muted-foreground: 220 10% 42%;
 
-  --accent: 222 42% 95%;
-  --accent-foreground: 222 72% 32%;
+  --accent: 224 42% 95%;
+  --accent-foreground: 224 72% 32%;
 
   --destructive: 0 68% 48%;
   --destructive-foreground: 0 0% 100%;
 
   --border: 220 18% 88%;
   --input: 220 18% 88%;
-  --ring: 222 72% 38%;
+  --ring: 224 76% 48%;
   --radius: 0.75rem;
 
   --success: 156 56% 32%;
@@ -72,45 +77,49 @@
 }
 
 /* ══════════════════════════════════════════
-   Design Tokens (Dark)
+   Design Tokens (Dark) — Enhanced Contrast
    ══════════════════════════════════════════ */
 .dark {
-  --background: 222 22% 6%;
+  --background: 224 20% 7%;
   --foreground: 220 14% 92%;
 
-  --card: 222 20% 9%;
+  --card: 224 18% 11%;
   --card-foreground: 220 14% 92%;
-  --popover: 222 20% 10%;
+  --popover: 224 18% 12%;
   --popover-foreground: 220 14% 92%;
 
-  --primary: 222 64% 62%;
+  --primary: 224 64% 62%;
   --primary-foreground: 0 0% 100%;
-  --primary-light: 222 66% 72%;
-  --primary-dark: 222 64% 52%;
+  --primary-light: 224 66% 72%;
+  --primary-dark: 224 64% 52%;
 
-  --gov-primary: 222 64% 62%;
-  --gov-primary-light: 222 66% 72%;
-  --gov-primary-dark: 222 64% 52%;
+  --gov-primary: 224 64% 62%;
+  --gov-primary-light: 224 66% 72%;
+  --gov-primary-dark: 224 64% 52%;
 
-  --invest-primary: 164 46% 46%;
-  --invest-primary-light: 164 42% 56%;
-  --invest-primary-dark: 164 46% 38%;
+  --invest-primary: 158 50% 46%;
+  --invest-primary-light: 158 46% 56%;
+  --invest-primary-dark: 158 50% 38%;
 
-  --secondary: 222 16% 13%;
+  --ai-primary: 36 96% 54%;
+  --ai-primary-light: 40 96% 64%;
+  --ai-primary-dark: 32 96% 46%;
+
+  --secondary: 224 16% 14%;
   --secondary-foreground: 220 10% 66%;
 
-  --muted: 222 16% 13%;
-  --muted-foreground: 220 8% 50%;
+  --muted: 224 16% 14%;
+  --muted-foreground: 220 8% 58%;
 
-  --accent: 222 24% 14%;
-  --accent-foreground: 222 64% 72%;
+  --accent: 224 24% 15%;
+  --accent-foreground: 224 64% 72%;
 
   --destructive: 2 64% 46%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 222 16% 15%;
-  --input: 222 16% 13%;
-  --ring: 222 64% 62%;
+  --border: 224 16% 16%;
+  --input: 224 16% 14%;
+  --ring: 224 64% 62%;
 
   --success: 156 50% 40%;
   --success-foreground: 0 0% 100%;
@@ -148,20 +157,20 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    font-size: 16px;
-    letter-spacing: -0.014em;
-    line-height: 1.7;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply text-foreground;
-    letter-spacing: -0.035em;
-    line-height: 1.2;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
   }
 
-  h1 { @apply text-3xl sm:text-4xl lg:text-5xl font-extrabold; }
+  h1 { @apply text-4xl sm:text-5xl lg:text-6xl font-extrabold; }
   h2 { @apply text-2xl sm:text-3xl font-bold; }
   h3 { @apply text-xl font-bold; }
   h4 { @apply text-lg font-semibold; }
@@ -187,40 +196,54 @@
   /* ── 히어로 그래디언트 ── */
   .hero-gradient {
     background: linear-gradient(135deg,
-      hsl(222 72% 38%) 0%,
-      hsl(222 76% 28%) 40%,
-      hsl(222 80% 22%) 100%
+      hsl(224 76% 48%) 0%,
+      hsl(224 80% 36%) 40%,
+      hsl(224 84% 26%) 100%
     );
   }
   .dark .hero-gradient {
     background: linear-gradient(135deg,
-      hsl(222 44% 18%) 0%,
-      hsl(222 40% 12%) 40%,
-      hsl(222 36% 8%) 100%
+      hsl(224 44% 18%) 0%,
+      hsl(224 40% 12%) 40%,
+      hsl(224 36% 8%) 100%
     );
   }
 
   /* ── 글래스 카드 효과 ── */
   .glass-card {
-    @apply bg-card/80 backdrop-blur-xl border border-border/60;
+    @apply bg-card/70 backdrop-blur-xl border border-border/50 shadow-glass;
   }
   .dark .glass-card {
-    @apply bg-card/60;
+    @apply bg-card/50;
   }
 
   /* ── 카드 호버 (리프트 효과) ── */
   .card-interactive {
-    @apply transition-all duration-200 ease-out;
+    @apply transition-all duration-300 ease-out;
   }
   .card-interactive:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+    transform: translateY(-3px);
   }
   .dark .card-interactive:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.32), 0 2px 8px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.36), 0 4px 12px rgba(0, 0, 0, 0.18);
   }
 
-  /* ── 카드 상단 그래디언트 바 ── */
+  /* ── 카드 좌측 컬러 바 ── */
+  .card-left-gov {
+    @apply border-l-4 rounded-l-none;
+    border-left-color: hsl(var(--gov-primary));
+  }
+  .card-left-invest {
+    @apply border-l-4 rounded-l-none;
+    border-left-color: hsl(var(--invest-primary));
+  }
+  .card-left-ai {
+    @apply border-l-4 rounded-l-none;
+    border-left-color: hsl(var(--ai-primary));
+  }
+
+  /* ── 카드 상단 그래디언트 바 (기존 유지) ── */
   .card-accent-gov {
     border-top: 3px solid transparent;
     border-image: linear-gradient(90deg, hsl(var(--gov-primary)), hsl(var(--gov-primary-light))) 1;
@@ -233,7 +256,7 @@
 
   .card-accent-ai {
     border-top: 3px solid transparent;
-    border-image: linear-gradient(90deg, hsl(var(--warning)), hsl(var(--warning-light))) 1;
+    border-image: linear-gradient(90deg, hsl(var(--ai-primary)), hsl(var(--ai-primary-light))) 1;
   }
 
   /* ── 카드 탑바 (별도 div) ── */
@@ -271,6 +294,24 @@
   .icon-box-lg {
     @apply w-14 h-14 rounded-2xl;
   }
+
+  /* ── 섹션 넘버링 ── */
+  .section-number {
+    @apply text-xs font-bold tracking-[0.2em] uppercase text-muted-foreground/60 mb-2 block;
+  }
+
+  /* ── 필 네비 (pill nav) ── */
+  .nav-pill {
+    @apply rounded-full px-4 py-2 text-sm font-medium transition-all duration-200;
+  }
+  .nav-pill-active {
+    @apply bg-primary/10 text-primary dark:text-primary-light;
+  }
+
+  /* ── 칩 (메타정보) ── */
+  .meta-chip {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-muted/60 text-xs text-muted-foreground font-medium;
+  }
 }
 
 /* ── Animations ── */
@@ -299,6 +340,16 @@
   50% { transform: translateY(-6px); }
 }
 
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
 @layer utilities {
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out;
@@ -315,6 +366,16 @@
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, hsl(var(--primary) / 0.08), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.1s; }
+  .stagger-3 { animation-delay: 0.15s; }
+  .stagger-4 { animation-delay: 0.2s; }
+  .stagger-5 { animation-delay: 0.25s; }
 }
 
 /* ── Selection ── */
