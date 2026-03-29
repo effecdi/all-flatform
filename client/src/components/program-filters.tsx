@@ -20,7 +20,10 @@ export function ProgramFilters({ filters, onChange }: ProgramFiltersProps) {
 
   return (
     <div className="space-y-5">
-      <h4 className="text-sm font-bold text-foreground">필터</h4>
+      <h4 className="text-sm font-bold text-foreground flex items-center gap-2">
+        <div className="w-1 h-4 rounded-full bg-primary" />
+        필터
+      </h4>
 
       {/* Search */}
       <div className="relative">

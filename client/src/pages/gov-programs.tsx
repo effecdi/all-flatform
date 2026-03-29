@@ -48,7 +48,8 @@ export default function GovProgramsPage() {
               <Landmark className="w-7 h-7 text-gov-primary dark:text-gov-primary-light" />
             </div>
             <div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold">정부지원사업</h1>
+              <span className="section-number">Government Programs</span>
+              <h1>정부지원사업</h1>
               <p className="text-sm text-muted-foreground mt-1.5">
                 {data ? `총 ${data.total}개의 지원사업` : "지원사업을 검색하세요"}
               </p>

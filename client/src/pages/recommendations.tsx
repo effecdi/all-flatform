@@ -50,15 +50,15 @@ function LoadingProgress() {
 
   return (
     <div className="flex flex-col items-center py-16 gap-6">
-      <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center">
-        <Loader2 className="w-7 h-7 animate-spin text-amber-500" />
+      <div className="w-14 h-14 rounded-2xl bg-ai-primary/10 flex items-center justify-center">
+        <Loader2 className="w-7 h-7 animate-spin text-ai-primary" />
       </div>
       <div className="flex flex-col items-center gap-3 w-full max-w-xs">
         {LOADING_STEPS.map((label, i) => (
           <div key={i} className="flex items-center gap-3 w-full">
             <div
               className={`w-2 h-2 rounded-full shrink-0 transition-colors duration-300 ${
-                i < step ? "bg-success" : i === step ? "bg-amber-500 animate-pulse" : "bg-muted"
+                i < step ? "bg-success" : i === step ? "bg-ai-primary animate-pulse" : "bg-muted"
               }`}
             />
             <span
@@ -169,9 +169,9 @@ export default function RecommendationsPage() {
     return (
       <PageTransition>
         <div className="max-w-lg mx-auto px-4 sm:px-6 pt-24 pb-10">
-          <div className="text-center py-16 rounded-xl border border-dashed border-border bg-card/50">
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <AlertCircle className="w-7 h-7 text-primary" />
+          <div className="text-center py-16 rounded-2xl border-2 border-dashed border-border bg-card/30">
+            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
+              <AlertCircle className="w-8 h-8 text-primary" />
             </div>
             <p className="font-semibold text-lg">사업 프로필이 필요합니다</p>
             <p className="text-sm text-muted-foreground mt-2 mb-6">
@@ -194,11 +194,12 @@ export default function RecommendationsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
-            <div className="icon-box icon-box-lg bg-amber-500/10">
-              <Sparkles className="w-7 h-7 text-amber-500" />
+            <div className="icon-box icon-box-lg bg-ai-primary/10">
+              <Sparkles className="w-7 h-7 text-ai-primary dark:text-ai-primary-light" />
             </div>
             <div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold">AI 맞춤 추천</h1>
+              <span className="section-number">AI Recommendations</span>
+              <h1>AI 맞춤 추천</h1>
               <p className="text-sm text-muted-foreground mt-1.5">사업 프로필 기반 맞춤 추천</p>
             </div>
           </div>
@@ -231,9 +232,9 @@ export default function RecommendationsPage() {
             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
           </div>
         ) : !history || history.length === 0 ? (
-          <div className="text-center py-16 rounded-xl border border-dashed border-border bg-card/50">
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-7 h-7 text-amber-500/50" />
+          <div className="text-center py-16 rounded-2xl border-2 border-dashed border-border bg-card/30">
+            <div className="w-16 h-16 rounded-2xl bg-ai-primary/10 flex items-center justify-center mx-auto mb-5">
+              <Sparkles className="w-8 h-8 text-ai-primary/40" />
             </div>
             <p className="font-medium">아직 추천 결과가 없습니다</p>
             <p className="text-sm text-muted-foreground mt-1">"새 추천 받기" 버튼을 눌러 AI 분석을 시작하세요</p>

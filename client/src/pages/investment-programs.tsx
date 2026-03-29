@@ -35,7 +35,8 @@ export default function InvestmentProgramsPage() {
               <TrendingUp className="w-7 h-7 text-invest-primary dark:text-invest-primary-light" />
             </div>
             <div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold">투자유치 프로그램</h1>
+              <span className="section-number">Investment Programs</span>
+              <h1>투자유치 프로그램</h1>
               <p className="text-sm text-muted-foreground mt-1.5">
                 {data ? `총 ${data.total}개의 투자 프로그램` : "투자 프로그램을 검색하세요"}
               </p>

@@ -7,11 +7,19 @@ interface MatchScoreBadgeProps {
 }
 
 export function MatchScoreBadge({ score, className }: MatchScoreBadgeProps) {
-  const variant = score >= 90 ? "success" : score >= 70 ? "info" : "warning";
+  const color = score >= 90
+    ? "bg-success/15 text-success dark:text-success-light border-success/20"
+    : score >= 70
+    ? "bg-ai-primary/15 text-ai-primary dark:text-ai-primary-light border-ai-primary/20"
+    : "bg-warning/15 text-warning dark:text-warning-light border-warning/20";
 
   return (
-    <Badge variant={variant} className={cn("tabular-nums font-bold", className)}>
+    <span className={cn(
+      "inline-flex items-center px-2.5 py-1 rounded-lg border text-xs font-bold tabular-nums",
+      color,
+      className
+    )}>
       {score}%
-    </Badge>
+    </span>
   );
 }

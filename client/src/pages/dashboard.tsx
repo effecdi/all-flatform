@@ -64,17 +64,18 @@ export default function DashboardPage() {
           <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/[0.03] rounded-full translate-y-1/2 -translate-x-1/3" />
           <div className="absolute top-1/2 right-1/4 w-2 h-2 bg-white/20 rounded-full animate-float" />
           <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-white/15 rounded-full animate-float" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-1/4 right-1/5 w-1 h-1 bg-white/10 rounded-full animate-float" style={{ animationDelay: '2s' }} />
 
           <div className="relative z-10 max-w-2xl">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
               <Shield className="w-4 h-4 text-white/80" />
               <span className="text-sm font-medium text-white/80">정부지원사업 & 투자유치 통합 플랫폼</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
+            <h1 className="text-white mb-4">
               {user?.name || "사용자"}님,<br />
               환영합니다
             </h1>
-            <p className="text-lg sm:text-xl text-white/75 leading-relaxed">
+            <p className="text-lg sm:text-xl text-white/75 leading-relaxed max-w-lg">
               오늘의 지원사업과 투자유치 정보를 확인하고,
               AI 맞춤 추천으로 최적의 기회를 찾아보세요.
             </p>
@@ -84,7 +85,7 @@ export default function DashboardPage() {
         {/* ── Onboarding Prompt ── */}
         {!profileLoading && !profile && (
           <Link href="/onboarding">
-            <div className="rounded-2xl border-2 border-primary/15 bg-gradient-to-r from-primary/5 via-primary/3 to-transparent p-6 sm:p-8 mb-12 cursor-pointer hover:border-primary/30 transition-all duration-300 group">
+            <div className="glass-card rounded-2xl p-6 sm:p-8 mb-12 cursor-pointer hover:border-primary/30 transition-all duration-300 group animate-shimmer">
               <div className="flex items-center gap-5">
                 <div className="icon-box icon-box-lg bg-primary/10 shrink-0">
                   <Sparkles className="w-6 h-6 text-primary" />
@@ -101,15 +102,25 @@ export default function DashboardPage() {
           </Link>
         )}
 
-        {/* ── Stats Grid ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5 mb-12">
-          <StatCard
-            icon={<FileText className="w-5 h-5" />}
-            label="전체 사업"
-            value={stats?.totalGovernmentPrograms ?? 0}
-            color="text-gov-primary dark:text-gov-primary-light"
-            iconBg="bg-gov-primary/10"
-          />
+        {/* ── Stats Bento Grid ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 mb-12">
+          {/* Large stat - 전체사업 */}
+          <div className="col-span-2 sm:col-span-2">
+            <Card className="h-full overflow-hidden bg-gradient-to-br from-gov-primary/5 to-transparent">
+              <CardContent className="p-6 sm:p-7">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="icon-box icon-box-md bg-gov-primary/10 text-gov-primary dark:text-gov-primary-light">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <span className="text-sm font-semibold text-muted-foreground">전체 사업</span>
+                </div>
+                <p className="text-5xl sm:text-6xl font-extrabold tabular-nums tracking-tight text-gov-primary dark:text-gov-primary-light">
+                  {stats?.totalGovernmentPrograms ?? 0}
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">정부지원사업 등록 수</p>
+              </CardContent>
+            </Card>
+          </div>
           <StatCard
             icon={<BarChart3 className="w-5 h-5" />}
             label="모집중"
@@ -131,14 +142,6 @@ export default function DashboardPage() {
             color="text-error dark:text-error-light"
             iconBg="bg-error/10"
             href={stats?.upcomingDeadlines ? "/programs/government?deadline=true" : undefined}
-          />
-          <StatCard
-            icon={<Bookmark className="w-5 h-5" />}
-            label="북마크"
-            value={stats?.bookmarkCount ?? 0}
-            color="text-warning dark:text-warning-light"
-            iconBg="bg-warning/10"
-            href="/bookmarks"
           />
         </div>
 
@@ -165,8 +168,8 @@ export default function DashboardPage() {
             icon={<Zap className="w-6 h-6" />}
             label="AI 맞춤 추천"
             desc="나에게 맞는 사업"
-            iconColor="text-warning-dark dark:text-warning-light"
-            iconBg="bg-warning/10"
+            iconColor="text-ai-primary dark:text-ai-primary-light"
+            iconBg="bg-ai-primary/10"
           />
           <QuickAction
             href="/discover"
@@ -178,9 +181,9 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* ── 최신 정부지원사업 ── */}
+        {/* ── 01 최신 정부지원사업 ── */}
         <section className="mb-16">
-          <SectionHeader title="최신 정부지원사업" href="/programs/government" />
+          <SectionHeader number="01" title="최신 정부지원사업" href="/programs/government" />
           {govLoading ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
@@ -194,13 +197,13 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <EmptyState text="등록된 정부지원사업이 없습니다." />
+            <EmptyState text="등록된 정부지원사업이 없습니다." icon={<Landmark className="w-8 h-8 text-muted-foreground/30" />} />
           )}
         </section>
 
-        {/* ── 최신 투자유치 프로그램 ── */}
+        {/* ── 02 최신 투자유치 프로그램 ── */}
         <section className="mb-16">
-          <SectionHeader title="최신 투자유치 프로그램" href="/programs/investment" />
+          <SectionHeader number="02" title="최신 투자유치 프로그램" href="/programs/investment" />
           {invLoading ? (
             <div className="grid gap-5 sm:grid-cols-2">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -214,14 +217,14 @@ export default function DashboardPage() {
               ))}
             </div>
           ) : (
-            <EmptyState text="등록된 투자유치 프로그램이 없습니다." />
+            <EmptyState text="등록된 투자유치 프로그램이 없습니다." icon={<TrendingUp className="w-8 h-8 text-muted-foreground/30" />} />
           )}
         </section>
 
-        {/* ── AI 추천 ── */}
+        {/* ── 03 AI 추천 ── */}
         {latestRecs && latestRecs.length > 0 && (
           <section>
-            <SectionHeader title="AI 추천 사업" href="/recommendations" />
+            <SectionHeader number="03" title="AI 추천 사업" href="/recommendations" />
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {latestRecs.map((rec, i) => (
                 <RecommendationCard key={i} {...rec} />
@@ -236,12 +239,12 @@ export default function DashboardPage() {
 
 /* ── Sub Components ── */
 
-function SectionHeader({ title, href }: { title: string; href: string }) {
+function SectionHeader({ number, title, href }: { number: string; title: string; href: string }) {
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center justify-between mb-8">
       <div>
-        <div className="section-divider" />
-        <h2 className="text-2xl font-bold">{title}</h2>
+        <span className="section-number">{number} — {title.split(" ")[0]}</span>
+        <h2>{title}</h2>
       </div>
       <Link href={href}>
         <Button variant="ghost" size="sm" className="gap-1.5 text-sm text-muted-foreground hover:text-foreground font-medium rounded-xl">
@@ -268,7 +271,7 @@ function StatCard({
   href?: string;
 }) {
   const inner = (
-    <Card className={`${href ? "cursor-pointer card-interactive" : ""} overflow-hidden`}>
+    <Card className={`${href ? "cursor-pointer card-interactive" : ""} overflow-hidden h-full`}>
       <CardContent className="p-5 sm:p-6">
         <div className={`icon-box icon-box-sm ${iconBg} ${color} mb-4`}>
           {icon}
@@ -331,9 +334,10 @@ function SkeletonCard() {
   );
 }
 
-function EmptyState({ text }: { text: string }) {
+function EmptyState({ text, icon }: { text: string; icon?: React.ReactNode }) {
   return (
     <div className="text-center py-20 rounded-2xl border-2 border-dashed border-border bg-card/30">
+      {icon && <div className="flex justify-center mb-4">{icon}</div>}
       <p className="text-lg text-muted-foreground">{text}</p>
     </div>
   );

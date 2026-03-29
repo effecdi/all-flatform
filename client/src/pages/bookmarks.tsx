@@ -3,7 +3,9 @@ import { useBookmarks } from "@/hooks/use-bookmarks";
 import { useGovernmentProgram, useInvestmentProgram } from "@/hooks/use-programs";
 import { ProgramCard } from "@/components/program-card";
 import { InvestmentCard } from "@/components/investment-card";
-import { Loader2, Bookmark } from "lucide-react";
+import { Loader2, Bookmark, Landmark, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 function BookmarkedGovProgram({ programId }: { programId: number }) {
   const { data: program } = useGovernmentProgram(programId);
@@ -31,11 +33,12 @@ export default function BookmarksPage() {
     <PageTransition>
       <div className="page-container">
         <div className="flex items-center gap-4 mb-10">
-          <div className="icon-box icon-box-lg bg-amber-500/10">
-            <Bookmark className="w-7 h-7 text-amber-600 dark:text-amber-400" />
+          <div className="icon-box icon-box-lg bg-ai-primary/10">
+            <Bookmark className="w-7 h-7 text-ai-primary dark:text-ai-primary-light" />
           </div>
           <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold">저장한 프로그램</h1>
+            <span className="section-number">Bookmarks</span>
+            <h1>저장한 프로그램</h1>
             <p className="text-sm text-muted-foreground mt-1.5">관심 있는 프로그램을 모아보세요</p>
           </div>
         </div>
@@ -45,12 +48,26 @@ export default function BookmarksPage() {
             <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
           </div>
         ) : !bookmarks || bookmarks.length === 0 ? (
-          <div className="text-center py-16 rounded-xl border border-dashed border-border bg-card/50">
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
-              <Bookmark className="w-7 h-7 text-amber-500/50" />
+          <div className="text-center py-20 rounded-2xl border-2 border-dashed border-border bg-card/30">
+            <div className="w-16 h-16 rounded-2xl bg-ai-primary/10 flex items-center justify-center mx-auto mb-5">
+              <Bookmark className="w-8 h-8 text-ai-primary/40" />
             </div>
-            <p className="font-medium">저장한 프로그램이 없습니다</p>
-            <p className="text-sm text-muted-foreground mt-1">관심 있는 프로그램에 북마크를 추가해보세요</p>
+            <p className="font-bold text-lg">저장한 프로그램이 없습니다</p>
+            <p className="text-sm text-muted-foreground mt-2 mb-6">관심 있는 프로그램에 북마크를 추가해보세요</p>
+            <div className="flex justify-center gap-3">
+              <Link href="/programs/government">
+                <Button variant="outline" size="sm" className="rounded-xl gap-1.5">
+                  <Landmark className="w-4 h-4" />
+                  정부지원사업 탐색
+                </Button>
+              </Link>
+              <Link href="/programs/investment">
+                <Button variant="outline" size="sm" className="rounded-xl gap-1.5">
+                  <TrendingUp className="w-4 h-4" />
+                  투자유치 탐색
+                </Button>
+              </Link>
+            </div>
           </div>
         ) : (
           <div className="space-y-10">

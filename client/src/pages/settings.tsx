@@ -86,7 +86,8 @@ export default function SettingsPage() {
             <Settings className="w-7 h-7 text-muted-foreground" />
           </div>
           <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold">설정</h1>
+            <span className="section-number">Settings</span>
+            <h1>설정</h1>
             <p className="text-sm text-muted-foreground mt-1.5">계정 및 환경 설정</p>
           </div>
         </div>

@@ -37,7 +37,7 @@ function ProjectCard({ project }: { project: DiscoverProject }) {
   const isGov = project.type === "government";
 
   return (
-    <Card className={cn("group card-interactive", isGov ? "card-accent-gov" : "card-accent-invest")}>
+    <Card className={cn("group card-interactive", isGov ? "card-left-gov" : "card-left-invest")}>
       <CardContent className="p-5">
         <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex flex-wrap items-center gap-1.5">
@@ -235,7 +235,8 @@ export default function DiscoverPage() {
             <Compass className="w-7 h-7 text-info dark:text-info-light" />
           </div>
           <div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold">사업 검색</h1>
+            <span className="section-number">Discover</span>
+            <h1>사업 검색</h1>
             <p className="text-sm text-muted-foreground mt-1.5">
               정부지원사업, 투자유치, 관련 웹 정보를 한 번에 검색하세요
             </p>
@@ -243,13 +244,13 @@ export default function DiscoverPage() {
         </div>
 
         {/* Search */}
-        <form onSubmit={handleSubmit} className="flex gap-2 max-w-xl mb-8">
+        <form onSubmit={handleSubmit} className="flex gap-3 max-w-2xl mb-8">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="원하는 사업이나 정보를 검색해보세요" className="h-10 pl-9 rounded-lg text-sm" disabled={programsLoading} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="원하는 사업이나 정보를 검색해보세요" className="h-12 pl-12 rounded-2xl text-base" disabled={programsLoading} />
           </div>
-          <Button type="submit" disabled={programsLoading || !query.trim()} className="gap-1.5 h-10">
-            {programsLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+          <Button type="submit" disabled={programsLoading || !query.trim()} className="gap-2 h-12 px-6 rounded-2xl text-base">
+            {programsLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Search className="w-5 h-5" />}
             검색
           </Button>
         </form>
@@ -257,11 +258,11 @@ export default function DiscoverPage() {
         {/* Initial State */}
         {!hasSearched && !programsLoading && (
           <div className="py-12">
-            <p className="text-sm text-muted-foreground mb-3">추천 검색어로 시작해보세요</p>
-            <div className="flex flex-wrap gap-2">
+            <p className="text-sm text-muted-foreground mb-4">추천 검색어로 시작해보세요</p>
+            <div className="flex flex-wrap gap-2.5">
               {["청년 창업 지원", "소상공인 디지털 전환", "AI 스타트업 투자", "기술 사업화"].map(
                 (suggestion) => (
-                  <button key={suggestion} type="button" onClick={() => handleSearch(suggestion)} className="px-3 py-1.5 text-xs rounded-md border border-border bg-card hover:bg-accent transition-colors text-muted-foreground">
+                  <button key={suggestion} type="button" onClick={() => handleSearch(suggestion)} className="meta-chip hover:bg-accent cursor-pointer transition-colors">
                     {suggestion}
                   </button>
                 )

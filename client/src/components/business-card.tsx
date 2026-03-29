@@ -4,7 +4,7 @@ import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { BookmarkButton } from "./bookmark-button";
 import { DeadlineBadge } from "./deadline-badge";
-import { Building2, MapPin, Banknote, TrendingUp } from "lucide-react";
+import { Building2, MapPin, Banknote, TrendingUp, ArrowRight } from "lucide-react";
 
 interface BusinessCardProps {
   type: "government" | "investment";
@@ -41,7 +41,7 @@ export function BusinessCard({
     <Link href={`/programs/${type}/${id}`}>
       <Card className={cn(
         "group cursor-pointer card-interactive h-full overflow-hidden",
-        isGov ? "card-accent-gov" : "card-accent-invest"
+        isGov ? "card-left-gov" : "card-left-invest"
       )}>
         <CardContent className="p-5 sm:p-6">
           {/* Badges */}
@@ -68,29 +68,40 @@ export function BusinessCard({
             {title}
           </h3>
 
-          {/* Meta */}
-          <div className="space-y-2 text-sm text-muted-foreground">
+          {/* Meta - chip style */}
+          <div className="flex flex-wrap gap-2 mb-4">
             {organization && (
-              <div className="flex items-center gap-2.5">
-                <Building2 className="w-4 h-4 shrink-0 opacity-40" />
-                <span className="truncate">{organization}</span>
-              </div>
+              <span className="meta-chip">
+                <Building2 className="w-3.5 h-3.5 opacity-50" />
+                <span className="truncate max-w-[140px]">{organization}</span>
+              </span>
             )}
             {region && (
-              <div className="flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 shrink-0 opacity-40" />
-                <span>{region}</span>
-              </div>
+              <span className="meta-chip">
+                <MapPin className="w-3.5 h-3.5 opacity-50" />
+                {region}
+              </span>
             )}
             {amount && (
-              <div className="flex items-center gap-2.5">
+              <span className="meta-chip">
                 {isGov
-                  ? <Banknote className="w-4 h-4 shrink-0 opacity-40" />
-                  : <TrendingUp className="w-4 h-4 shrink-0 opacity-40" />
+                  ? <Banknote className="w-3.5 h-3.5 opacity-50" />
+                  : <TrendingUp className="w-3.5 h-3.5 opacity-50" />
                 }
-                <span className="truncate">{amount}</span>
-              </div>
+                <span className="truncate max-w-[120px]">{amount}</span>
+              </span>
             )}
+          </div>
+
+          {/* Hover CTA */}
+          <div className={cn(
+            "flex items-center gap-1.5 text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-1 group-hover:translate-y-0",
+            isGov
+              ? "text-gov-primary dark:text-gov-primary-light"
+              : "text-invest-primary dark:text-invest-primary-light"
+          )}>
+            자세히 보기
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </div>
         </CardContent>
       </Card>
