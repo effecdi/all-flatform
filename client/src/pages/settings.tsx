@@ -80,14 +80,14 @@ export default function SettingsPage() {
 
   return (
     <PageTransition>
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 pt-20 pb-12">
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center">
-            <Settings className="w-5 h-5 text-muted-foreground" />
+      <div className="max-w-2xl mx-auto px-5 sm:px-8 pt-24 pb-16">
+        <div className="flex items-center gap-4 mb-10">
+          <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center">
+            <Settings className="w-6 h-6 text-muted-foreground" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold">설정</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">계정 및 환경 설정</p>
+            <h1 className="text-2xl sm:text-3xl font-extrabold">설정</h1>
+            <p className="text-sm text-muted-foreground mt-1">계정 및 환경 설정</p>
           </div>
         </div>
 

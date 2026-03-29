@@ -43,9 +43,9 @@ export function BusinessCard({
         "group cursor-pointer card-interactive h-full",
         isGov ? "card-accent-gov" : "card-accent-invest"
       )}>
-        <CardContent className="p-4">
+        <CardContent className="p-5">
           {/* Badges */}
-          <div className="flex items-start justify-between gap-2 mb-2">
+          <div className="flex items-start justify-between gap-2 mb-3">
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge variant={STATUS_VARIANT[status] ?? "secondary"}>{status}</Badge>
               {typeLabel && (
@@ -60,7 +60,7 @@ export function BusinessCard({
 
           {/* Title */}
           <h3 className={cn(
-            "font-medium text-sm leading-snug mb-2.5 line-clamp-2 transition-colors",
+            "font-semibold text-base leading-snug mb-3 line-clamp-2 transition-colors",
             isGov
               ? "group-hover:text-gov-primary dark:group-hover:text-gov-primary-light"
               : "group-hover:text-invest-primary dark:group-hover:text-invest-primary-light"
@@ -69,24 +69,24 @@ export function BusinessCard({
           </h3>
 
           {/* Meta */}
-          <div className="space-y-1 text-xs text-muted-foreground">
+          <div className="space-y-1.5 text-sm text-muted-foreground">
             {organization && (
-              <div className="flex items-center gap-1.5">
-                <Building2 className="w-3 h-3 shrink-0 opacity-50" />
+              <div className="flex items-center gap-2">
+                <Building2 className="w-3.5 h-3.5 shrink-0 opacity-50" />
                 <span className="truncate">{organization}</span>
               </div>
             )}
             {region && (
-              <div className="flex items-center gap-1.5">
-                <MapPin className="w-3 h-3 shrink-0 opacity-50" />
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 shrink-0 opacity-50" />
                 <span>{region}</span>
               </div>
             )}
             {amount && (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 {isGov
-                  ? <Banknote className="w-3 h-3 shrink-0 opacity-50" />
-                  : <TrendingUp className="w-3 h-3 shrink-0 opacity-50" />
+                  ? <Banknote className="w-3.5 h-3.5 shrink-0 opacity-50" />
+                  : <TrendingUp className="w-3.5 h-3.5 shrink-0 opacity-50" />
                 }
                 <span className="truncate">{amount}</span>
               </div>

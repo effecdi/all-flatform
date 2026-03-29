@@ -9,128 +9,128 @@
    Design Tokens (Light)
    ══════════════════════════════════════════ */
 :root {
-  --background: 220 14% 96%;
-  --foreground: 222 20% 12%;
+  --background: 222 20% 96%;
+  --foreground: 222 24% 9%;
 
   --card: 0 0% 100%;
-  --card-foreground: 222 20% 12%;
+  --card-foreground: 222 24% 9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 222 20% 12%;
+  --popover-foreground: 222 24% 9%;
 
-  /* 메인 컬러: 차분한 인디고 */
-  --primary: 226 62% 48%;
+  /* 메인 컬러: 깊은 네이비 블루 (정부 권위감) */
+  --primary: 224 72% 42%;
   --primary-foreground: 0 0% 100%;
-  --primary-light: 226 58% 58%;
-  --primary-dark: 226 62% 40%;
+  --primary-light: 224 62% 54%;
+  --primary-dark: 224 76% 32%;
 
-  /* 정부사업: 인디고 톤 */
-  --gov-primary: 226 62% 48%;
-  --gov-primary-light: 226 58% 58%;
-  --gov-primary-dark: 226 62% 40%;
+  /* 정부사업: 네이비 블루 */
+  --gov-primary: 224 72% 42%;
+  --gov-primary-light: 224 62% 54%;
+  --gov-primary-dark: 224 76% 32%;
 
-  /* 투자: 틸 계열 */
-  --invest-primary: 168 48% 38%;
-  --invest-primary-light: 168 42% 48%;
-  --invest-primary-dark: 168 48% 30%;
+  /* 투자: 깊은 틸 */
+  --invest-primary: 168 55% 34%;
+  --invest-primary-light: 168 45% 44%;
+  --invest-primary-dark: 168 55% 26%;
 
-  --secondary: 220 12% 93%;
-  --secondary-foreground: 220 14% 30%;
+  --secondary: 222 16% 93%;
+  --secondary-foreground: 222 18% 28%;
 
-  --muted: 220 12% 93%;
-  --muted-foreground: 220 8% 46%;
+  --muted: 222 14% 93%;
+  --muted-foreground: 222 10% 44%;
 
-  --accent: 226 40% 95%;
-  --accent-foreground: 226 62% 40%;
+  --accent: 224 44% 95%;
+  --accent-foreground: 224 72% 36%;
 
   --destructive: 0 65% 50%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 220 12% 90%;
-  --input: 220 12% 90%;
-  --ring: 226 62% 48%;
-  --radius: 0.5rem;
+  --border: 222 16% 89%;
+  --input: 222 16% 89%;
+  --ring: 224 72% 42%;
+  --radius: 0.625rem;
 
-  --success: 152 50% 36%;
+  --success: 158 52% 34%;
   --success-foreground: 0 0% 100%;
-  --success-light: 152 42% 46%;
-  --success-dark: 152 50% 28%;
+  --success-light: 158 44% 44%;
+  --success-dark: 158 52% 26%;
 
-  --warning: 38 80% 50%;
-  --warning-foreground: 38 80% 14%;
-  --warning-light: 42 82% 58%;
-  --warning-dark: 32 84% 44%;
+  --warning: 36 84% 48%;
+  --warning-foreground: 36 84% 12%;
+  --warning-light: 40 86% 56%;
+  --warning-dark: 30 88% 40%;
 
-  --error: 0 65% 52%;
+  --error: 4 68% 50%;
   --error-foreground: 0 0% 100%;
-  --error-light: 0 72% 66%;
-  --error-dark: 0 65% 42%;
+  --error-light: 4 72% 62%;
+  --error-dark: 4 68% 40%;
 
-  --info: 210 60% 50%;
+  --info: 212 64% 48%;
   --info-foreground: 0 0% 100%;
-  --info-light: 210 58% 60%;
-  --info-dark: 210 60% 40%;
+  --info-light: 212 58% 58%;
+  --info-dark: 212 64% 38%;
 }
 
 /* ══════════════════════════════════════════
    Design Tokens (Dark)
    ══════════════════════════════════════════ */
 .dark {
-  --background: 224 14% 7%;
-  --foreground: 220 10% 90%;
+  --background: 224 18% 7%;
+  --foreground: 220 12% 92%;
 
-  --card: 224 12% 10%;
-  --card-foreground: 220 10% 90%;
-  --popover: 224 12% 11%;
-  --popover-foreground: 220 10% 90%;
+  --card: 224 16% 10%;
+  --card-foreground: 220 12% 92%;
+  --popover: 224 16% 11%;
+  --popover-foreground: 220 12% 92%;
 
-  --primary: 226 60% 62%;
+  --primary: 224 62% 64%;
   --primary-foreground: 0 0% 100%;
-  --primary-light: 226 62% 70%;
-  --primary-dark: 226 60% 52%;
+  --primary-light: 224 64% 72%;
+  --primary-dark: 224 62% 54%;
 
-  --gov-primary: 226 60% 62%;
-  --gov-primary-light: 226 62% 70%;
-  --gov-primary-dark: 226 60% 52%;
+  --gov-primary: 224 62% 64%;
+  --gov-primary-light: 224 64% 72%;
+  --gov-primary-dark: 224 62% 54%;
 
-  --invest-primary: 168 42% 48%;
-  --invest-primary-light: 168 38% 56%;
-  --invest-primary-dark: 168 42% 40%;
+  --invest-primary: 168 44% 48%;
+  --invest-primary-light: 168 40% 56%;
+  --invest-primary-dark: 168 44% 40%;
 
-  --secondary: 224 10% 14%;
-  --secondary-foreground: 220 8% 66%;
+  --secondary: 224 14% 14%;
+  --secondary-foreground: 220 10% 66%;
 
-  --muted: 224 10% 14%;
-  --muted-foreground: 220 6% 48%;
+  --muted: 224 14% 14%;
+  --muted-foreground: 220 8% 50%;
 
-  --accent: 226 18% 16%;
-  --accent-foreground: 226 60% 70%;
+  --accent: 224 22% 16%;
+  --accent-foreground: 224 62% 72%;
 
-  --destructive: 0 60% 48%;
+  --destructive: 4 62% 48%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 224 10% 16%;
-  --input: 224 10% 14%;
-  --ring: 226 60% 62%;
+  --border: 224 14% 16%;
+  --input: 224 14% 14%;
+  --ring: 224 62% 64%;
 
-  --success: 152 48% 40%;
+  --success: 158 48% 42%;
   --success-foreground: 0 0% 100%;
-  --success-light: 152 42% 50%;
-  --success-dark: 152 48% 52%;
+  --success-light: 158 42% 52%;
+  --success-dark: 158 48% 54%;
 
-  --warning: 38 80% 50%;
-  --warning-foreground: 38 80% 14%;
-  --warning-light: 42 82% 58%;
-  --warning-dark: 38 80% 58%;
+  --warning: 36 82% 52%;
+  --warning-foreground: 36 84% 12%;
+  --warning-light: 40 84% 60%;
+  --warning-dark: 36 82% 60%;
 
-  --error: 0 62% 54%;
+  --error: 4 64% 56%;
   --error-foreground: 0 0% 100%;
-  --error-light: 0 68% 66%;
-  --error-dark: 0 62% 62%;
+  --error-light: 4 70% 68%;
+  --error-dark: 4 64% 64%;
 
-  --info: 210 58% 58%;
+  --info: 212 60% 60%;
   --info-foreground: 0 0% 100%;
-  --info-light: 210 56% 66%;
-  --info-dark: 210 58% 62%;
+  --info-light: 212 58% 68%;
+  --info-dark: 212 60% 64%;
 }
 
 /* ── Scrollbar ── */
@@ -148,23 +148,23 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    font-size: 15px;
-    letter-spacing: -0.01em;
-    line-height: 1.65;
+    font-size: 16px;
+    letter-spacing: -0.012em;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply text-foreground;
-    letter-spacing: -0.025em;
-    line-height: 1.3;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
   }
 
-  h1 { @apply text-2xl sm:text-3xl font-bold; }
-  h2 { @apply text-xl sm:text-2xl font-semibold; }
+  h1 { @apply text-2xl sm:text-3xl lg:text-4xl font-extrabold; }
+  h2 { @apply text-xl sm:text-2xl font-bold; }
   h3 { @apply text-lg font-semibold; }
-  h4 { @apply text-base font-medium; }
+  h4 { @apply text-base font-semibold; }
 }
 
 /* ══════════════════════════════════════════
@@ -172,32 +172,67 @@
    ══════════════════════════════════════════ */
 @layer components {
   .page-container {
-    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12;
+    @apply max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 pt-24 pb-16;
   }
 
-  /* 카드 호버 효과 - 심플하게 */
+  /* 히어로 그래디언트 */
+  .hero-gradient {
+    background: linear-gradient(135deg,
+      hsl(var(--primary)) 0%,
+      hsl(var(--primary-dark)) 50%,
+      hsl(224 76% 28%) 100%
+    );
+  }
+  .dark .hero-gradient {
+    background: linear-gradient(135deg,
+      hsl(224 40% 18%) 0%,
+      hsl(224 36% 14%) 50%,
+      hsl(224 30% 10%) 100%
+    );
+  }
+
+  /* 카드 호버 효과 */
   .card-interactive {
-    @apply transition-all duration-150 ease-out;
+    @apply transition-all duration-200 ease-out;
   }
   .card-interactive:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
     border-color: hsl(var(--border));
+    transform: translateY(-1px);
   }
   .dark .card-interactive:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28), 0 1px 4px rgba(0, 0, 0, 0.12);
   }
 
-  /* 카드 상단 컬러 인디케이터 - 얇은 라인 */
+  /* 카드 상단 컬러 바 (상단 3px 라인) */
   .card-accent-gov {
-    border-left: 3px solid hsl(var(--gov-primary));
+    border-top: 3px solid hsl(var(--gov-primary));
+    border-left: none;
   }
 
   .card-accent-invest {
-    border-left: 3px solid hsl(var(--invest-primary));
+    border-top: 3px solid hsl(var(--invest-primary));
+    border-left: none;
   }
 
   .card-accent-ai {
-    border-left: 3px solid hsl(var(--warning));
+    border-top: 3px solid hsl(var(--warning));
+    border-left: none;
+  }
+
+  /* 카드 상단 컬러바 (별도 div) */
+  .card-top-bar-gov {
+    @apply h-1 rounded-t-xl;
+    background: hsl(var(--gov-primary));
+  }
+  .card-top-bar-invest {
+    @apply h-1 rounded-t-xl;
+    background: hsl(var(--invest-primary));
+  }
+
+  /* 섹션 디바이더 */
+  .section-divider {
+    @apply w-12 h-1 rounded-full bg-primary/20 mb-4;
   }
 }
 

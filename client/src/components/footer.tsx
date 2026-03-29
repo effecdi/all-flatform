@@ -3,26 +3,26 @@ import { Layers } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-card/40 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+    <footer className="border-t border-border/50 bg-card/60 mt-auto">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-gov-primary to-invest-primary flex items-center justify-center shadow-sm">
-                <Layers className="w-4 h-4 text-white" />
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-xl hero-gradient flex items-center justify-center shadow-sm">
+                <Layers className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-foreground">All-Flatform</span>
+              <span className="font-extrabold text-lg text-foreground tracking-tight">All-Flatform</span>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed max-w-[240px]">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-[280px]">
               정부지원사업과 투자유치 정보를 한 곳에서 탐색하고, AI 맞춤 추천으로 최적의 기회를 찾아보세요.
             </p>
           </div>
 
           {/* Quick links */}
           <div>
-            <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">서비스</h4>
-            <nav className="flex flex-col gap-2 text-sm text-muted-foreground">
+            <h4 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4">서비스</h4>
+            <nav className="flex flex-col gap-2.5 text-sm text-muted-foreground">
               <Link href="/programs/government" className="hover:text-foreground transition-colors w-fit">
                 정부지원사업
               </Link>
@@ -40,8 +40,8 @@ export function Footer() {
 
           {/* Support */}
           <div>
-            <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">지원</h4>
-            <nav className="flex flex-col gap-2 text-sm text-muted-foreground">
+            <h4 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4">지원</h4>
+            <nav className="flex flex-col gap-2.5 text-sm text-muted-foreground">
               <Link href="/settings" className="hover:text-foreground transition-colors w-fit">
                 설정
               </Link>
@@ -55,9 +55,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-5 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+        <div className="mt-10 pt-6 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} All-Flatform. All rights reserved.</p>
-          <p>정부지원사업 & 투자유치 통합 탐색 플랫폼</p>
+          <p className="font-medium">정부지원사업 & 투자유치 통합 탐색 플랫폼</p>
         </div>
       </div>
     </footer>

@@ -38,8 +38,8 @@ function ProjectCard({ project }: { project: DiscoverProject }) {
 
   return (
     <Card className={cn("group card-interactive", isGov ? "card-accent-gov" : "card-accent-invest")}>
-      <CardContent className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-2">
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between gap-2 mb-3">
           <div className="flex flex-wrap items-center gap-1.5">
             <Badge variant={STATUS_VARIANT[project.status] ?? "secondary"}>
               {project.status}
@@ -60,32 +60,32 @@ function ProjectCard({ project }: { project: DiscoverProject }) {
         </div>
 
         <h3 className={cn(
-          "font-medium text-sm leading-snug mb-2 line-clamp-2 transition-colors",
+          "font-semibold text-base leading-snug mb-2.5 line-clamp-2 transition-colors",
           isGov
             ? "group-hover:text-gov-primary dark:group-hover:text-gov-primary-light"
             : "group-hover:text-invest-primary dark:group-hover:text-invest-primary-light"
         )}>{project.title}</h3>
 
         {project.description && (
-          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{project.description}</p>
+          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{project.description}</p>
         )}
 
-        <div className="space-y-1 text-xs text-muted-foreground mb-3">
+        <div className="space-y-1.5 text-sm text-muted-foreground mb-3">
           {project.organization && (
-            <div className="flex items-center gap-1.5">
-              <Building2 className="w-3 h-3 shrink-0 opacity-50" />
+            <div className="flex items-center gap-2">
+              <Building2 className="w-3.5 h-3.5 shrink-0 opacity-50" />
               <span className="truncate">{project.organization}</span>
             </div>
           )}
           {project.region && (
-            <div className="flex items-center gap-1.5">
-              <MapPin className="w-3 h-3 shrink-0 opacity-50" />
+            <div className="flex items-center gap-2">
+              <MapPin className="w-3.5 h-3.5 shrink-0 opacity-50" />
               <span>{project.region}</span>
             </div>
           )}
           {project.supportAmount && (
-            <div className="flex items-center gap-1.5">
-              <Banknote className="w-3 h-3 shrink-0 opacity-50" />
+            <div className="flex items-center gap-2">
+              <Banknote className="w-3.5 h-3.5 shrink-0 opacity-50" />
               <span className="truncate">{project.supportAmount}</span>
             </div>
           )}
@@ -230,11 +230,16 @@ export default function DiscoverPage() {
     <PageTransition>
       <div className="page-container">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-xl font-bold mb-1">사업 검색</h1>
-          <p className="text-sm text-muted-foreground">
-            정부지원사업, 투자유치, 관련 웹 정보를 한 번에 검색하세요
-          </p>
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-12 h-12 rounded-xl bg-info/10 flex items-center justify-center">
+            <Compass className="w-6 h-6 text-info dark:text-info-light" />
+          </div>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold">사업 검색</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              정부지원사업, 투자유치, 관련 웹 정보를 한 번에 검색하세요
+            </p>
+          </div>
         </div>
 
         {/* Search */}

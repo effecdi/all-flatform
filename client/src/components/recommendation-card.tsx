@@ -44,7 +44,7 @@ export function RecommendationCard({
 
   return (
     <Card className="group h-full card-accent-ai">
-      <CardContent className="p-4 flex flex-col gap-2.5">
+      <CardContent className="p-5 flex flex-col gap-3">
         {/* Header */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -63,13 +63,13 @@ export function RecommendationCard({
 
         {/* Title */}
         <Link href={`/programs/${programType}/${programId}`}>
-          <h3 className="font-medium text-sm leading-snug hover:text-primary transition-colors line-clamp-2 cursor-pointer">
+          <h3 className="font-semibold text-base leading-snug hover:text-primary transition-colors line-clamp-2 cursor-pointer">
             {title}
           </h3>
         </Link>
 
         {/* Reasoning */}
-        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
+        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
           {reasoning}
         </p>
 
