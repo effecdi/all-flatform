@@ -50,12 +50,12 @@ function GovProgramDetail({ id }: { id: number }) {
             <Badge variant="gov">{SUPPORT_TYPE_LABELS[program.supportType] || program.supportType}</Badge>
             <DeadlineBadge endDate={program.endDate} />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold leading-snug">{program.title}</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-snug">{program.title}</h1>
         </div>
         <BookmarkButton programType="government" programId={id} className="shrink-0" />
       </div>
 
-      <div className="grid gap-3 text-sm">
+      <div className="grid gap-3 text-base">
         {program.organization && (
           <div className="flex items-center gap-2.5 text-muted-foreground">
             <div className="w-7 h-7 rounded-lg bg-gov-primary/10 flex items-center justify-center shrink-0"><Building2 className="w-3.5 h-3.5 text-gov-primary" /></div>
@@ -123,12 +123,12 @@ function InvProgramDetail({ id }: { id: number }) {
             <Badge variant="invest">{INVESTOR_TYPE_LABELS[program.investorType] || program.investorType}</Badge>
             <DeadlineBadge endDate={program.endDate} />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold leading-snug">{program.title}</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold leading-snug">{program.title}</h1>
         </div>
         <BookmarkButton programType="investment" programId={id} className="shrink-0" />
       </div>
 
-      <div className="grid gap-3 text-sm text-muted-foreground">
+      <div className="grid gap-3 text-base text-muted-foreground">
         {program.organization && (
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg bg-invest-primary/10 flex items-center justify-center shrink-0"><Building2 className="w-3.5 h-3.5 text-invest-primary" /></div>
@@ -199,17 +199,17 @@ export default function ProgramDetailPage() {
 
   return (
     <PageTransition>
-      <div className="max-w-3xl mx-auto px-5 sm:px-8 pt-24 pb-16">
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 pt-28 pb-20">
         <Link href={isGov ? "/programs/government" : "/programs/investment"}>
-          <Button variant="ghost" size="sm" className="gap-1.5 mb-8 text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" size="sm" className="gap-2 mb-8 text-muted-foreground hover:text-foreground rounded-xl">
             <ArrowLeft className="w-4 h-4" />
             목록으로
           </Button>
         </Link>
 
-        <Card className="overflow-hidden shadow-elevated">
+        <Card className="overflow-hidden shadow-hero rounded-2xl">
           <div className={isGov ? "card-top-bar-gov" : "card-top-bar-invest"} />
-          <CardContent className="p-6 sm:p-10">
+          <CardContent className="p-7 sm:p-12">
             {isGov ? <GovProgramDetail id={id} /> : <InvProgramDetail id={id} />}
           </CardContent>
         </Card>

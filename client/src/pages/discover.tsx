@@ -230,13 +230,13 @@ export default function DiscoverPage() {
     <PageTransition>
       <div className="page-container">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <div className="w-12 h-12 rounded-xl bg-info/10 flex items-center justify-center">
-            <Compass className="w-6 h-6 text-info dark:text-info-light" />
+        <div className="flex items-center gap-4 mb-10">
+          <div className="icon-box icon-box-lg bg-info/10">
+            <Compass className="w-7 h-7 text-info dark:text-info-light" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold">사업 검색</h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h1 className="text-3xl sm:text-4xl font-extrabold">사업 검색</h1>
+            <p className="text-sm text-muted-foreground mt-1.5">
               정부지원사업, 투자유치, 관련 웹 정보를 한 번에 검색하세요
             </p>
           </div>

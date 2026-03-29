@@ -31,27 +31,27 @@ export default function InvestmentProgramsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-invest-primary/10 flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-invest-primary dark:text-invest-primary-light" />
+            <div className="icon-box icon-box-lg bg-invest-primary/10">
+              <TrendingUp className="w-7 h-7 text-invest-primary dark:text-invest-primary-light" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold">투자유치 프로그램</h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <h1 className="text-3xl sm:text-4xl font-extrabold">투자유치 프로그램</h1>
+              <p className="text-sm text-muted-foreground mt-1.5">
                 {data ? `총 ${data.total}개의 투자 프로그램` : "투자 프로그램을 검색하세요"}
               </p>
             </div>
           </div>
-          <Button variant="outline" size="sm" className="md:hidden gap-1.5" onClick={() => setShowFilters(!showFilters)}>
+          <Button variant="outline" size="sm" className="md:hidden gap-1.5 rounded-xl" onClick={() => setShowFilters(!showFilters)}>
             {showFilters ? <X className="w-4 h-4" /> : <SlidersHorizontal className="w-4 h-4" />}
             필터
           </Button>
         </div>
 
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar filters - matching gov-programs layout */}
-          <div className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-64 shrink-0`}>
-            <Card className="sticky top-20">
-              <CardContent className="p-4">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Sidebar filters */}
+          <div className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-72 shrink-0`}>
+            <Card className="sticky top-24">
+              <CardContent className="p-5">
                 <InvestmentFilters filters={filters} onChange={(f) => { setFilters(f); setPage(1); }} />
               </CardContent>
             </Card>
@@ -60,25 +60,25 @@ export default function InvestmentProgramsPage() {
           {/* Results */}
           <div className="flex-1 min-w-0">
             {isLoading ? (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <Card key={i}>
-                    <div className="h-2 bg-muted rounded-t-xl" />
-                    <CardContent className="p-5 pt-4">
-                      <div className="flex gap-1.5 mb-3">
-                        <Skeleton className="w-14 h-5 rounded-full" />
-                        <Skeleton className="w-10 h-5 rounded-full" />
+                    <div className="h-1.5 bg-muted rounded-t-xl" />
+                    <CardContent className="p-6">
+                      <div className="flex gap-2 mb-4">
+                        <Skeleton className="w-16 h-6 rounded-full" />
+                        <Skeleton className="w-12 h-6 rounded-full" />
                       </div>
-                      <Skeleton className="w-full h-4 mb-2" />
-                      <Skeleton className="w-3/4 h-4 mb-4" />
-                      <Skeleton className="w-1/2 h-3.5" />
+                      <Skeleton className="w-full h-5 mb-2.5" />
+                      <Skeleton className="w-3/4 h-5 mb-5" />
+                      <Skeleton className="w-1/2 h-4" />
                     </CardContent>
                   </Card>
                 ))}
               </div>
             ) : data && data.data.length > 0 ? (
               <>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {data.data.map((p) => (
                     <InvestmentCard
                       key={p.id}
@@ -95,23 +95,23 @@ export default function InvestmentProgramsPage() {
                 </div>
 
                 {data.totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-3 mt-8">
-                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
+                  <div className="flex items-center justify-center gap-4 mt-10">
+                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(p => p - 1)} className="rounded-xl px-5">
                       이전
                     </Button>
-                    <span className="text-sm text-muted-foreground px-2 tabular-nums">
+                    <span className="text-sm text-muted-foreground px-3 tabular-nums font-medium">
                       {page} / {data.totalPages}
                     </span>
-                    <Button variant="outline" size="sm" disabled={page >= data.totalPages} onClick={() => setPage(p => p + 1)}>
+                    <Button variant="outline" size="sm" disabled={page >= data.totalPages} onClick={() => setPage(p => p + 1)} className="rounded-xl px-5">
                       다음
                     </Button>
                   </div>
                 )}
               </>
             ) : (
-              <div className="text-center py-20 rounded-xl border border-dashed border-border bg-card/50">
-                <p className="text-muted-foreground">검색 결과가 없습니다.</p>
-                <p className="text-sm text-muted-foreground mt-1">필터를 변경하거나 검색어를 수정해보세요.</p>
+              <div className="text-center py-24 rounded-2xl border-2 border-dashed border-border bg-card/30">
+                <p className="text-lg text-muted-foreground">검색 결과가 없습니다.</p>
+                <p className="text-sm text-muted-foreground mt-2">필터를 변경하거나 검색어를 수정해보세요.</p>
               </div>
             )}
           </div>

@@ -43,8 +43,8 @@ export function RecommendationCard({
   const isGov = programType === "government";
 
   return (
-    <Card className="group h-full card-accent-ai">
-      <CardContent className="p-5 flex flex-col gap-3">
+    <Card className="group h-full card-accent-ai overflow-hidden">
+      <CardContent className="p-5 sm:p-6 flex flex-col gap-3.5">
         {/* Header */}
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -63,7 +63,7 @@ export function RecommendationCard({
 
         {/* Title */}
         <Link href={`/programs/${programType}/${programId}`}>
-          <h3 className="font-semibold text-base leading-snug hover:text-primary transition-colors line-clamp-2 cursor-pointer">
+          <h3 className="font-bold text-base sm:text-lg leading-snug hover:text-primary transition-colors line-clamp-2 cursor-pointer">
             {title}
           </h3>
         </Link>
@@ -75,9 +75,9 @@ export function RecommendationCard({
 
         {/* Difficulty */}
         {difficulty && (
-          <div className="flex items-center gap-1.5 text-xs">
+          <div className="flex items-center gap-2 text-sm">
             <span className="text-muted-foreground">신청 난이도:</span>
-            <span className={`font-medium ${difficultyConfig[difficulty].className}`}>
+            <span className={`font-semibold ${difficultyConfig[difficulty].className}`}>
               {difficultyConfig[difficulty].label}
             </span>
           </div>
@@ -85,8 +85,8 @@ export function RecommendationCard({
 
         {/* Benefits */}
         {benefits && (
-          <div className="flex items-start gap-2 text-xs bg-success/5 rounded-md px-3 py-2">
-            <Gift className="w-3 h-3 text-success mt-0.5 shrink-0" />
+          <div className="flex items-start gap-2.5 text-sm bg-success/5 rounded-xl px-4 py-3">
+            <Gift className="w-4 h-4 text-success mt-0.5 shrink-0" />
             <span className="text-foreground/80 leading-relaxed">{benefits}</span>
           </div>
         )}
@@ -96,13 +96,13 @@ export function RecommendationCard({
           <div>
             <button
               onClick={() => setTipsOpen(!tipsOpen)}
-              className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors w-full"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
             >
-              {tipsOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              {tipsOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
               <span>준비사항 {tipsOpen ? "접기" : "보기"}</span>
             </button>
             {tipsOpen && (
-              <div className="mt-1.5 text-xs text-muted-foreground bg-muted/50 rounded-md px-3 py-2 leading-relaxed animate-slide-down">
+              <div className="mt-2 text-sm text-muted-foreground bg-muted/50 rounded-xl px-4 py-3 leading-relaxed animate-slide-down">
                 {preparationTips}
               </div>
             )}
@@ -118,8 +118,8 @@ export function RecommendationCard({
             className="mt-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <Button variant="outline" size="sm" className="w-full gap-1.5 text-xs">
-              <ExternalLink className="w-3 h-3" />
+            <Button variant="outline" size="sm" className="w-full gap-2 rounded-xl">
+              <ExternalLink className="w-3.5 h-3.5" />
               신청하기
             </Button>
           </a>

@@ -90,22 +90,22 @@ function SummaryStats({ recommendations }: { recommendations: RecommendationItem
   if (!stats) return null;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-      <div className="bg-card rounded-xl border border-border/60 p-4 text-center">
-        <div className="text-3xl font-extrabold text-primary">{stats.avgScore}</div>
-        <div className="text-xs text-muted-foreground mt-1 font-medium">평균 매칭 점수</div>
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5 mb-8">
+      <div className="bg-card rounded-2xl border border-border/60 p-5 text-center shadow-soft">
+        <div className="text-4xl font-extrabold text-primary tracking-tight">{stats.avgScore}</div>
+        <div className="text-sm text-muted-foreground mt-1.5 font-medium">평균 매칭 점수</div>
       </div>
-      <div className="bg-card rounded-xl border border-border/60 p-4 text-center">
-        <div className="text-3xl font-extrabold text-gov-primary">{stats.govCount}</div>
-        <div className="text-xs text-muted-foreground mt-1 font-medium">정부지원사업</div>
+      <div className="bg-card rounded-2xl border border-border/60 p-5 text-center shadow-soft">
+        <div className="text-4xl font-extrabold text-gov-primary tracking-tight">{stats.govCount}</div>
+        <div className="text-sm text-muted-foreground mt-1.5 font-medium">정부지원사업</div>
       </div>
-      <div className="bg-card rounded-xl border border-border/60 p-4 text-center">
-        <div className="text-3xl font-extrabold text-invest-primary">{stats.invCount}</div>
-        <div className="text-xs text-muted-foreground mt-1 font-medium">투자유치</div>
+      <div className="bg-card rounded-2xl border border-border/60 p-5 text-center shadow-soft">
+        <div className="text-4xl font-extrabold text-invest-primary tracking-tight">{stats.invCount}</div>
+        <div className="text-sm text-muted-foreground mt-1.5 font-medium">투자유치</div>
       </div>
-      <div className="bg-card rounded-xl border border-border/60 p-4 text-center">
-        <div className="text-3xl font-extrabold text-error">{stats.urgentCount}</div>
-        <div className="text-xs text-muted-foreground mt-1 font-medium">긴급 마감</div>
+      <div className="bg-card rounded-2xl border border-border/60 p-5 text-center shadow-soft">
+        <div className="text-4xl font-extrabold text-error tracking-tight">{stats.urgentCount}</div>
+        <div className="text-sm text-muted-foreground mt-1.5 font-medium">긴급 마감</div>
       </div>
     </div>
   );
@@ -194,12 +194,12 @@ export default function RecommendationsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-amber-500" />
+            <div className="icon-box icon-box-lg bg-amber-500/10">
+              <Sparkles className="w-7 h-7 text-amber-500" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold">AI 맞춤 추천</h1>
-              <p className="text-sm text-muted-foreground mt-1">사업 프로필 기반 맞춤 추천</p>
+              <h1 className="text-3xl sm:text-4xl font-extrabold">AI 맞춤 추천</h1>
+              <p className="text-sm text-muted-foreground mt-1.5">사업 프로필 기반 맞춤 추천</p>
             </div>
           </div>
           <Button
