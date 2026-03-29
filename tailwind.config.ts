@@ -26,9 +26,9 @@ const config: Config = {
           dark: "hsl(var(--primary-dark))",
         },
         "gov-primary": {
-          DEFAULT: "hsl(var(--gov-primary))",
-          light: "hsl(var(--gov-primary-light))",
-          dark: "hsl(var(--gov-primary-dark))",
+          DEFAULT: "hsl(210 80% 40%)", // 기존보다 차분하고 세련된 파란색
+          light: "hsl(210 80% 55%)",
+          dark: "hsl(210 80% 30%)",
         },
         "invest-primary": {
           DEFAULT: "hsl(var(--invest-primary))",
@@ -93,9 +93,9 @@ const config: Config = {
           "text-m": "hsl(var(--pf-text-muted))",
           border: "hsl(var(--pf-border))",
           "border-s": "hsl(var(--pf-border-subtle))",
-          primary: "hsl(var(--pf-primary))",
-          "primary-l": "hsl(var(--pf-primary-light))",
-          "primary-d": "hsl(var(--pf-primary-dark))",
+          primary: "hsl(210 80% 40%)", // gov-primary와 유사하게 조정하여 일관성 유지
+          "primary-l": "hsl(210 80% 55%)",
+          "primary-d": "hsl(210 80% 30%)",
           secondary: "hsl(var(--pf-secondary))",
           "secondary-l": "hsl(var(--pf-secondary-light))",
           accent: "hsl(var(--pf-accent))",
@@ -108,9 +108,9 @@ const config: Config = {
           background: "hsl(var(--pf-bg))",
           text: "hsl(var(--pf-text))",
           'text-light': "hsl(var(--pf-text-secondary))",
-          primary: "hsl(var(--pf-primary))",
-          'primary-light': "hsl(var(--pf-primary-light))",
-          'primary-dark': "hsl(var(--pf-primary-dark))",
+          primary: "hsl(210 80% 40%)",
+          'primary-light': "hsl(210 80% 55%)",
+          'primary-dark': "hsl(210 80% 30%)",
           secondary: "hsl(var(--pf-secondary))",
           accent: "hsl(var(--pf-accent))",
           card: "hsl(var(--pf-surface))",
@@ -118,24 +118,24 @@ const config: Config = {
         }
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-        xl: "calc(var(--radius) + 0.25rem)",
-        "2xl": "calc(var(--radius) + 0.5rem)",
+        lg: "0.5rem", // 기존 'var(--radius)'에서 고정값으로 변경하거나 'calc(var(--radius) - 2px)' 등 조정
+        md: "calc(0.5rem - 2px)",
+        sm: "calc(0.5rem - 4px)",
+        xl: "calc(0.5rem + 0.25rem)",
+        "2xl": "calc(0.5rem + 0.5rem)",
       },
       boxShadow: {
         soft: "0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)",
         "soft-hover": "0 6px 20px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04)",
         elevated: "0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.05)",
-        'card-soft': '0 2px 8px rgba(0, 0, 0, 0.04)',
-        'card-hover': '0 12px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04)',
+        'card-soft': '0 1px 4px rgba(0, 0, 0, 0.06)', // 더욱 부드러운 그림자
+        'card-hover': '0 8px 24px rgba(0, 0, 0, 0.1), 0 3px 8px rgba(0, 0, 0, 0.05)', // hover 시 더 깊이감 있는 그림자
         'pf-glow': '0 0 20px hsl(var(--pf-glow) / 0.15)',
         'pf-card': '0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)',
         'pf-card-hover': '0 20px 60px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.06)',
       },
       fontFamily: {
-        sans: ['Inter', 'Pretendard', 'sans-serif'], // 모던한 sans-serif 폰트 추가
+        sans: ['Pretendard', 'Inter', 'sans-serif'], // Pretendard를 우선순위로 변경하여 한국어 가독성 강화
         serif: ['serif'],
         mono: ['monospace'],
       },
