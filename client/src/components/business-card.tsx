@@ -39,15 +39,17 @@ export function BusinessCard({
 
   return (
     <Link href={`/programs/${type}/${id}`}>
-      <Card className="group cursor-pointer card-interactive h-full overflow-hidden border-border/60">
-        <div className={isGov ? "card-top-bar-gov" : "card-top-bar-invest"} />
-        <CardContent className="p-5 pt-4">
+      <Card className={cn(
+        "group cursor-pointer card-interactive h-full",
+        isGov ? "card-accent-gov" : "card-accent-invest"
+      )}>
+        <CardContent className="p-4">
           {/* Badges */}
-          <div className="flex items-start justify-between gap-2 mb-3">
+          <div className="flex items-start justify-between gap-2 mb-2">
             <div className="flex flex-wrap items-center gap-1.5">
               <Badge variant={STATUS_VARIANT[status] ?? "secondary"}>{status}</Badge>
               {typeLabel && (
-                <Badge variant="outline" className="text-muted-foreground border-border/60">
+                <Badge variant="outline" className="text-muted-foreground">
                   {typeLabel}
                 </Badge>
               )}
@@ -58,7 +60,7 @@ export function BusinessCard({
 
           {/* Title */}
           <h3 className={cn(
-            "font-semibold text-base leading-snug mb-3 line-clamp-2 transition-colors duration-200",
+            "font-medium text-sm leading-snug mb-2.5 line-clamp-2 transition-colors",
             isGov
               ? "group-hover:text-gov-primary dark:group-hover:text-gov-primary-light"
               : "group-hover:text-invest-primary dark:group-hover:text-invest-primary-light"
@@ -67,24 +69,24 @@ export function BusinessCard({
           </h3>
 
           {/* Meta */}
-          <div className="space-y-1.5 text-[13px] text-muted-foreground">
+          <div className="space-y-1 text-xs text-muted-foreground">
             {organization && (
-              <div className="flex items-center gap-2">
-                <Building2 className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary/50" : "text-invest-primary/50")} />
+              <div className="flex items-center gap-1.5">
+                <Building2 className="w-3 h-3 shrink-0 opacity-50" />
                 <span className="truncate">{organization}</span>
               </div>
             )}
             {region && (
-              <div className="flex items-center gap-2">
-                <MapPin className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary/50" : "text-invest-primary/50")} />
+              <div className="flex items-center gap-1.5">
+                <MapPin className="w-3 h-3 shrink-0 opacity-50" />
                 <span>{region}</span>
               </div>
             )}
             {amount && (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 {isGov
-                  ? <Banknote className="w-3.5 h-3.5 shrink-0 text-gov-primary/50" />
-                  : <TrendingUp className="w-3.5 h-3.5 shrink-0 text-invest-primary/50" />
+                  ? <Banknote className="w-3 h-3 shrink-0 opacity-50" />
+                  : <TrendingUp className="w-3 h-3 shrink-0 opacity-50" />
                 }
                 <span className="truncate">{amount}</span>
               </div>

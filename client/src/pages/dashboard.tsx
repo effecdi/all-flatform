@@ -54,11 +54,11 @@ export default function DashboardPage() {
     <PageTransition>
       <div className="page-container">
         {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1">
+        <div className="mb-8">
+          <h1 className="text-xl font-bold mb-1">
             {user?.name || "사용자"}님, 환영합니다
           </h1>
-          <p className="text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             오늘의 지원사업과 투자유치 정보를 확인하세요
           </p>
         </div>
@@ -66,12 +66,12 @@ export default function DashboardPage() {
         {/* Onboarding prompt */}
         {!profileLoading && !profile && (
           <Link href="/onboarding">
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 mb-10 cursor-pointer hover:border-primary/40 transition-colors">
+            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 mb-8 cursor-pointer hover:border-primary/40 transition-colors">
               <div className="flex items-center gap-3">
-                <Sparkles className="w-5 h-5 text-primary shrink-0" />
+                <Sparkles className="w-4 h-4 text-primary shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold">사업 프로필을 작성하세요</p>
-                  <p className="text-sm text-muted-foreground mt-0.5">
+                  <p className="text-sm font-medium">사업 프로필을 작성하세요</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     프로필을 작성하면 AI가 맞춤형 지원사업을 추천해드립니다
                   </p>
                 </div>
@@ -82,7 +82,7 @@ export default function DashboardPage() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
           <StatCard
             label="전체 사업"
             value={stats?.totalGovernmentPrograms ?? 0}
@@ -113,44 +113,44 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick actions */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
           <QuickAction
             href="/programs/government"
-            icon={<Landmark className="w-4.5 h-4.5" />}
+            icon={<Landmark className="w-4 h-4" />}
             label="정부지원사업"
             desc="지원사업 목록 보기"
           />
           <QuickAction
             href="/programs/investment"
-            icon={<TrendingUp className="w-4.5 h-4.5" />}
+            icon={<TrendingUp className="w-4 h-4" />}
             label="투자유치"
             desc="투자 프로그램 보기"
           />
           <QuickAction
             href="/recommendations"
-            icon={<Sparkles className="w-4.5 h-4.5" />}
+            icon={<Sparkles className="w-4 h-4" />}
             label="AI 맞춤 추천"
             desc="나에게 맞는 사업 찾기"
           />
           <QuickAction
             href="/discover"
-            icon={<Search className="w-4.5 h-4.5" />}
+            icon={<Search className="w-4 h-4" />}
             label="사업 검색"
             desc="통합 검색으로 찾기"
           />
         </div>
 
         {/* 최신 정부지원사업 */}
-        <section className="mb-12">
+        <section className="mb-10">
           <SectionHeader title="최신 정부지원사업" href="/programs/government" />
           {govLoading ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 stagger-children">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
             </div>
           ) : govPrograms && govPrograms.data.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 stagger-children">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {govPrograms.data.map((p) => (
                 <ProgramCard key={p.id} {...p} />
               ))}
@@ -161,16 +161,16 @@ export default function DashboardPage() {
         </section>
 
         {/* 최신 투자유치 프로그램 */}
-        <section className="mb-12">
+        <section className="mb-10">
           <SectionHeader title="최신 투자유치 프로그램" href="/programs/investment" />
           {invLoading ? (
-            <div className="grid gap-4 sm:grid-cols-2 stagger-children">
+            <div className="grid gap-3 sm:grid-cols-2">
               {Array.from({ length: 4 }).map((_, i) => (
                 <SkeletonCard key={i} />
               ))}
             </div>
           ) : invPrograms && invPrograms.data.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 stagger-children">
+            <div className="grid gap-3 sm:grid-cols-2">
               {invPrograms.data.map((p) => (
                 <InvestmentCard key={p.id} {...p} />
               ))}
@@ -184,7 +184,7 @@ export default function DashboardPage() {
         {latestRecs && latestRecs.length > 0 && (
           <section>
             <SectionHeader title="AI 추천 사업" href="/recommendations" />
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 stagger-children">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {latestRecs.map((rec, i) => (
                 <RecommendationCard key={i} {...rec} />
               ))}
@@ -200,11 +200,11 @@ export default function DashboardPage() {
 
 function SectionHeader({ title, href }: { title: string; href: string }) {
   return (
-    <div className="flex items-center justify-between mb-5">
-      <h2 className="text-lg font-semibold">{title}</h2>
+    <div className="flex items-center justify-between mb-4">
+      <h2 className="text-base font-semibold">{title}</h2>
       <Link href={href}>
-        <Button variant="ghost" size="sm" className="gap-1 text-sm text-muted-foreground hover:text-foreground">
-          전체보기 <ArrowRight className="w-3.5 h-3.5" />
+        <Button variant="ghost" size="sm" className="gap-1 text-xs text-muted-foreground hover:text-foreground">
+          전체보기 <ArrowRight className="w-3 h-3" />
         </Button>
       </Link>
     </div>
@@ -223,10 +223,10 @@ function StatCard({
   href?: string;
 }) {
   const inner = (
-    <Card className={`${href ? "cursor-pointer card-interactive" : ""} border-border/60`}>
-      <CardContent className="p-4">
-        <p className={`text-2xl font-bold tabular-nums tracking-tight ${color}`}>{value}</p>
-        <p className="text-sm text-muted-foreground mt-1">{label}</p>
+    <Card className={`${href ? "cursor-pointer card-interactive" : ""}`}>
+      <CardContent className="p-3.5">
+        <p className={`text-lg font-bold tabular-nums ${color}`}>{value}</p>
+        <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
       </CardContent>
     </Card>
   );
@@ -250,11 +250,11 @@ function QuickAction({
 }) {
   return (
     <Link href={href}>
-      <Card className="cursor-pointer card-interactive h-full border-border/60">
-        <CardContent className="p-4">
-          <div className="text-muted-foreground mb-2.5">{icon}</div>
-          <h3 className="font-semibold text-[15px]">{label}</h3>
-          <p className="text-sm text-muted-foreground mt-0.5">{desc}</p>
+      <Card className="cursor-pointer card-interactive h-full">
+        <CardContent className="p-3.5">
+          <div className="text-muted-foreground mb-2">{icon}</div>
+          <p className="font-medium text-sm">{label}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
         </CardContent>
       </Card>
     </Link>
@@ -263,16 +263,15 @@ function QuickAction({
 
 function SkeletonCard() {
   return (
-    <Card className="border-border/60">
-      <div className="h-[2px] bg-muted rounded-t-xl" />
-      <CardContent className="p-5 pt-4">
+    <Card>
+      <CardContent className="p-4">
         <div className="flex gap-1.5 mb-3">
-          <Skeleton className="w-14 h-5 rounded-full" />
-          <Skeleton className="w-10 h-5 rounded-full" />
+          <Skeleton className="w-14 h-5 rounded" />
+          <Skeleton className="w-10 h-5 rounded" />
         </div>
-        <Skeleton className="w-full h-5 mb-2" />
-        <Skeleton className="w-3/4 h-5 mb-4" />
-        <Skeleton className="w-1/2 h-4" />
+        <Skeleton className="w-full h-4 mb-2" />
+        <Skeleton className="w-3/4 h-4 mb-3" />
+        <Skeleton className="w-1/2 h-3.5" />
       </CardContent>
     </Card>
   );
@@ -280,8 +279,8 @@ function SkeletonCard() {
 
 function EmptyState({ text }: { text: string }) {
   return (
-    <div className="text-center py-16 rounded-xl border border-dashed border-border/60 bg-card/30">
-      <p className="text-muted-foreground">{text}</p>
+    <div className="text-center py-12 rounded-lg border border-dashed border-border bg-card/30">
+      <p className="text-sm text-muted-foreground">{text}</p>
     </div>
   );
 }

@@ -43,21 +43,21 @@ export function Navbar() {
   };
 
   return (
-    <nav ref={menuRef} className="fixed top-0 left-0 right-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border/60 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav ref={menuRef} className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gov-primary to-invest-primary flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-              <Layers className="w-4.5 h-4.5 text-white" />
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
+              <Layers className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-bold text-lg text-foreground tracking-tight hidden sm:block">
+            <span className="font-bold text-sm text-foreground hidden sm:block">
               All-Flatform
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden lg:flex items-center bg-secondary/60 rounded-xl p-1 border border-border/30">
+          <div className="hidden lg:flex items-center gap-1">
             {NAV_ITEMS.map((item) => {
               const active =
                 location === item.href ||
@@ -67,10 +67,10 @@ export function Navbar() {
                 <Link key={item.href} href={item.href}>
                   <div
                     className={cn(
-                      "relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all duration-200",
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors",
                       active
-                        ? "bg-card text-foreground font-medium shadow-soft"
-                        : "text-muted-foreground hover:text-foreground hover:bg-card/50"
+                        ? "bg-accent text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     )}
                   >
                     <Icon className="w-3.5 h-3.5" />
@@ -86,7 +86,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="w-9 h-9 rounded-xl text-muted-foreground hover:text-foreground"
+              className="w-8 h-8 rounded-md text-muted-foreground hover:text-foreground"
               onClick={toggle}
               title={theme === "dark" ? "라이트 모드" : "다크 모드"}
             >
@@ -97,7 +97,7 @@ export function Navbar() {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "w-9 h-9 rounded-xl hidden lg:inline-flex",
+                  "w-8 h-8 rounded-md hidden lg:inline-flex",
                   location === "/settings"
                     ? "text-primary bg-primary/10"
                     : "text-muted-foreground hover:text-foreground"
@@ -110,7 +110,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="w-9 h-9 rounded-xl hidden lg:inline-flex text-muted-foreground hover:text-red-500 dark:hover:text-red-400"
+                className="w-8 h-8 rounded-md hidden lg:inline-flex text-muted-foreground hover:text-red-500 dark:hover:text-red-400"
                 onClick={handleLogout}
                 title="로그아웃"
               >
@@ -120,10 +120,10 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden w-9 h-9 rounded-xl"
+              className="lg:hidden w-8 h-8 rounded-md"
               onClick={() => setMobileOpen(!mobileOpen)}
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </Button>
           </div>
         </div>
@@ -132,11 +132,11 @@ export function Navbar() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "lg:hidden overflow-hidden transition-all duration-300 ease-in-out",
-          mobileOpen ? "max-h-[420px] opacity-100" : "max-h-0 opacity-0"
+          "lg:hidden overflow-hidden transition-all duration-200",
+          mobileOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <div className="bg-card/95 backdrop-blur-xl border-t border-border/50 px-4 py-3 space-y-1">
+        <div className="bg-card border-t border-border px-4 py-2 space-y-0.5">
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
             const active = location === item.href || (item.href !== "/" && location.startsWith(item.href));
@@ -144,9 +144,9 @@ export function Navbar() {
               <Link key={item.href} href={item.href}>
                 <div
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all",
+                    "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors",
                     active
-                      ? "bg-primary/10 text-foreground font-medium"
+                      ? "bg-accent text-foreground font-medium"
                       : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
                   )}
                 >
@@ -159,9 +159,9 @@ export function Navbar() {
           <Link href="/settings">
             <div
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-all",
+                "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-colors",
                 location === "/settings"
-                  ? "bg-primary/10 text-foreground font-medium"
+                  ? "bg-accent text-foreground font-medium"
                   : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
               )}
             >
@@ -172,7 +172,7 @@ export function Navbar() {
           {user && (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-all w-full text-left"
+              className="flex items-center gap-2.5 px-3 py-2 rounded-md text-sm text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-colors w-full text-left"
             >
               <LogOut className="w-4 h-4" />
               로그아웃

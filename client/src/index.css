@@ -48,7 +48,7 @@
   --border: 220 12% 90%;
   --input: 220 12% 90%;
   --ring: 226 62% 48%;
-  --radius: 0.625rem;
+  --radius: 0.5rem;
 
   --success: 152 50% 36%;
   --success-foreground: 0 0% 100%;
@@ -146,10 +146,11 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased text-[15px];
+    @apply bg-background text-foreground antialiased;
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 14px;
     letter-spacing: -0.01em;
-    line-height: 1.65;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -157,13 +158,13 @@
   h1, h2, h3, h4, h5, h6 {
     @apply text-foreground;
     letter-spacing: -0.02em;
-    line-height: 1.35;
+    line-height: 1.3;
   }
 
-  h1 { @apply text-2xl sm:text-3xl font-bold; }
-  h2 { @apply text-xl sm:text-2xl font-semibold; }
-  h3 { @apply text-lg font-medium; }
-  h4 { @apply text-base font-medium; }
+  h1 { @apply text-xl sm:text-2xl font-bold; }
+  h2 { @apply text-lg sm:text-xl font-semibold; }
+  h3 { @apply text-base font-medium; }
+  h4 { @apply text-sm font-medium; }
 }
 
 /* ══════════════════════════════════════════
@@ -174,40 +175,29 @@
     @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12;
   }
 
-  .glass {
-    @apply bg-card/80 backdrop-blur-xl border border-border/50;
-  }
-
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light;
-  }
-
-  /* 카드 호버 효과 */
+  /* 카드 호버 효과 - 심플하게 */
   .card-interactive {
-    @apply transition-all duration-200 ease-out;
+    @apply transition-all duration-150 ease-out;
   }
   .card-interactive:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
-    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-color: hsl(var(--border));
   }
   .dark .card-interactive:hover {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
-  /* 카드 상단 악센트 바 */
-  .card-top-bar-gov {
-    @apply h-[2px] w-full;
-    background: linear-gradient(90deg, hsl(var(--gov-primary)), hsl(var(--gov-primary-light)));
+  /* 카드 상단 컬러 인디케이터 - 얇은 라인 */
+  .card-accent-gov {
+    border-left: 3px solid hsl(var(--gov-primary));
   }
 
-  .card-top-bar-invest {
-    @apply h-[2px] w-full;
-    background: linear-gradient(90deg, hsl(var(--invest-primary)), hsl(var(--invest-primary-light)));
+  .card-accent-invest {
+    border-left: 3px solid hsl(var(--invest-primary));
   }
 
-  .card-top-bar-ai {
-    @apply h-[2px] w-full;
-    background: linear-gradient(90deg, hsl(var(--warning)), hsl(var(--warning-light)));
+  .card-accent-ai {
+    border-left: 3px solid hsl(var(--warning));
   }
 }
 
@@ -246,17 +236,6 @@
     animation: scaleIn 0.2s ease-out;
   }
 }
-
-/* ── Stagger animations for grids ── */
-.stagger-children > * {
-  animation: slideUp 0.3s ease-out backwards;
-}
-.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-children > *:nth-child(2) { animation-delay: 40ms; }
-.stagger-children > *:nth-child(3) { animation-delay: 80ms; }
-.stagger-children > *:nth-child(4) { animation-delay: 120ms; }
-.stagger-children > *:nth-child(5) { animation-delay: 160ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 200ms; }
 
 /* ── Selection ── */
 ::selection {
