@@ -39,8 +39,8 @@ function ProjectCard({ project }: { project: DiscoverProject }) {
   return (
     <Card className="group card-interactive overflow-hidden">
       <div className={isGov ? "card-top-bar-gov" : "card-top-bar-invest"} />
-      <CardContent className="p-4 pt-3">
-        <div className="flex items-start justify-between gap-2 mb-2">
+      <CardContent className="p-5 pt-4">
+        <div className="flex items-start justify-between gap-2 mb-2.5">
           <div className="flex flex-wrap items-center gap-1.5">
             <Badge variant={STATUS_VARIANT[project.status] ?? "secondary"}>
               {project.status}
@@ -61,32 +61,32 @@ function ProjectCard({ project }: { project: DiscoverProject }) {
         </div>
 
         <h3 className={cn(
-          "font-semibold text-sm leading-snug mb-2 line-clamp-2 transition-colors",
+          "font-semibold text-base leading-snug mb-2 line-clamp-2 transition-colors",
           isGov
             ? "group-hover:text-gov-primary dark:group-hover:text-gov-primary-light"
             : "group-hover:text-invest-primary dark:group-hover:text-invest-primary-light"
         )}>{project.title}</h3>
 
         {project.description && (
-          <p className="text-xs text-muted-foreground mb-2 line-clamp-2">{project.description}</p>
+          <p className="text-[13px] text-muted-foreground mb-2.5 line-clamp-2">{project.description}</p>
         )}
 
-        <div className="space-y-1.5 text-xs text-muted-foreground mb-3">
+        <div className="space-y-1.5 text-[13px] text-muted-foreground mb-3">
           {project.organization && (
             <div className="flex items-center gap-2">
-              <Building2 className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary" : "text-invest-primary")} />
+              <Building2 className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary/50" : "text-invest-primary/50")} />
               <span className="truncate">{project.organization}</span>
             </div>
           )}
           {project.region && (
             <div className="flex items-center gap-2">
-              <MapPin className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary" : "text-invest-primary")} />
+              <MapPin className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary/50" : "text-invest-primary/50")} />
               <span>{project.region}</span>
             </div>
           )}
           {project.supportAmount && (
             <div className="flex items-center gap-2">
-              <Banknote className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary" : "text-invest-primary")} />
+              <Banknote className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary/50" : "text-invest-primary/50")} />
               <span className="truncate">{project.supportAmount}</span>
             </div>
           )}
@@ -94,13 +94,13 @@ function ProjectCard({ project }: { project: DiscoverProject }) {
 
         <div className="flex items-center gap-2 pt-3 border-t border-border">
           {externalUrl && (
-            <a href={externalUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary-dark transition-colors">
-              <ExternalLink className="w-3 h-3" />
+            <a href={externalUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary-dark transition-colors">
+              <ExternalLink className="w-3.5 h-3.5" />
               바로가기
             </a>
           )}
           <Link href={detailHref}>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-muted-foreground hover:bg-accent transition-colors cursor-pointer">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg border border-border text-muted-foreground hover:bg-accent transition-colors cursor-pointer">
               상세 보기
             </span>
           </Link>
@@ -116,16 +116,14 @@ function WebResultCard({ result }: { result: WebSearchResult }) {
       <Card className="card-interactive">
         <CardContent className="p-4">
           <div className="flex items-start gap-2.5 mb-1">
-            <div className="w-6 h-6 rounded-md bg-muted flex items-center justify-center shrink-0 mt-0.5">
-              <Globe className="w-3.5 h-3.5 text-muted-foreground" />
-            </div>
+            <Globe className="w-4 h-4 text-muted-foreground shrink-0 mt-1" />
             <div className="min-w-0 flex-1">
-              <h3 className="font-medium text-sm text-primary hover:underline line-clamp-1">{result.title}</h3>
-              <p className="text-xs text-emerald-600 dark:text-emerald-400 truncate mt-0.5">{result.url}</p>
+              <h3 className="font-medium text-[15px] text-primary hover:underline line-clamp-1">{result.title}</h3>
+              <p className="text-[13px] text-emerald-600 dark:text-emerald-400 truncate mt-0.5">{result.url}</p>
             </div>
             <ExternalLink className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
           </div>
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-2 pl-8">{result.snippet}</p>
+          <p className="text-[13px] text-muted-foreground mt-2 line-clamp-2 pl-6">{result.snippet}</p>
         </CardContent>
       </Card>
     </a>
@@ -137,19 +135,14 @@ function ResultSection({ title, icon: Icon, children, isEmpty, emptyMessage, isL
 }) {
   return (
     <div>
-      <div className="flex items-center gap-2.5 mb-4">
-        <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-          <Icon className="w-4 h-4 text-primary" />
-        </div>
-        <h2 className="text-lg font-bold text-foreground">{title}</h2>
-      </div>
+      <h2 className="text-lg font-semibold text-foreground mb-4">{title}</h2>
       {isLoading ? (
         <div className="flex items-center justify-center py-10 rounded-xl border border-dashed border-border bg-card/50">
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground mr-2" />
-          <span className="text-sm text-muted-foreground">검색 중...</span>
+          <span className="text-muted-foreground">검색 중...</span>
         </div>
       ) : isEmpty ? (
-        <div className="text-center py-10 rounded-xl border border-dashed border-border bg-card/50 text-muted-foreground text-sm">
+        <div className="text-center py-10 rounded-xl border border-dashed border-border bg-card/50 text-muted-foreground">
           {emptyMessage}
         </div>
       ) : (
@@ -238,21 +231,18 @@ export default function DiscoverPage() {
     <PageTransition>
       <div className="page-container">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <Compass className="w-6 h-6 text-primary" />
-          </div>
-          <h1 className="text-2xl font-bold mb-1">맞춤 사업 추천 및 정보 안내</h1>
-          <p className="text-sm text-muted-foreground">
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1">사업 검색</h1>
+          <p className="text-muted-foreground">
             정부지원사업, 투자유치, 관련 웹 정보를 한 번에 검색하세요
           </p>
         </div>
 
         {/* Search */}
-        <form onSubmit={handleSubmit} className="flex gap-2 max-w-2xl mx-auto mb-8">
+        <form onSubmit={handleSubmit} className="flex gap-2 max-w-2xl mb-10">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="원하는 사업이나 정보를 검색해보세요" className="h-11 pl-10 rounded-xl" disabled={programsLoading} />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground" />
+            <Input type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="원하는 사업이나 정보를 검색해보세요" className="h-11 pl-10 rounded-xl text-[15px]" disabled={programsLoading} />
           </div>
           <Button type="submit" disabled={programsLoading || !query.trim()} size="lg" className="gap-2">
             {programsLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
@@ -262,12 +252,12 @@ export default function DiscoverPage() {
 
         {/* Initial State */}
         {!hasSearched && !programsLoading && (
-          <div className="text-center py-16">
-            <p className="text-muted-foreground">검색어를 입력하여 맞춤 정보를 찾아보세요</p>
-            <div className="flex flex-wrap justify-center gap-2 mt-4">
+          <div className="py-16">
+            <p className="text-muted-foreground mb-4">추천 검색어로 시작해보세요</p>
+            <div className="flex flex-wrap gap-2">
               {["청년 창업 지원", "소상공인 디지털 전환", "AI 스타트업 투자", "기술 사업화"].map(
                 (suggestion) => (
-                  <button key={suggestion} type="button" onClick={() => handleSearch(suggestion)} className="px-3.5 py-1.5 text-xs rounded-full border border-border bg-card hover:bg-accent hover:text-accent-foreground transition-all text-muted-foreground hover:border-primary/30">
+                  <button key={suggestion} type="button" onClick={() => handleSearch(suggestion)} className="px-4 py-2 text-sm rounded-full border border-border bg-card hover:bg-accent hover:text-accent-foreground transition-all text-muted-foreground hover:border-primary/30">
                     {suggestion}
                   </button>
                 )
@@ -278,7 +268,7 @@ export default function DiscoverPage() {
 
         {/* Error */}
         {error && (
-          <div className="max-w-2xl mx-auto mb-6 px-4 py-3 rounded-xl bg-red-500/5 border border-red-500/15 text-red-700 dark:text-red-300 text-sm">
+          <div className="max-w-2xl mb-6 px-4 py-3 rounded-xl bg-red-500/5 border border-red-500/15 text-red-700 dark:text-red-300">
             {error}
           </div>
         )}
@@ -287,16 +277,13 @@ export default function DiscoverPage() {
         {programsLoading && !hasPrograms && (
           <div className="flex flex-col items-center justify-center py-16">
             <Loader2 className="w-8 h-8 animate-spin text-primary mb-3" />
-            <p className="text-sm text-muted-foreground">"{searchedQuery}" 검색 중...</p>
+            <p className="text-muted-foreground">"{searchedQuery}" 검색 중...</p>
           </div>
         )}
 
         {/* No Results */}
         {hasSearched && !programsLoading && !hasPrograms && !webLoading && webResults.length === 0 && !error && (
-          <div className="text-center py-16">
-            <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center mx-auto mb-4">
-              <Search className="w-7 h-7 text-muted-foreground/50" />
-            </div>
+          <div className="py-16">
             <p className="text-muted-foreground">"{searchedQuery}"에 대한 검색 결과가 없습니다</p>
             <p className="text-sm text-muted-foreground mt-1">다른 검색어로 시도해보세요</p>
           </div>
@@ -304,8 +291,8 @@ export default function DiscoverPage() {
 
         {/* Results */}
         {hasSearched && (hasPrograms || webResults.length > 0 || webLoading) && !programsLoading && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="space-y-10">
               <ResultSection title="정부지원사업" icon={Landmark} isEmpty={govProjects.length === 0} emptyMessage="검색어와 일치하는 정부지원사업이 없습니다.">
                 {govProjects.map((project) => <ProjectCard key={`gov-${project.id}`} project={project} />)}
               </ResultSection>

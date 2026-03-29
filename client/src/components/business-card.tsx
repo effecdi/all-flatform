@@ -58,7 +58,7 @@ export function BusinessCard({
 
           {/* Title */}
           <h3 className={cn(
-            "font-semibold text-[0.9rem] leading-snug mb-3 line-clamp-2 transition-colors duration-200",
+            "font-semibold text-base leading-snug mb-3 line-clamp-2 transition-colors duration-200",
             isGov
               ? "group-hover:text-gov-primary dark:group-hover:text-gov-primary-light"
               : "group-hover:text-invest-primary dark:group-hover:text-invest-primary-light"
@@ -67,37 +67,25 @@ export function BusinessCard({
           </h3>
 
           {/* Meta */}
-          <div className="space-y-1.5 text-xs text-muted-foreground">
+          <div className="space-y-1.5 text-[13px] text-muted-foreground">
             {organization && (
               <div className="flex items-center gap-2">
-                <div className={cn(
-                  "w-5 h-5 rounded flex items-center justify-center shrink-0",
-                  isGov ? "bg-gov-primary/8 text-gov-primary" : "bg-invest-primary/8 text-invest-primary"
-                )}>
-                  <Building2 className="w-3 h-3" />
-                </div>
+                <Building2 className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary/50" : "text-invest-primary/50")} />
                 <span className="truncate">{organization}</span>
               </div>
             )}
             {region && (
               <div className="flex items-center gap-2">
-                <div className={cn(
-                  "w-5 h-5 rounded flex items-center justify-center shrink-0",
-                  isGov ? "bg-gov-primary/8 text-gov-primary" : "bg-invest-primary/8 text-invest-primary"
-                )}>
-                  <MapPin className="w-3 h-3" />
-                </div>
+                <MapPin className={cn("w-3.5 h-3.5 shrink-0", isGov ? "text-gov-primary/50" : "text-invest-primary/50")} />
                 <span>{region}</span>
               </div>
             )}
             {amount && (
               <div className="flex items-center gap-2">
-                <div className={cn(
-                  "w-5 h-5 rounded flex items-center justify-center shrink-0",
-                  isGov ? "bg-gov-primary/8 text-gov-primary" : "bg-invest-primary/8 text-invest-primary"
-                )}>
-                  {isGov ? <Banknote className="w-3 h-3" /> : <TrendingUp className="w-3 h-3" />}
-                </div>
+                {isGov
+                  ? <Banknote className="w-3.5 h-3.5 shrink-0 text-gov-primary/50" />
+                  : <TrendingUp className="w-3.5 h-3.5 shrink-0 text-invest-primary/50" />
+                }
                 <span className="truncate">{amount}</span>
               </div>
             )}
