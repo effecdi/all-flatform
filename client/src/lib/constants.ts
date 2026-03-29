@@ -4,4 +4,5 @@ export const NAV_ITEMS = [
   { label: "자동 탐색", href: "/auto-discover" },
   { label: "구독 관리", href: "/subscriptions" },
   { label: "삭제 가이드", href: "/delete-guide" },
+  { label: "화면 녹화", href: "/screen-recording" },
 ] as const;

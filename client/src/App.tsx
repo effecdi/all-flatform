@@ -10,6 +10,7 @@ import AccountsPage from "@/pages/accounts";
 import SubscriptionsPage from "@/pages/subscriptions";
 import DeleteGuidePage from "@/pages/delete-guide";
 import AutoDiscoverPage from "@/pages/auto-discover";
+import ScreenRecordingPage from "@/pages/screen-recording";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/subscriptions" component={SubscriptionsPage} />
       <Route path="/delete-guide" component={DeleteGuidePage} />
       <Route path="/auto-discover" component={AutoDiscoverPage} />
+      <Route path="/screen-recording" component={ScreenRecordingPage} />
       <Route component={NotFound} />
     </Switch>
   );
