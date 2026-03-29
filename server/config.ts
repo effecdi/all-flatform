@@ -4,7 +4,6 @@ export const config = {
   nodeEnv: process.env.NODE_ENV || "development",
   dataGoKrApiKey: process.env.DATA_GO_KR_API_KEY || "",
   bizinfoApiKey: process.env.BIZINFO_API_KEY || "",
-  adminKey: process.env.ADMIN_KEY || "",
 };
 
 export function validateProductionConfig() {
@@ -14,10 +13,6 @@ export function validateProductionConfig() {
 
   if (!config.databaseUrl) {
     errors.push("DATABASE_URL은 프로덕션 환경에서 필수입니다.");
-  }
-
-  if (!config.adminKey) {
-    errors.push("ADMIN_KEY는 프로덕션 환경에서 필수입니다. (관리자 API 보호)");
   }
 
   if (errors.length > 0) {

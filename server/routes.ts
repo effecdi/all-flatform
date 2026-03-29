@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertBusinessProfileSchema, insertInvestmentProgramSchema } from "@shared/schema";
 import { logger } from "./logger";
-import { requireAuth, requireAdmin } from "./auth-middleware";
+import { requireAuth } from "./auth-middleware";
 import { DESIGN_TOKENS } from "@shared/design-tokens";
 
 export async function registerRoutes(
@@ -259,54 +259,6 @@ export async function registerRoutes(
     } catch (err) {
       logger.error("GET /api/dashboard/stats 실패", err);
       res.status(500).json({ message: "통계 조회에 실패했습니다." });
-    }
-  });
-
-  // =====================
-  // Admin Routes
-  // =====================
-
-  app.post("/api/admin/crawl/:source", requireAdmin, async (req, res) => {
-    try {
-      const source = req.params.source as string;
-      if (!["k-startup", "bizinfo"].includes(source)) {
-        return res.status(400).json({ message: "유효하지 않은 소스입니다. k-startup 또는 bizinfo를 사용하세요." });
-      }
-
-      const { runCrawler } = await import("./crawlers/index");
-      const result = await runCrawler(source, storage);
-      res.json(result);
-    } catch (err: any) {
-      logger.error(`POST /api/admin/crawl/${req.params.source} 실패`, err);
-      res.status(500).json({ message: err.message || "크롤링에 실패했습니다." });
-    }
-  });
-
-  app.get("/api/admin/crawl-logs", requireAdmin, async (req, res) => {
-    try {
-      const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 50;
-      const logs = await storage.getCrawlLogs(limit);
-      res.json(logs);
-    } catch (err) {
-      logger.error("GET /api/admin/crawl-logs 실패", err);
-      res.status(500).json({ message: "크롤링 로그 조회에 실패했습니다." });
-    }
-  });
-
-  app.post("/api/admin/investment-programs", requireAdmin, async (req, res) => {
-    try {
-      const parsed = insertInvestmentProgramSchema.safeParse(req.body);
-      if (!parsed.success) {
-        return res.status(400).json({
-          message: "입력값이 올바르지 않습니다.",
-          errors: parsed.error.flatten().fieldErrors,
-        });
-      }
-      const program = await storage.createInvestmentProgram(parsed.data);
-      res.status(201).json(program);
-    } catch (err) {
-      logger.error("POST /api/admin/investment-programs 실패", err);
-      res.status(500).json({ message: "투자 프로그램 생성에 실패했습니다." });
     }
   });
 

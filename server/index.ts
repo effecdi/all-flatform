@@ -46,15 +46,6 @@ app.use("/api/recommendations/generate", rateLimit({
   message: { message: "AI 추천은 1분에 3회까지 가능합니다." },
 }));
 
-// Admin API rate limit — 분당 10회
-app.use("/api/admin/", rateLimit({
-  windowMs: 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { message: "관리자 API 요청 제한을 초과했습니다." },
-}));
-
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
