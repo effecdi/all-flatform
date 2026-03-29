@@ -1,5 +1,4 @@
 /* Web Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 @tailwind base;
@@ -7,17 +6,16 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════
-   Design Tokens (Light) — Refined & Professional
-   차분한 인디고 + 슬레이트 기반, 과도한 채도 제거
+   Design Tokens (Light)
    ══════════════════════════════════════════ */
 :root {
   --background: 220 14% 96%;
-  --foreground: 220 20% 10%;
+  --foreground: 222 20% 12%;
 
   --card: 0 0% 100%;
-  --card-foreground: 220 20% 10%;
+  --card-foreground: 222 20% 12%;
   --popover: 0 0% 100%;
-  --popover-foreground: 220 20% 10%;
+  --popover-foreground: 222 20% 12%;
 
   /* 메인 컬러: 차분한 인디고 */
   --primary: 226 62% 48%;
@@ -25,12 +23,12 @@
   --primary-light: 226 58% 58%;
   --primary-dark: 226 62% 40%;
 
-  /* 정부사업: 메인과 동일한 인디고 톤 */
+  /* 정부사업: 인디고 톤 */
   --gov-primary: 226 62% 48%;
   --gov-primary-light: 226 58% 58%;
   --gov-primary-dark: 226 62% 40%;
 
-  /* 투자: 차분한 틸 계열 */
+  /* 투자: 틸 계열 */
   --invest-primary: 168 48% 38%;
   --invest-primary-light: 168 42% 48%;
   --invest-primary-dark: 168 48% 30%;
@@ -39,7 +37,7 @@
   --secondary-foreground: 220 14% 30%;
 
   --muted: 220 12% 93%;
-  --muted-foreground: 220 8% 50%;
+  --muted-foreground: 220 8% 46%;
 
   --accent: 226 40% 95%;
   --accent-foreground: 226 62% 40%;
@@ -47,10 +45,10 @@
   --destructive: 0 65% 50%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 220 12% 89%;
-  --input: 220 12% 89%;
+  --border: 220 12% 90%;
+  --input: 220 12% 90%;
   --ring: 226 62% 48%;
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 
   --success: 152 50% 36%;
   --success-foreground: 0 0% 100%;
@@ -71,34 +69,10 @@
   --info-foreground: 0 0% 100%;
   --info-light: 210 58% 60%;
   --info-dark: 210 60% 40%;
-
-  /* Portfolio Design System */
-  --pf-bg: 220 14% 96%;
-  --pf-surface: 0 0% 100%;
-  --pf-surface-elevated: 0 0% 100%;
-  --pf-text: 220 20% 10%;
-  --pf-text-secondary: 220 8% 50%;
-  --pf-text-muted: 220 6% 62%;
-  --pf-border: 220 12% 89%;
-  --pf-border-subtle: 220 12% 93%;
-  --pf-primary: 226 62% 48%;
-  --pf-primary-light: 226 58% 58%;
-  --pf-primary-dark: 226 62% 40%;
-  --pf-secondary: 168 48% 38%;
-  --pf-secondary-light: 168 42% 48%;
-  --pf-accent: 260 48% 52%;
-  --pf-accent-light: 260 50% 64%;
-  --pf-warm: 24 72% 56%;
-  --pf-warm-light: 24 74% 66%;
-  --pf-gradient-start: 226 62% 48%;
-  --pf-gradient-end: 260 48% 52%;
-  --pf-hero-from: 226 30% 96%;
-  --pf-hero-to: 260 20% 96%;
-  --pf-glow: 226 62% 48%;
 }
 
 /* ══════════════════════════════════════════
-   Design Tokens (Dark) — Refined Dark
+   Design Tokens (Dark)
    ══════════════════════════════════════════ */
 .dark {
   --background: 224 14% 7%;
@@ -157,30 +131,6 @@
   --info-foreground: 0 0% 100%;
   --info-light: 210 56% 66%;
   --info-dark: 210 58% 62%;
-
-  /* Portfolio Design System (Dark) */
-  --pf-bg: 224 14% 7%;
-  --pf-surface: 224 12% 10%;
-  --pf-surface-elevated: 224 12% 12%;
-  --pf-text: 220 10% 90%;
-  --pf-text-secondary: 220 6% 52%;
-  --pf-text-muted: 220 4% 38%;
-  --pf-border: 224 10% 16%;
-  --pf-border-subtle: 224 10% 13%;
-  --pf-primary: 226 60% 62%;
-  --pf-primary-light: 226 62% 70%;
-  --pf-primary-dark: 226 60% 52%;
-  --pf-secondary: 168 42% 48%;
-  --pf-secondary-light: 168 38% 56%;
-  --pf-accent: 260 50% 62%;
-  --pf-accent-light: 260 52% 70%;
-  --pf-warm: 24 74% 60%;
-  --pf-warm-light: 24 76% 68%;
-  --pf-gradient-start: 226 60% 62%;
-  --pf-gradient-end: 260 50% 62%;
-  --pf-hero-from: 224 16% 8%;
-  --pf-hero-to: 260 10% 8%;
-  --pf-glow: 226 60% 62%;
 }
 
 /* ── Scrollbar ── */
@@ -197,27 +147,27 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     letter-spacing: -0.01em;
-    line-height: 1.65;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply text-foreground font-semibold;
-    letter-spacing: -0.02em;
+    @apply text-foreground;
+    letter-spacing: -0.025em;
     line-height: 1.3;
   }
 
-  h1 { @apply text-xl sm:text-2xl; }
-  h2 { @apply text-lg sm:text-xl; }
+  h1 { @apply text-xl sm:text-2xl font-bold; }
+  h2 { @apply text-lg sm:text-xl font-semibold; }
   h3 { @apply text-base font-medium; }
   h4 { @apply text-sm font-medium; }
 }
 
 /* ══════════════════════════════════════════
-   Component Classes — Minimal & Professional
+   Component Classes
    ══════════════════════════════════════════ */
 @layer components {
   .page-container {
@@ -232,44 +182,36 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light;
   }
 
+  /* 카드 호버 효과 */
   .card-interactive {
     @apply transition-all duration-200 ease-out;
   }
   .card-interactive:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
-    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+    transform: translateY(-2px);
   }
   .dark .card-interactive:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.1);
   }
 
-  .section-divider {
-    @apply h-px bg-border;
-  }
-
-  .gradient-gov-primary {
-    @apply text-primary;
-  }
-
-  .gradient-invest-primary {
-    @apply text-invest-primary;
-  }
-
-  /* Subtle top accent — thin solid line */
+  /* 카드 상단 악센트 바 */
   .card-top-bar-gov {
-    @apply h-[2px] w-full bg-gov-primary/30;
+    @apply h-[2px] w-full;
+    background: linear-gradient(90deg, hsl(var(--gov-primary)), hsl(var(--gov-primary-light)));
   }
 
   .card-top-bar-invest {
-    @apply h-[2px] w-full bg-invest-primary/30;
+    @apply h-[2px] w-full;
+    background: linear-gradient(90deg, hsl(var(--invest-primary)), hsl(var(--invest-primary-light)));
   }
 
   .card-top-bar-ai {
-    @apply h-[2px] w-full bg-warning/30;
+    @apply h-[2px] w-full;
+    background: linear-gradient(90deg, hsl(var(--warning)), hsl(var(--warning-light)));
   }
 }
 
-/* ── Animations (subtle) ── */
+/* ── Animations ── */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -290,16 +232,6 @@
   to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(8px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
 @layer utilities {
   .animate-fade-in {
     animation: fadeIn 0.2s ease-out;
@@ -313,143 +245,18 @@
   .animate-scale-in {
     animation: scaleIn 0.2s ease-out;
   }
-  .animate-slide-in-right {
-    animation: slideInRight 0.25s ease-out;
-  }
-  .animate-shimmer {
-    background: linear-gradient(90deg, transparent 0%, hsl(var(--muted)) 50%, transparent 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-  }
 }
 
 /* ── Stagger animations for grids ── */
 .stagger-children > * {
-  animation: slideUp 0.25s ease-out backwards;
+  animation: slideUp 0.3s ease-out backwards;
 }
 .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-children > *:nth-child(2) { animation-delay: 30ms; }
-.stagger-children > *:nth-child(3) { animation-delay: 60ms; }
-.stagger-children > *:nth-child(4) { animation-delay: 90ms; }
-.stagger-children > *:nth-child(5) { animation-delay: 120ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 150ms; }
-.stagger-children > *:nth-child(7) { animation-delay: 180ms; }
-.stagger-children > *:nth-child(8) { animation-delay: 210ms; }
-.stagger-children > *:nth-child(9) { animation-delay: 240ms; }
-
-/* ── Portfolio Specific ── */
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-}
-
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 20px hsl(var(--pf-glow) / 0.15); }
-  50% { box-shadow: 0 0 40px hsl(var(--pf-glow) / 0.25); }
-}
-
-@keyframes morphBlob {
-  0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-  50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-  100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-}
-
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@layer components {
-  .pf-surface {
-    @apply bg-[hsl(var(--pf-surface))] text-[hsl(var(--pf-text))];
-  }
-  .pf-surface-elevated {
-    @apply bg-[hsl(var(--pf-surface-elevated))];
-  }
-  .pf-border {
-    @apply border-[hsl(var(--pf-border))];
-  }
-  .pf-border-subtle {
-    @apply border-[hsl(var(--pf-border-subtle))];
-  }
-  .pf-text {
-    @apply text-[hsl(var(--pf-text))];
-  }
-  .pf-text-secondary {
-    @apply text-[hsl(var(--pf-text-secondary))];
-  }
-  .pf-text-muted {
-    @apply text-[hsl(var(--pf-text-muted))];
-  }
-
-  .pf-gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[hsl(var(--pf-gradient-start))] to-[hsl(var(--pf-gradient-end))];
-  }
-
-  .pf-hero-bg {
-    background: linear-gradient(135deg, hsl(var(--pf-hero-from)), hsl(var(--pf-hero-to)));
-  }
-
-  .pf-card {
-    @apply rounded-xl pf-surface pf-border border transition-all duration-200;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-  }
-  .pf-card:hover {
-    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    transform: translateY(-1px);
-  }
-
-  .pf-card-highlight {
-    @apply pf-card relative overflow-hidden;
-  }
-  .pf-card-highlight::before {
-    content: '';
-    @apply absolute top-0 left-0 right-0 h-0.5;
-    background: hsl(var(--pf-primary));
-  }
-
-  .pf-badge {
-    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium;
-  }
-
-  .pf-blob {
-    animation: morphBlob 8s ease-in-out infinite;
-    background: linear-gradient(135deg, hsl(var(--pf-primary) / 0.08), hsl(var(--pf-accent) / 0.08));
-  }
-
-  .pf-glow {
-    animation: pulseGlow 3s ease-in-out infinite;
-  }
-
-  .pf-gradient-bg {
-    background: linear-gradient(135deg, hsl(var(--pf-gradient-start)), hsl(var(--pf-gradient-end)));
-    background-size: 200% 200%;
-    animation: gradientShift 6s ease infinite;
-  }
-
-  .pf-count-up {
-    animation: countUp 0.6s ease-out forwards;
-  }
-
-  .pf-section-title {
-    @apply text-xl sm:text-2xl font-semibold pf-text tracking-tight;
-  }
-
-  .pf-section-subtitle {
-    @apply text-sm pf-text-secondary mt-1;
-  }
-}
-
-/* Portfolio stagger grid */
-.pf-stagger > * {
-  animation: slideUp 0.4s ease-out backwards;
-}
-.pf-stagger > *:nth-child(1) { animation-delay: 0ms; }
-.pf-stagger > *:nth-child(2) { animation-delay: 60ms; }
-.pf-stagger > *:nth-child(3) { animation-delay: 120ms; }
-.pf-stagger > *:nth-child(4) { animation-delay: 180ms; }
-.pf-stagger > *:nth-child(5) { animation-delay: 240ms; }
-.pf-stagger > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 40ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 80ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 160ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 200ms; }
 
 /* ── Selection ── */
 ::selection {

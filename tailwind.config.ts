@@ -83,39 +83,6 @@ const config: Config = {
           light: "hsl(var(--info-light))",
           dark: "hsl(var(--info-dark))",
         },
-        // 포트폴리오 디자인 시스템 (CSS 변수 기반 - 다크모드 자동 지원)
-        pf: {
-          bg: "hsl(var(--pf-bg))",
-          surface: "hsl(var(--pf-surface))",
-          "surface-el": "hsl(var(--pf-surface-elevated))",
-          text: "hsl(var(--pf-text))",
-          "text-2": "hsl(var(--pf-text-secondary))",
-          "text-m": "hsl(var(--pf-text-muted))",
-          border: "hsl(var(--pf-border))",
-          "border-s": "hsl(var(--pf-border-subtle))",
-          primary: "hsl(var(--pf-primary))",
-          "primary-l": "hsl(var(--pf-primary-light))",
-          "primary-d": "hsl(var(--pf-primary-dark))",
-          secondary: "hsl(var(--pf-secondary))",
-          "secondary-l": "hsl(var(--pf-secondary-light))",
-          accent: "hsl(var(--pf-accent))",
-          "accent-l": "hsl(var(--pf-accent-light))",
-          warm: "hsl(var(--pf-warm))",
-          "warm-l": "hsl(var(--pf-warm-light))",
-        },
-        // 하위 호환 (기존 코드가 portfolio.* 으로 참조하는 곳 대응)
-        portfolio: {
-          background: "hsl(var(--pf-bg))",
-          text: "hsl(var(--pf-text))",
-          'text-light': "hsl(var(--pf-text-secondary))",
-          primary: "hsl(var(--pf-primary))",
-          'primary-light': "hsl(var(--pf-primary-light))",
-          'primary-dark': "hsl(var(--pf-primary-dark))",
-          secondary: "hsl(var(--pf-secondary))",
-          accent: "hsl(var(--pf-accent))",
-          card: "hsl(var(--pf-surface))",
-          border: "hsl(var(--pf-border))",
-        }
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -125,17 +92,12 @@ const config: Config = {
         "2xl": "calc(var(--radius) + 8px)",
       },
       boxShadow: {
-        soft: "0 1px 2px rgba(0, 0, 0, 0.04)",
-        "soft-hover": "0 4px 12px rgba(0, 0, 0, 0.06)",
-        elevated: "0 2px 8px rgba(0, 0, 0, 0.08)",
-        'pf-card': '0 1px 3px rgba(0,0,0,0.03)',
-        'pf-card-hover': '0 8px 24px rgba(0,0,0,0.08)',
-        'pf-glow': '0 0 20px hsl(var(--pf-glow) / 0.15)',
+        soft: "0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02)",
+        "soft-hover": "0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04)",
+        elevated: "0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03)",
       },
       fontFamily: {
         sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-        serif: ['serif'],
-        mono: ['monospace'],
       },
       keyframes: {
         "accordion-down": {
@@ -146,52 +108,10 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "pf-fade-up": {
-          "0%": { opacity: "0", transform: "translateY(30px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-        "pf-fade-in": {
-          "0%": { opacity: "0" },
-          "100%": { opacity: "1" },
-        },
-        "pf-scale-in": {
-          "0%": { opacity: "0", transform: "scale(0.9)" },
-          "100%": { opacity: "1", transform: "scale(1)" },
-        },
-        "pf-slide-left": {
-          "0%": { opacity: "0", transform: "translateX(40px)" },
-          "100%": { opacity: "1", transform: "translateX(0)" },
-        },
-        "pf-slide-right": {
-          "0%": { opacity: "0", transform: "translateX(-40px)" },
-          "100%": { opacity: "1", transform: "translateX(0)" },
-        },
-        "pf-counter": {
-          "0%": { opacity: "0", transform: "translateY(12px) scale(0.95)" },
-          "60%": { opacity: "1", transform: "translateY(-2px) scale(1.02)" },
-          "100%": { opacity: "1", transform: "translateY(0) scale(1)" },
-        },
-        "pf-draw-line": {
-          "0%": { width: "0%" },
-          "100%": { width: "100%" },
-        },
-        "pf-pulse-ring": {
-          "0%": { transform: "scale(1)", opacity: "0.6" },
-          "50%": { transform: "scale(1.15)", opacity: "0" },
-          "100%": { transform: "scale(1)", opacity: "0" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "pf-fade-up": "pf-fade-up 0.7s cubic-bezier(0.16,1,0.3,1) both",
-        "pf-fade-in": "pf-fade-in 0.6s ease-out both",
-        "pf-scale-in": "pf-scale-in 0.5s cubic-bezier(0.16,1,0.3,1) both",
-        "pf-slide-left": "pf-slide-left 0.6s cubic-bezier(0.16,1,0.3,1) both",
-        "pf-slide-right": "pf-slide-right 0.6s cubic-bezier(0.16,1,0.3,1) both",
-        "pf-counter": "pf-counter 0.8s cubic-bezier(0.16,1,0.3,1) both",
-        "pf-draw-line": "pf-draw-line 1s ease-out both",
-        "pf-pulse-ring": "pf-pulse-ring 2s ease-out infinite",
       },
     },
   },
