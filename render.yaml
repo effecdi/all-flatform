@@ -1,0 +1,26 @@
+databases:
+  - name: all-flatform-db
+    plan: free
+    databaseName: allflatform
+    user: allflatform
+
+services:
+  - type: web
+    name: all-flatform
+    plan: free
+    runtime: node
+    buildCommand: npm install && npm run build && npm run db:migrate
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: all-flatform-db
+          property: connectionString
+      - key: DATA_GO_KR_API_KEY
+        sync: false
+      - key: BIZINFO_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
