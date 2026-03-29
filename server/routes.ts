@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertBusinessProfileSchema, insertInvestmentProgramSchema, insertPortfolioSchema } from "@shared/schema";
+import { insertBusinessProfileSchema, insertInvestmentProgramSchema } from "@shared/schema";
 import { logger } from "./logger";
 import { requireAuth, requireAdmin } from "./auth-middleware";
 import { DESIGN_TOKENS } from "@shared/design-tokens";
@@ -245,52 +245,6 @@ export async function registerRoutes(
     } catch (err: any) {
       logger.error("GET /api/discover/web 실패", err);
       res.status(500).json({ message: err.message || "웹 검색에 실패했습니다." });
-    }
-  });
-
-  // =====================
-  // Portfolio
-  // =====================
-
-  app.get("/api/portfolio", requireAuth, async (req, res) => {
-    try {
-      const portfolio = await storage.getPortfolio(req.user!.id);
-      res.json(portfolio || null);
-    } catch (err) {
-      logger.error("GET /api/portfolio 실패", err);
-      res.status(500).json({ message: "포트폴리오 조회에 실패했습니다." });
-    }
-  });
-
-  app.get("/api/portfolio/:slug", async (req, res) => {
-    try {
-      const slug = req.params.slug as string;
-      const portfolio = await storage.getPortfolioBySlug(slug);
-      if (!portfolio) return res.status(404).json({ message: "포트폴리오를 찾을 수 없습니다." });
-      res.json(portfolio);
-    } catch (err) {
-      logger.error("GET /api/portfolio/:slug 실패", err);
-      res.status(500).json({ message: "포트폴리오 조회에 실패했습니다." });
-    }
-  });
-
-  app.post("/api/portfolio", requireAuth, async (req, res) => {
-    try {
-      const parsed = insertPortfolioSchema.safeParse({
-        ...req.body,
-        userId: req.user!.id,
-      });
-      if (!parsed.success) {
-        return res.status(400).json({
-          message: "입력값이 올바르지 않습니다.",
-          errors: parsed.error.flatten().fieldErrors,
-        });
-      }
-      const portfolio = await storage.upsertPortfolio(parsed.data);
-      res.json(portfolio);
-    } catch (err) {
-      logger.error("POST /api/portfolio 실패", err);
-      res.status(500).json({ message: "포트폴리오 저장에 실패했습니다." });
     }
   });
 

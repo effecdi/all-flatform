@@ -6,4 +6,3 @@ export * from "./models/investment-program";
 export * from "./models/bookmark";
 export * from "./models/ai-recommendation";
 export * from "./models/crawl-log";
-export * from "./models/portfolio";
