@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSaveBusinessProfile, useBusinessProfile } from "@/hooks/use-business-profile";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { Loader2, ArrowLeft, ArrowRight, Check, Copy, CheckCheck } from "lucide-react";
 import {
   REGIONS,
   BUSINESS_STAGE_LABELS,
@@ -121,9 +121,18 @@ function PillButton({ label, selected, onClick, delay = 0 }: { label: string; se
   );
 }
 
-function CompletionScreen() {
+function CompletionScreen({ recoveryCode, onContinue }: { recoveryCode: string | null; onContinue: () => void }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    if (!recoveryCode) return;
+    await navigator.clipboard.writeText(recoveryCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
       <motion.div className="w-20 h-20 rounded-full bg-success/10 flex items-center justify-center mb-6" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 200, damping: 12 }}>
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}>
           <Check className="w-10 h-10 text-success" />
@@ -132,12 +141,31 @@ function CompletionScreen() {
       <motion.h2 className="text-2xl sm:text-3xl font-bold" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
         프로필 설정 완료!
       </motion.h2>
-      <motion.p className="text-muted-foreground mt-3 text-base" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-        맞춤 추천을 준비하고 있어요...
-      </motion.p>
-      <motion.div className="mt-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
-        <Loader2 className="w-5 h-5 animate-spin text-primary mx-auto" />
-      </motion.div>
+
+      {recoveryCode ? (
+        <motion.div className="mt-6 max-w-sm w-full" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+          <p className="text-muted-foreground text-sm mb-4">
+            아래 복구 코드를 저장해두세요.<br />
+            브라우저 변경이나 쿠키 삭제 시 프로필을 복구할 수 있습니다.
+          </p>
+          <div className="bg-card border border-border rounded-xl p-4">
+            <p className="text-xs text-muted-foreground mb-2">복구 코드</p>
+            <div className="flex items-center justify-center gap-3">
+              <code className="text-xl font-mono font-bold tracking-widest text-foreground">{recoveryCode}</code>
+              <Button variant="ghost" size="sm" onClick={handleCopy} className="shrink-0">
+                {copied ? <CheckCheck className="w-4 h-4 text-success" /> : <Copy className="w-4 h-4" />}
+              </Button>
+            </div>
+          </div>
+          <Button onClick={onContinue} className="mt-6 w-full">
+            확인, 시작하기
+          </Button>
+        </motion.div>
+      ) : (
+        <motion.div className="mt-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
+          <Loader2 className="w-5 h-5 animate-spin text-primary mx-auto" />
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -146,6 +174,7 @@ export default function OnboardingPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [completed, setCompleted] = useState(false);
+  const [recoveryCode, setRecoveryCode] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [, setLocation] = useLocation();
   const saveProfile = useSaveBusinessProfile();
@@ -224,7 +253,14 @@ export default function OnboardingPage() {
         businessDescription: form.businessDescription || null,
       });
       setCompleted(true);
-      setTimeout(() => setLocation("/"), 1800);
+      // 복구 코드 가져오기
+      try {
+        const rcRes = await fetch("/api/recovery-code", { credentials: "same-origin" });
+        if (rcRes.ok) {
+          const { recoveryCode: code } = await rcRes.json();
+          setRecoveryCode(code);
+        }
+      } catch { /* 복구 코드 실패해도 진행 */ }
     } catch (err: any) {
       let message = "프로필 저장에 실패했습니다. 다시 시도해주세요.";
       try {
@@ -332,7 +368,7 @@ export default function OnboardingPage() {
   if (completed) {
     return (
       <div className="min-h-[calc(100vh-4rem)] bg-background">
-        <CompletionScreen />
+        <CompletionScreen recoveryCode={recoveryCode} onContinue={() => setLocation("/")} />
       </div>
     );
   }

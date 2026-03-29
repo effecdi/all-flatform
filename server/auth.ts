@@ -31,6 +31,7 @@ export async function ensureDefaultUser(): Promise<User> {
     name: "기본 사용자",
     passwordHash: null,
     isAdmin: true,
+    recoveryCode: null,
     createdAt: new Date(),
     updatedAt: new Date(),
   };

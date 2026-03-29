@@ -15,6 +15,7 @@ export const users = pgTable("users", {
   name: varchar("name", { length: 200 }),
   passwordHash: text("password_hash"),
   isAdmin: boolean("is_admin").notNull().default(false),
+  recoveryCode: varchar("recovery_code", { length: 20 }).unique(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
     .notNull()

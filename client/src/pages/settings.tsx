@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
-import { User, Building2, Sun, Moon, Settings, ChevronRight, LogOut, Trash2 } from "lucide-react";
+import { User, Building2, Sun, Moon, Settings, ChevronRight, LogOut, Trash2, Key, Copy, CheckCheck, RefreshCw, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function SettingsPage() {
   const { data: profile } = useBusinessProfile();
@@ -15,6 +16,56 @@ export default function SettingsPage() {
   const { theme, toggle } = useTheme();
   const qc = useQueryClient();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [recoveryCode, setRecoveryCode] = useState<string | null>(null);
+  const [codeCopied, setCodeCopied] = useState(false);
+  const [recoverInput, setRecoverInput] = useState("");
+  const [recoverStatus, setRecoverStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [recovering, setRecovering] = useState(false);
+
+  const fetchRecoveryCode = async () => {
+    try {
+      const res = await fetch("/api/recovery-code", { credentials: "same-origin" });
+      if (res.ok) {
+        const { recoveryCode: code } = await res.json();
+        setRecoveryCode(code);
+      }
+    } catch { /* ignore */ }
+  };
+
+  const handleCopyCode = async () => {
+    if (!recoveryCode) return;
+    await navigator.clipboard.writeText(recoveryCode);
+    setCodeCopied(true);
+    setTimeout(() => setCodeCopied(false), 2000);
+  };
+
+  const handleRecover = async () => {
+    if (!recoverInput.trim()) return;
+    setRecovering(true);
+    setRecoverStatus(null);
+    try {
+      const res = await fetch("/api/recover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ recoveryCode: recoverInput.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setRecoverStatus({ type: "success", message: data.message });
+        setRecoverInput("");
+        qc.invalidateQueries({ queryKey: ["/api/profile"] });
+        qc.invalidateQueries({ queryKey: ["/api/bookmarks"] });
+        fetchRecoveryCode();
+      } else {
+        setRecoverStatus({ type: "error", message: data.message });
+      }
+    } catch {
+      setRecoverStatus({ type: "error", message: "복구에 실패했습니다." });
+    } finally {
+      setRecovering(false);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -114,6 +165,71 @@ export default function SettingsPage() {
               ) : (
                 <p className="text-sm text-muted-foreground py-2">프로필이 아직 작성되지 않았습니다.</p>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Recovery Code */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                  <Key className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                </div>
+                프로필 복구
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* 내 복구 코드 */}
+              {profile && (
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    내 복구 코드 (브라우저 변경 시 프로필 복구용)
+                  </p>
+                  {recoveryCode ? (
+                    <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2">
+                      <code className="font-mono font-bold tracking-wider text-sm flex-1">{recoveryCode}</code>
+                      <Button variant="ghost" size="sm" onClick={handleCopyCode} className="shrink-0 h-7 w-7 p-0">
+                        {codeCopied ? <CheckCheck className="w-3.5 h-3.5 text-success" /> : <Copy className="w-3.5 h-3.5" />}
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button variant="outline" size="sm" onClick={fetchRecoveryCode} className="gap-2">
+                      <Key className="w-3.5 h-3.5" />
+                      복구 코드 확인
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {/* 복구 코드로 복원 */}
+              <div className="pt-2 border-t border-border">
+                <p className="text-sm text-muted-foreground mb-2">
+                  기존 복구 코드로 프로필 복원
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    value={recoverInput}
+                    onChange={e => setRecoverInput(e.target.value)}
+                    placeholder="XXXX-XXXX-XXXX"
+                    className="font-mono uppercase text-sm"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRecover}
+                    disabled={recovering || !recoverInput.trim()}
+                    className="shrink-0 gap-1.5"
+                  >
+                    {recovering ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+                    복구
+                  </Button>
+                </div>
+                {recoverStatus && (
+                  <p className={`text-xs mt-2 ${recoverStatus.type === "success" ? "text-success" : "text-red-500"}`}>
+                    {recoverStatus.message}
+                  </p>
+                )}
+              </div>
             </CardContent>
           </Card>
 

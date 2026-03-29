@@ -61,6 +61,44 @@ export async function registerRoutes(
   });
 
   // =====================
+  // Recovery Code
+  // =====================
+
+  app.get("/api/recovery-code", requireAuth, async (req, res) => {
+    try {
+      const code = await storage.ensureRecoveryCode(req.user!.id);
+      res.json({ recoveryCode: code });
+    } catch (err) {
+      logger.error("GET /api/recovery-code 실패", err);
+      res.status(500).json({ message: "복구 코드 생성에 실패했습니다." });
+    }
+  });
+
+  app.post("/api/recover", requireAuth, async (req, res) => {
+    try {
+      const { recoveryCode } = req.body;
+      if (!recoveryCode || typeof recoveryCode !== "string") {
+        return res.status(400).json({ message: "복구 코드를 입력해주세요." });
+      }
+      const code = recoveryCode.trim().toUpperCase();
+      const oldUser = await storage.findUserByRecoveryCode(code);
+      if (!oldUser) {
+        return res.status(404).json({ message: "유효하지 않은 복구 코드입니다." });
+      }
+      if (oldUser.id === req.user!.id) {
+        return res.json({ message: "이미 현재 계정의 복구 코드입니다." });
+      }
+      await storage.transferUserData(oldUser.id, req.user!.id);
+      // 새 유저에게 복구 코드 이전
+      await storage.ensureRecoveryCode(req.user!.id);
+      res.json({ message: "프로필이 복구되었습니다." });
+    } catch (err) {
+      logger.error("POST /api/recover 실패", err);
+      res.status(500).json({ message: "프로필 복구에 실패했습니다." });
+    }
+  });
+
+  // =====================
   // Government Programs
   // =====================
 

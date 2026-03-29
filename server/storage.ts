@@ -26,9 +26,25 @@ import type { ProgramFilters, PaginatedResult, DashboardStats, InvestmentFilters
 import { requireDb } from "./db";
 import { eq, desc, ilike, and, sql, count, or } from "drizzle-orm";
 
+function generateRecoveryCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // 혼동 문자 제외 (0/O, 1/I)
+  const parts = [];
+  for (let p = 0; p < 3; p++) {
+    let seg = "";
+    for (let i = 0; i < 4; i++) {
+      seg += chars[Math.floor(Math.random() * chars.length)];
+    }
+    parts.push(seg);
+  }
+  return parts.join("-"); // e.g. "AB3D-EF7H-JK2M"
+}
+
 export interface IStorage {
   // Anonymous Users
   findOrCreateUserByAnonId(anonId: string): Promise<User>;
+  findUserByRecoveryCode(code: string): Promise<User | undefined>;
+  ensureRecoveryCode(userId: number): Promise<string>;
+  transferUserData(fromUserId: number, toUserId: number): Promise<void>;
 
   // Government Programs
   getGovernmentPrograms(filters: ProgramFilters): Promise<PaginatedResult<GovernmentProgram>>;
@@ -96,12 +112,37 @@ export class MemoryStorage implements IStorage {
         name: `사용자 ${this.nextUserId - 1}`,
         passwordHash: null,
         isAdmin: isFirst, // 첫 번째 사용자만 admin
+        recoveryCode: null,
         createdAt: now,
         updatedAt: now,
       };
       this.usersList.push(user);
     }
     return user;
+  }
+
+  async findUserByRecoveryCode(code: string): Promise<User | undefined> {
+    return this.usersList.find(u => u.recoveryCode === code);
+  }
+
+  async ensureRecoveryCode(userId: number): Promise<string> {
+    const user = this.usersList.find(u => u.id === userId);
+    if (!user) throw new Error("사용자를 찾을 수 없습니다.");
+    if (user.recoveryCode) return user.recoveryCode;
+    const code = generateRecoveryCode();
+    user.recoveryCode = code;
+    return code;
+  }
+
+  async transferUserData(fromUserId: number, toUserId: number): Promise<void> {
+    const profile = this.profiles.find(p => p.userId === fromUserId);
+    if (profile) {
+      const toIdx = this.profiles.findIndex(p => p.userId === toUserId);
+      if (toIdx !== -1) this.profiles.splice(toIdx, 1);
+      profile.userId = toUserId;
+    }
+    this.bookmarksList.filter(b => b.userId === fromUserId).forEach(b => { b.userId = toUserId; });
+    this.recommendations.filter(r => r.userId === fromUserId).forEach(r => { r.userId = toUserId; });
   }
 
   async getGovernmentPrograms(filters: ProgramFilters): Promise<PaginatedResult<GovernmentProgram>> {
@@ -421,6 +462,36 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return created;
+  }
+
+  async findUserByRecoveryCode(code: string): Promise<User | undefined> {
+    const [user] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.recoveryCode, code));
+    return user;
+  }
+
+  async ensureRecoveryCode(userId: number): Promise<string> {
+    const [user] = await this.db.select().from(users).where(eq(users.id, userId));
+    if (!user) throw new Error("사용자를 찾을 수 없습니다.");
+    if (user.recoveryCode) return user.recoveryCode;
+    const code = generateRecoveryCode();
+    await this.db.update(users).set({ recoveryCode: code }).where(eq(users.id, userId));
+    return code;
+  }
+
+  async transferUserData(fromUserId: number, toUserId: number): Promise<void> {
+    // 프로필 이전
+    const [fromProfile] = await this.db.select().from(businessProfiles).where(eq(businessProfiles.userId, fromUserId));
+    if (fromProfile) {
+      await this.db.delete(businessProfiles).where(eq(businessProfiles.userId, toUserId));
+      await this.db.update(businessProfiles).set({ userId: toUserId }).where(eq(businessProfiles.userId, fromUserId));
+    }
+    // 북마크 이전
+    await this.db.update(bookmarks).set({ userId: toUserId }).where(eq(bookmarks.userId, fromUserId));
+    // AI 추천 이전
+    await this.db.update(aiRecommendations).set({ userId: toUserId }).where(eq(aiRecommendations.userId, fromUserId));
   }
 
   async getGovernmentPrograms(filters: ProgramFilters): Promise<PaginatedResult<GovernmentProgram>> {
