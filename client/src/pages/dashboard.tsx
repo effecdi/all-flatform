@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { PageTransition } from "@/components/page-transition";
 import { useAuth } from "@/hooks/use-auth";
 import { useBusinessProfile } from "@/hooks/use-business-profile";
@@ -31,6 +32,7 @@ export default function DashboardPage() {
   const { data: user } = useAuth();
   const { data: profile, isLoading: profileLoading } = useBusinessProfile();
   const [, navigate] = useLocation();
+  const revealRef = useRef<HTMLDivElement>(null);
 
   const { data: stats } = useQuery<DashboardStats>({
     queryKey: ["/api/dashboard/stats"],
@@ -54,11 +56,32 @@ export default function DashboardPage() {
 
   const latestRecs = recommendations?.[0]?.recommendations?.slice(0, 3);
 
+  // Scroll Reveal - IntersectionObserver
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    const el = revealRef.current;
+    if (el) {
+      el.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
+    }
+
+    return () => observer.disconnect();
+  }, [govPrograms, invPrograms, recommendations]);
+
   return (
     <PageTransition>
-      <div className="page-container">
+      <div className="page-container" ref={revealRef}>
         {/* ── Hero Section ── */}
-        <div className="hero-gradient rounded-3xl p-8 sm:p-12 lg:p-16 mb-12 relative overflow-hidden shadow-hero">
+        <div className="hero-gradient rounded-3xl p-8 sm:p-12 lg:p-16 mb-12 relative overflow-hidden shadow-hero reveal">
           {/* 배경 장식 요소 */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.04] rounded-full -translate-y-1/3 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/[0.03] rounded-full translate-y-1/2 -translate-x-1/3" />
@@ -71,7 +94,7 @@ export default function DashboardPage() {
               <Shield className="w-4 h-4 text-white/80" />
               <span className="text-sm font-medium text-white/80">정부지원사업 & 투자유치 통합 플랫폼</span>
             </div>
-            <h1 className="text-white mb-4">
+            <h1 className="text-white mb-4 text-display">
               {user?.name || "사용자"}님,<br />
               환영합니다
             </h1>
@@ -85,9 +108,9 @@ export default function DashboardPage() {
         {/* ── Onboarding Prompt ── */}
         {!profileLoading && !profile && (
           <Link href="/onboarding">
-            <div className="glass-card rounded-2xl p-6 sm:p-8 mb-12 cursor-pointer hover:border-primary/30 transition-all duration-300 group animate-shimmer">
+            <div className="glass-card rounded-2xl p-6 sm:p-8 mb-12 cursor-pointer hover:border-primary/30 transition-all duration-300 group reveal">
               <div className="flex items-center gap-5">
-                <div className="icon-box icon-box-lg bg-primary/10 shrink-0">
+                <div className="icon-box icon-box-lg bg-primary/10 shrink-0 group-hover:scale-110 transition-transform duration-300">
                   <Sparkles className="w-6 h-6 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -105,84 +128,98 @@ export default function DashboardPage() {
         {/* ── Stats Bento Grid ── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 mb-12">
           {/* Large stat - 전체사업 */}
-          <div className="col-span-2 sm:col-span-2">
-            <Card className="h-full overflow-hidden bg-gradient-to-br from-gov-primary/5 to-transparent">
+          <div className="col-span-2 sm:col-span-2 reveal reveal-delay-1">
+            <Card className="h-full overflow-hidden bg-gradient-to-br from-gov-primary/5 to-transparent card-interactive">
               <CardContent className="p-6 sm:p-7">
                 <div className="flex items-center gap-3 mb-5">
-                  <div className="icon-box icon-box-md bg-gov-primary/10 text-gov-primary dark:text-gov-primary-light">
+                  <div className="icon-box icon-box-md bg-gov-primary/10 text-gov-primary">
                     <FileText className="w-5 h-5" />
                   </div>
                   <span className="text-sm font-semibold text-muted-foreground">전체 사업</span>
                 </div>
-                <p className="text-5xl sm:text-6xl font-extrabold tabular-nums tracking-tight text-gov-primary dark:text-gov-primary-light">
+                <p className="text-5xl sm:text-6xl font-extrabold tabular-nums tracking-tightest text-gov-primary">
                   {stats?.totalGovernmentPrograms ?? 0}
                 </p>
                 <p className="text-sm text-muted-foreground mt-2">정부지원사업 등록 수</p>
               </CardContent>
             </Card>
           </div>
-          <StatCard
-            icon={<BarChart3 className="w-5 h-5" />}
-            label="모집중"
-            value={stats?.activeGovernmentPrograms ?? 0}
-            color="text-success dark:text-success-light"
-            iconBg="bg-success/10"
-          />
-          <StatCard
-            icon={<TrendingUp className="w-5 h-5" />}
-            label="투자 프로그램"
-            value={stats?.totalInvestmentPrograms ?? 0}
-            color="text-invest-primary dark:text-invest-primary-light"
-            iconBg="bg-invest-primary/10"
-          />
-          <StatCard
-            icon={<Clock className="w-5 h-5" />}
-            label="마감임박"
-            value={stats?.upcomingDeadlines ?? 0}
-            color="text-error dark:text-error-light"
-            iconBg="bg-error/10"
-            href={stats?.upcomingDeadlines ? "/programs/government?deadline=true" : undefined}
-          />
+          <div className="reveal reveal-delay-2">
+            <StatCard
+              icon={<BarChart3 className="w-5 h-5" />}
+              label="모집중"
+              value={stats?.activeGovernmentPrograms ?? 0}
+              color="text-success"
+              iconBg="bg-success/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-3">
+            <StatCard
+              icon={<TrendingUp className="w-5 h-5" />}
+              label="투자 프로그램"
+              value={stats?.totalInvestmentPrograms ?? 0}
+              color="text-invest-primary"
+              iconBg="bg-invest-primary/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-4">
+            <StatCard
+              icon={<Clock className="w-5 h-5" />}
+              label="마감임박"
+              value={stats?.upcomingDeadlines ?? 0}
+              color="text-error"
+              iconBg="bg-error/10"
+              href={stats?.upcomingDeadlines ? "/programs/government?deadline=true" : undefined}
+            />
+          </div>
         </div>
 
         {/* ── Quick Actions ── */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-16">
-          <QuickAction
-            href="/programs/government"
-            icon={<Landmark className="w-6 h-6" />}
-            label="정부지원사업"
-            desc="지원사업 전체 목록"
-            iconColor="text-gov-primary dark:text-gov-primary-light"
-            iconBg="bg-gov-primary/10"
-          />
-          <QuickAction
-            href="/programs/investment"
-            icon={<TrendingUp className="w-6 h-6" />}
-            label="투자유치"
-            desc="투자 프로그램 탐색"
-            iconColor="text-invest-primary dark:text-invest-primary-light"
-            iconBg="bg-invest-primary/10"
-          />
-          <QuickAction
-            href="/recommendations"
-            icon={<Zap className="w-6 h-6" />}
-            label="AI 맞춤 추천"
-            desc="나에게 맞는 사업"
-            iconColor="text-ai-primary dark:text-ai-primary-light"
-            iconBg="bg-ai-primary/10"
-          />
-          <QuickAction
-            href="/discover"
-            icon={<Search className="w-6 h-6" />}
-            label="사업 검색"
-            desc="통합 검색으로 찾기"
-            iconColor="text-info dark:text-info-light"
-            iconBg="bg-info/10"
-          />
+          <div className="reveal reveal-delay-1">
+            <QuickAction
+              href="/programs/government"
+              icon={<Landmark className="w-6 h-6" />}
+              label="정부지원사업"
+              desc="지원사업 전체 목록"
+              iconColor="text-gov-primary"
+              iconBg="bg-gov-primary/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-2">
+            <QuickAction
+              href="/programs/investment"
+              icon={<TrendingUp className="w-6 h-6" />}
+              label="투자유치"
+              desc="투자 프로그램 탐색"
+              iconColor="text-invest-primary"
+              iconBg="bg-invest-primary/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-3">
+            <QuickAction
+              href="/recommendations"
+              icon={<Zap className="w-6 h-6" />}
+              label="AI 맞춤 추천"
+              desc="나에게 맞는 사업"
+              iconColor="text-ai-primary"
+              iconBg="bg-ai-primary/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-4">
+            <QuickAction
+              href="/discover"
+              icon={<Search className="w-6 h-6" />}
+              label="사업 검색"
+              desc="통합 검색으로 찾기"
+              iconColor="text-info"
+              iconBg="bg-info/10"
+            />
+          </div>
         </div>
 
         {/* ── 01 최신 정부지원사업 ── */}
-        <section className="mb-16">
+        <section className="mb-16 reveal">
           <SectionHeader number="01" title="최신 정부지원사업" href="/programs/government" />
           {govLoading ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -192,8 +229,10 @@ export default function DashboardPage() {
             </div>
           ) : govPrograms && govPrograms.data.length > 0 ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {govPrograms.data.map((p) => (
-                <ProgramCard key={p.id} {...p} />
+              {govPrograms.data.map((p, index) => (
+                <div key={p.id} className={`reveal reveal-delay-${Math.min(index + 1, 10)}`}>
+                  <ProgramCard {...p} />
+                </div>
               ))}
             </div>
           ) : (
@@ -202,7 +241,7 @@ export default function DashboardPage() {
         </section>
 
         {/* ── 02 최신 투자유치 프로그램 ── */}
-        <section className="mb-16">
+        <section className="mb-16 reveal">
           <SectionHeader number="02" title="최신 투자유치 프로그램" href="/programs/investment" />
           {invLoading ? (
             <div className="grid gap-5 sm:grid-cols-2">
@@ -212,8 +251,10 @@ export default function DashboardPage() {
             </div>
           ) : invPrograms && invPrograms.data.length > 0 ? (
             <div className="grid gap-5 sm:grid-cols-2">
-              {invPrograms.data.map((p) => (
-                <InvestmentCard key={p.id} {...p} />
+              {invPrograms.data.map((p, index) => (
+                <div key={p.id} className={`reveal reveal-delay-${Math.min(index + 1, 10)}`}>
+                  <InvestmentCard {...p} />
+                </div>
               ))}
             </div>
           ) : (
@@ -223,11 +264,13 @@ export default function DashboardPage() {
 
         {/* ── 03 AI 추천 ── */}
         {latestRecs && latestRecs.length > 0 && (
-          <section>
+          <section className="reveal">
             <SectionHeader number="03" title="AI 추천 사업" href="/recommendations" />
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {latestRecs.map((rec, i) => (
-                <RecommendationCard key={i} {...rec} />
+                <div key={i} className={`reveal reveal-delay-${Math.min(i + 1, 10)}`}>
+                  <RecommendationCard {...rec} />
+                </div>
               ))}
             </div>
           </section>
@@ -244,11 +287,11 @@ function SectionHeader({ number, title, href }: { number: string; title: string;
     <div className="flex items-center justify-between mb-8">
       <div>
         <span className="section-number">{number} — {title.split(" ")[0]}</span>
-        <h2>{title}</h2>
+        <h2 className="text-heading">{title}</h2>
       </div>
       <Link href={href}>
-        <Button variant="ghost" size="sm" className="gap-1.5 text-sm text-muted-foreground hover:text-foreground font-medium rounded-xl">
-          전체보기 <ArrowRight className="w-4 h-4" />
+        <Button variant="ghost" size="sm" className="gap-1.5 text-sm text-muted-foreground hover:text-foreground font-medium rounded-xl group">
+          전체보기 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </Button>
       </Link>
     </div>
@@ -271,12 +314,12 @@ function StatCard({
   href?: string;
 }) {
   const inner = (
-    <Card className={`${href ? "cursor-pointer card-interactive" : ""} overflow-hidden h-full`}>
+    <Card className={`${href ? "cursor-pointer" : ""} card-interactive overflow-hidden h-full`}>
       <CardContent className="p-5 sm:p-6">
         <div className={`icon-box icon-box-sm ${iconBg} ${color} mb-4`}>
           {icon}
         </div>
-        <p className={`text-3xl sm:text-4xl font-extrabold tabular-nums tracking-tight ${color}`}>{value}</p>
+        <p className={`text-3xl sm:text-4xl font-extrabold tabular-nums tracking-tightest ${color}`}>{value}</p>
         <p className="text-sm text-muted-foreground mt-1.5 font-medium">{label}</p>
       </CardContent>
     </Card>
@@ -320,7 +363,7 @@ function QuickAction({
 
 function SkeletonCard() {
   return (
-    <Card>
+    <Card className="card-interactive">
       <CardContent className="p-6">
         <div className="flex gap-2 mb-4">
           <Skeleton className="w-16 h-6 rounded-full" />
