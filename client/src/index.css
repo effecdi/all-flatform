@@ -7,183 +7,187 @@
 @tailwind utilities;
 
 /* ══════════════════════════════════════════
-   Design Tokens (Light) — Clean Minimal
+   Design Tokens (Light) — Refined & Professional
+   차분한 인디고 + 슬레이트 기반, 과도한 채도 제거
    ══════════════════════════════════════════ */
 :root {
-  --background: 0 0% 98.5%;
-  --foreground: 240 10% 6%;
+  --background: 220 14% 96%;
+  --foreground: 220 20% 10%;
 
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 6%;
+  --card-foreground: 220 20% 10%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 6%;
+  --popover-foreground: 220 20% 10%;
 
-  --primary: 234 89% 56%;
+  /* 메인 컬러: 차분한 인디고 */
+  --primary: 226 62% 48%;
   --primary-foreground: 0 0% 100%;
-  --primary-light: 234 82% 65%;
-  --primary-dark: 234 89% 48%;
+  --primary-light: 226 58% 58%;
+  --primary-dark: 226 62% 40%;
 
-  --gov-primary: 234 89% 56%;
-  --gov-primary-light: 234 82% 65%;
-  --gov-primary-dark: 234 89% 48%;
+  /* 정부사업: 메인과 동일한 인디고 톤 */
+  --gov-primary: 226 62% 48%;
+  --gov-primary-light: 226 58% 58%;
+  --gov-primary-dark: 226 62% 40%;
 
-  --invest-primary: 162 72% 38%;
-  --invest-primary-light: 162 62% 48%;
-  --invest-primary-dark: 162 72% 30%;
+  /* 투자: 차분한 틸 계열 */
+  --invest-primary: 168 48% 38%;
+  --invest-primary-light: 168 42% 48%;
+  --invest-primary-dark: 168 48% 30%;
 
-  --secondary: 240 5% 94%;
-  --secondary-foreground: 240 6% 25%;
+  --secondary: 220 12% 93%;
+  --secondary-foreground: 220 14% 30%;
 
-  --muted: 240 5% 94%;
-  --muted-foreground: 240 4% 46%;
+  --muted: 220 12% 93%;
+  --muted-foreground: 220 8% 50%;
 
-  --accent: 234 90% 96%;
-  --accent-foreground: 234 89% 48%;
+  --accent: 226 40% 95%;
+  --accent-foreground: 226 62% 40%;
 
-  --destructive: 0 72% 51%;
+  --destructive: 0 65% 50%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 240 6% 90%;
-  --input: 240 6% 90%;
-  --ring: 234 89% 56%;
-  --radius: 0.625rem;
+  --border: 220 12% 89%;
+  --input: 220 12% 89%;
+  --ring: 226 62% 48%;
+  --radius: 0.5rem;
 
-  --success: 152 69% 36%;
+  --success: 152 50% 36%;
   --success-foreground: 0 0% 100%;
-  --success-light: 152 55% 46%;
-  --success-dark: 152 69% 28%;
+  --success-light: 152 42% 46%;
+  --success-dark: 152 50% 28%;
 
-  --warning: 38 92% 50%;
-  --warning-foreground: 38 92% 14%;
-  --warning-light: 45 93% 58%;
-  --warning-dark: 32 95% 44%;
+  --warning: 38 80% 50%;
+  --warning-foreground: 38 80% 14%;
+  --warning-light: 42 82% 58%;
+  --warning-dark: 32 84% 44%;
 
-  --error: 0 72% 55%;
+  --error: 0 65% 52%;
   --error-foreground: 0 0% 100%;
-  --error-light: 0 86% 70%;
-  --error-dark: 0 72% 45%;
+  --error-light: 0 72% 66%;
+  --error-dark: 0 65% 42%;
 
-  --info: 210 80% 52%;
+  --info: 210 60% 50%;
   --info-foreground: 0 0% 100%;
-  --info-light: 210 80% 62%;
-  --info-dark: 210 80% 42%;
+  --info-light: 210 58% 60%;
+  --info-dark: 210 60% 40%;
 
   /* Portfolio Design System */
-  --pf-bg: 0 0% 98.5%;
+  --pf-bg: 220 14% 96%;
   --pf-surface: 0 0% 100%;
   --pf-surface-elevated: 0 0% 100%;
-  --pf-text: 240 10% 6%;
-  --pf-text-secondary: 240 4% 46%;
-  --pf-text-muted: 240 4% 62%;
-  --pf-border: 240 6% 90%;
-  --pf-border-subtle: 240 6% 94%;
-  --pf-primary: 234 89% 56%;
-  --pf-primary-light: 234 82% 65%;
-  --pf-primary-dark: 234 89% 48%;
-  --pf-secondary: 162 72% 38%;
-  --pf-secondary-light: 162 62% 48%;
-  --pf-accent: 280 67% 55%;
-  --pf-accent-light: 280 70% 66%;
-  --pf-warm: 24 90% 58%;
-  --pf-warm-light: 24 92% 68%;
-  --pf-gradient-start: 234 89% 56%;
-  --pf-gradient-end: 280 67% 55%;
-  --pf-hero-from: 234 50% 97%;
-  --pf-hero-to: 280 40% 97%;
-  --pf-glow: 234 89% 56%;
+  --pf-text: 220 20% 10%;
+  --pf-text-secondary: 220 8% 50%;
+  --pf-text-muted: 220 6% 62%;
+  --pf-border: 220 12% 89%;
+  --pf-border-subtle: 220 12% 93%;
+  --pf-primary: 226 62% 48%;
+  --pf-primary-light: 226 58% 58%;
+  --pf-primary-dark: 226 62% 40%;
+  --pf-secondary: 168 48% 38%;
+  --pf-secondary-light: 168 42% 48%;
+  --pf-accent: 260 48% 52%;
+  --pf-accent-light: 260 50% 64%;
+  --pf-warm: 24 72% 56%;
+  --pf-warm-light: 24 74% 66%;
+  --pf-gradient-start: 226 62% 48%;
+  --pf-gradient-end: 260 48% 52%;
+  --pf-hero-from: 226 30% 96%;
+  --pf-hero-to: 260 20% 96%;
+  --pf-glow: 226 62% 48%;
 }
 
 /* ══════════════════════════════════════════
    Design Tokens (Dark) — Refined Dark
    ══════════════════════════════════════════ */
 .dark {
-  --background: 240 12% 5%;
-  --foreground: 0 0% 92%;
+  --background: 224 14% 7%;
+  --foreground: 220 10% 90%;
 
-  --card: 240 10% 8.5%;
-  --card-foreground: 0 0% 92%;
-  --popover: 240 10% 10%;
-  --popover-foreground: 0 0% 92%;
+  --card: 224 12% 10%;
+  --card-foreground: 220 10% 90%;
+  --popover: 224 12% 11%;
+  --popover-foreground: 220 10% 90%;
 
-  --primary: 234 82% 66%;
+  --primary: 226 60% 62%;
   --primary-foreground: 0 0% 100%;
-  --primary-light: 234 85% 74%;
-  --primary-dark: 234 82% 56%;
+  --primary-light: 226 62% 70%;
+  --primary-dark: 226 60% 52%;
 
-  --gov-primary: 234 82% 66%;
-  --gov-primary-light: 234 85% 74%;
-  --gov-primary-dark: 234 82% 56%;
+  --gov-primary: 226 60% 62%;
+  --gov-primary-light: 226 62% 70%;
+  --gov-primary-dark: 226 60% 52%;
 
-  --invest-primary: 162 60% 48%;
-  --invest-primary-light: 162 55% 56%;
-  --invest-primary-dark: 162 60% 40%;
+  --invest-primary: 168 42% 48%;
+  --invest-primary-light: 168 38% 56%;
+  --invest-primary-dark: 168 42% 40%;
 
-  --secondary: 240 6% 13%;
-  --secondary-foreground: 240 4% 68%;
+  --secondary: 224 10% 14%;
+  --secondary-foreground: 220 8% 66%;
 
-  --muted: 240 6% 13%;
-  --muted-foreground: 240 4% 46%;
+  --muted: 224 10% 14%;
+  --muted-foreground: 220 6% 48%;
 
-  --accent: 234 24% 15%;
-  --accent-foreground: 234 82% 74%;
+  --accent: 226 18% 16%;
+  --accent-foreground: 226 60% 70%;
 
-  --destructive: 0 62% 50%;
+  --destructive: 0 60% 48%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 240 6% 15%;
-  --input: 240 6% 13%;
-  --ring: 234 82% 66%;
+  --border: 224 10% 16%;
+  --input: 224 10% 14%;
+  --ring: 226 60% 62%;
 
-  --success: 152 69% 40%;
+  --success: 152 48% 40%;
   --success-foreground: 0 0% 100%;
-  --success-light: 152 55% 50%;
-  --success-dark: 152 69% 55%;
+  --success-light: 152 42% 50%;
+  --success-dark: 152 48% 52%;
 
-  --warning: 38 92% 50%;
-  --warning-foreground: 38 92% 14%;
-  --warning-light: 45 93% 58%;
-  --warning-dark: 38 92% 60%;
+  --warning: 38 80% 50%;
+  --warning-foreground: 38 80% 14%;
+  --warning-light: 42 82% 58%;
+  --warning-dark: 38 80% 58%;
 
-  --error: 0 72% 58%;
+  --error: 0 62% 54%;
   --error-foreground: 0 0% 100%;
-  --error-light: 0 86% 70%;
-  --error-dark: 0 72% 65%;
+  --error-light: 0 68% 66%;
+  --error-dark: 0 62% 62%;
 
-  --info: 210 80% 60%;
+  --info: 210 58% 58%;
   --info-foreground: 0 0% 100%;
-  --info-light: 210 80% 70%;
-  --info-dark: 210 80% 65%;
+  --info-light: 210 56% 66%;
+  --info-dark: 210 58% 62%;
 
   /* Portfolio Design System (Dark) */
-  --pf-bg: 240 12% 5%;
-  --pf-surface: 240 10% 8.5%;
-  --pf-surface-elevated: 240 10% 11%;
-  --pf-text: 0 0% 92%;
-  --pf-text-secondary: 240 4% 54%;
-  --pf-text-muted: 240 4% 38%;
-  --pf-border: 240 6% 15%;
-  --pf-border-subtle: 240 6% 12%;
-  --pf-primary: 234 82% 66%;
-  --pf-primary-light: 234 85% 74%;
-  --pf-primary-dark: 234 82% 56%;
-  --pf-secondary: 162 60% 48%;
-  --pf-secondary-light: 162 55% 56%;
-  --pf-accent: 280 70% 66%;
-  --pf-accent-light: 280 75% 74%;
-  --pf-warm: 24 92% 62%;
-  --pf-warm-light: 24 94% 70%;
-  --pf-gradient-start: 234 82% 66%;
-  --pf-gradient-end: 280 70% 66%;
-  --pf-hero-from: 240 15% 7%;
-  --pf-hero-to: 280 10% 7%;
-  --pf-glow: 234 82% 66%;
+  --pf-bg: 224 14% 7%;
+  --pf-surface: 224 12% 10%;
+  --pf-surface-elevated: 224 12% 12%;
+  --pf-text: 220 10% 90%;
+  --pf-text-secondary: 220 6% 52%;
+  --pf-text-muted: 220 4% 38%;
+  --pf-border: 224 10% 16%;
+  --pf-border-subtle: 224 10% 13%;
+  --pf-primary: 226 60% 62%;
+  --pf-primary-light: 226 62% 70%;
+  --pf-primary-dark: 226 60% 52%;
+  --pf-secondary: 168 42% 48%;
+  --pf-secondary-light: 168 38% 56%;
+  --pf-accent: 260 50% 62%;
+  --pf-accent-light: 260 52% 70%;
+  --pf-warm: 24 74% 60%;
+  --pf-warm-light: 24 76% 68%;
+  --pf-gradient-start: 226 60% 62%;
+  --pf-gradient-end: 260 50% 62%;
+  --pf-hero-from: 224 16% 8%;
+  --pf-hero-to: 260 10% 8%;
+  --pf-glow: 226 60% 62%;
 }
 
 /* ── Scrollbar ── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.12); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.25); }
+::-webkit-scrollbar-thumb { background: hsl(var(--muted-foreground) / 0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.3); }
 
 /* ── Base Layer ── */
 @layer base {
@@ -194,30 +198,30 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Pretendard', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    font-feature-settings: 'cv11';
     letter-spacing: -0.01em;
-    line-height: 1.6;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', 'Pretendard', 'Noto Sans KR', sans-serif;
-    @apply text-foreground;
-    letter-spacing: -0.035em;
-    line-height: 1.2;
+    @apply text-foreground font-semibold;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
   }
 
-  h1 { @apply text-[1.75rem] sm:text-[2.25rem] font-bold; }
-  h2 { @apply text-xl sm:text-2xl font-semibold; }
-  h3 { @apply text-base sm:text-lg font-medium; }
-  h4 { @apply text-sm sm:text-base font-medium; }
+  h1 { @apply text-xl sm:text-2xl; }
+  h2 { @apply text-lg sm:text-xl; }
+  h3 { @apply text-base font-medium; }
+  h4 { @apply text-sm font-medium; }
 }
 
 /* ══════════════════════════════════════════
-   Component Classes — Minimal & Clean
+   Component Classes — Minimal & Professional
    ══════════════════════════════════════════ */
 @layer components {
   .page-container {
-    @apply max-w-6xl mx-auto px-5 sm:px-8 lg:px-10 pt-24 pb-16;
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12;
   }
 
   .glass {
@@ -229,14 +233,14 @@
   }
 
   .card-interactive {
-    @apply transition-all duration-300 ease-out;
+    @apply transition-all duration-200 ease-out;
   }
   .card-interactive:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
   }
   .dark .card-interactive:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.16);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
 
   .section-divider {
@@ -251,43 +255,43 @@
     @apply text-invest-primary;
   }
 
-  /* Subtle top accent — much thinner, no gradient */
+  /* Subtle top accent — thin solid line */
   .card-top-bar-gov {
-    @apply h-[2px] w-full bg-primary/40;
+    @apply h-[2px] w-full bg-gov-primary/30;
   }
 
   .card-top-bar-invest {
-    @apply h-[2px] w-full bg-invest-primary/40;
+    @apply h-[2px] w-full bg-invest-primary/30;
   }
 
   .card-top-bar-ai {
-    @apply h-[2px] w-full bg-amber-500/40;
+    @apply h-[2px] w-full bg-warning/30;
   }
 }
 
-/* ── Animations (tighter, faster) ── */
+/* ── Animations (subtle) ── */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-6px); }
+  from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.97); }
+  from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
 }
 
 @keyframes slideInRight {
-  from { opacity: 0; transform: translateX(10px); }
+  from { opacity: 0; transform: translateX(8px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
@@ -296,50 +300,42 @@
   100% { background-position: 200% 0; }
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.25s ease-out;
+    animation: fadeIn 0.2s ease-out;
   }
   .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
+    animation: slideUp 0.25s ease-out;
   }
   .animate-slide-down {
-    animation: slideDown 0.25s ease-out;
+    animation: slideDown 0.2s ease-out;
   }
   .animate-scale-in {
-    animation: scaleIn 0.25s ease-out;
+    animation: scaleIn 0.2s ease-out;
   }
   .animate-slide-in-right {
-    animation: slideInRight 0.3s ease-out;
+    animation: slideInRight 0.25s ease-out;
   }
   .animate-shimmer {
     background: linear-gradient(90deg, transparent 0%, hsl(var(--muted)) 50%, transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
 }
 
 /* ── Stagger animations for grids ── */
 .stagger-children > * {
-  animation: slideUp 0.3s ease-out backwards;
+  animation: slideUp 0.25s ease-out backwards;
 }
 .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-.stagger-children > *:nth-child(2) { animation-delay: 40ms; }
-.stagger-children > *:nth-child(3) { animation-delay: 80ms; }
-.stagger-children > *:nth-child(4) { animation-delay: 120ms; }
-.stagger-children > *:nth-child(5) { animation-delay: 160ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 200ms; }
-.stagger-children > *:nth-child(7) { animation-delay: 240ms; }
-.stagger-children > *:nth-child(8) { animation-delay: 280ms; }
-.stagger-children > *:nth-child(9) { animation-delay: 320ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 30ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 90ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 150ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 210ms; }
+.stagger-children > *:nth-child(9) { animation-delay: 240ms; }
 
 /* ── Portfolio Specific ── */
 @keyframes gradientShift {
@@ -395,12 +391,12 @@
   }
 
   .pf-card {
-    @apply rounded-2xl pf-surface pf-border border transition-all duration-300;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    @apply rounded-xl pf-surface pf-border border transition-all duration-200;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
   }
   .pf-card:hover {
-    box-shadow: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
-    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
   }
 
   .pf-card-highlight {
@@ -408,8 +404,8 @@
   }
   .pf-card-highlight::before {
     content: '';
-    @apply absolute top-0 left-0 right-0 h-1;
-    background: linear-gradient(90deg, hsl(var(--pf-gradient-start)), hsl(var(--pf-gradient-end)));
+    @apply absolute top-0 left-0 right-0 h-0.5;
+    background: hsl(var(--pf-primary));
   }
 
   .pf-badge {
@@ -418,7 +414,7 @@
 
   .pf-blob {
     animation: morphBlob 8s ease-in-out infinite;
-    background: linear-gradient(135deg, hsl(var(--pf-primary) / 0.12), hsl(var(--pf-accent) / 0.12));
+    background: linear-gradient(135deg, hsl(var(--pf-primary) / 0.08), hsl(var(--pf-accent) / 0.08));
   }
 
   .pf-glow {
@@ -436,27 +432,27 @@
   }
 
   .pf-section-title {
-    @apply text-2xl sm:text-3xl font-bold pf-text tracking-tight;
+    @apply text-xl sm:text-2xl font-semibold pf-text tracking-tight;
   }
 
   .pf-section-subtitle {
-    @apply text-sm sm:text-base pf-text-secondary mt-2;
+    @apply text-sm pf-text-secondary mt-1;
   }
 }
 
 /* Portfolio stagger grid */
 .pf-stagger > * {
-  animation: slideUp 0.5s ease-out backwards;
+  animation: slideUp 0.4s ease-out backwards;
 }
 .pf-stagger > *:nth-child(1) { animation-delay: 0ms; }
-.pf-stagger > *:nth-child(2) { animation-delay: 80ms; }
-.pf-stagger > *:nth-child(3) { animation-delay: 160ms; }
-.pf-stagger > *:nth-child(4) { animation-delay: 240ms; }
-.pf-stagger > *:nth-child(5) { animation-delay: 320ms; }
-.pf-stagger > *:nth-child(6) { animation-delay: 400ms; }
+.pf-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.pf-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.pf-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.pf-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.pf-stagger > *:nth-child(6) { animation-delay: 300ms; }
 
 /* ── Selection ── */
 ::selection {
-  background-color: hsl(var(--primary) / 0.1);
+  background-color: hsl(var(--primary) / 0.12);
   color: hsl(var(--primary));
 }
