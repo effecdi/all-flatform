@@ -1,16 +1,59 @@
 import express, { type Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import cors from "cors";
+import rateLimit from "express-rate-limit";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
 import { logger } from "./logger";
-import { validateProductionConfig } from "./config";
+import { validateProductionConfig, config } from "./config";
 import { ensureDefaultUser } from "./auth";
 
 validateProductionConfig();
 
 const app = express();
 const httpServer = createServer(app);
+
+// Security headers
+app.use(helmet({
+  contentSecurityPolicy: config.nodeEnv === "production" ? undefined : false,
+}));
+
+// CORS — 같은 origin만 허용 (프로덕션)
+app.use(cors({
+  origin: config.nodeEnv === "production"
+    ? (process.env.ALLOWED_ORIGIN || true)
+    : true,
+  credentials: true,
+}));
+
+// 전역 rate limit — 분당 100회
+app.use("/api/", rateLimit({
+  windowMs: 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "요청이 너무 많습니다. 잠시 후 다시 시도해주세요." },
+}));
+
+// AI 추천 rate limit — 분당 3회 (Claude API 비용 보호)
+app.use("/api/recommendations/generate", rateLimit({
+  windowMs: 60 * 1000,
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "AI 추천은 1분에 3회까지 가능합니다." },
+}));
+
+// Admin API rate limit — 분당 10회
+app.use("/api/admin/", rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "관리자 API 요청 제한을 초과했습니다." },
+}));
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: false }));
