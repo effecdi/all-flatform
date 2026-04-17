@@ -16,13 +16,16 @@ export async function apiRequest(
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
+    credentials: "same-origin",
   });
   await throwIfResNotOk(res);
   return res;
 }
 
 const defaultQueryFn: QueryFunction = async ({ queryKey }) => {
-  const res = await fetch(queryKey.join("/") as string);
+  const res = await fetch(queryKey.join("/") as string, {
+    credentials: "same-origin",
+  });
   await throwIfResNotOk(res);
   return res.json();
 };

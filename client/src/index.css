@@ -1,79 +1,266 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
-/* Pretendard CDN */
-@font-face { font-family: 'Pretendard'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'Pretendard'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2'); font-weight: 500; font-display: swap; }
-@font-face { font-family: 'Pretendard'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2'); font-weight: 600; font-display: swap; }
-@font-face { font-family: 'Pretendard'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+/* Google Fonts - Pretendard 및 Space Grotesk */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
-/* ---- Dark-first design tokens ---- */
-:root {
-  --background: 224 15% 8%;
-  --foreground: 210 20% 95%;
-  --card: 224 15% 12%;
-  --card-foreground: 210 20% 95%;
-  --popover: 224 15% 12%;
-  --popover-foreground: 210 20% 95%;
-  --primary: 271 91% 65%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 224 15% 18%;
-  --secondary-foreground: 210 20% 90%;
-  --muted: 224 15% 16%;
-  --muted-foreground: 215 15% 55%;
-  --accent: 224 15% 20%;
-  --accent-foreground: 210 20% 95%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 224 15% 20%;
-  --input: 224 15% 20%;
-  --ring: 271 91% 65%;
-  --radius: 0.75rem;
-}
 
-/* ---- Glass card utility ---- */
-.glass {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-strong {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-/* ---- Gradient text ---- */
-.gradient-text {
-  background: linear-gradient(135deg, #a855f7, #3b82f6, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ---- Neon glow ---- */
-.neon-purple { box-shadow: 0 0 20px rgba(168, 85, 247, 0.3); }
-.neon-blue { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-.neon-pink { box-shadow: 0 0 20px rgba(236, 72, 153, 0.3); }
-.neon-green { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
-
-/* ---- Scrollbar ---- */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
-
-/* ---- Base ---- */
 @layer base {
+  :root {
+    --background: 0 0% 100%; /* Light Mode Background: White */
+    --foreground: 224 71.4% 4.1%; /* Almost Black */
+    --card: 0 0% 100%; /* Card: White */
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 224 76% 48%; /* Primary Royal Blue */
+    --primary-foreground: 210 20% 98%; /* Off-white */
+    --secondary: 220 14% 96%; /* Lighter Gray */
+    --secondary-foreground: 224 71.4% 4.1%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 215 16% 47%; /* Darker Gray for readability */
+    --accent: 220 14% 96%;
+    --accent-foreground: 224 71.4% 4.1%;
+    --destructive: 2 72% 48%; /* Error Red */
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%; /* Light Gray Border */
+    --input: 220 13% 91%;
+    --ring: 224 76% 48%; /* Primary color for ring */
+    --radius: 0.5rem;
+
+    /* Custom Project Colors (Light Mode) */
+    --gov-primary: 224 76% 48%; /* Royal Blue */
+    --gov-foreground: 210 20% 98%;
+    --invest-green: 158 64% 36%; /* Emerald Green */
+    --invest-foreground: 210 20% 98%;
+    --ai-amber: 36 100% 50%; /* Golden Amber */
+    --ai-foreground: 210 20% 98%;
+
+    --success: 156 56% 32%; /* Dark Green */
+    --success-foreground: 210 20% 98%;
+    --warning: 34 88% 46%; /* Orange */
+    --warning-foreground: 210 20% 98%;
+    --info: 210 68% 46%; /* Sky Blue */
+    --info-foreground: 210 20% 98%;
+    --error: 2 72% 48%; /* Red */
+    --error-foreground: 210 20% 98%;
+
+    /* Typography Variables */
+    --font-sans: 'Pretendard', sans-serif;
+    --font-display: 'Pretendard', sans-serif;
+    --font-mono: 'Space Grotesk', monospace;
+
+    --font-size-7xl: 4.5rem;
+    --font-size-6xl: 3.75rem;
+    --font-size-5xl: 3rem;
+    --font-size-4xl: 2.25rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-xl: 1.25rem;
+    --font-size-lg: 1.125rem;
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-xs: 0.75rem;
+
+    --line-height-display: 1.1;
+    --line-height-heading: 1.2;
+    --line-height-subheading: 1.3;
+    --line-height-body: 1.65;
+    --line-height-caption: 1.65;
+
+    --letter-spacing-tightest: -0.04em;
+    --letter-spacing-tighter: -0.03em;
+    --letter-spacing-tight: -0.02em;
+    --letter-spacing-normal: 0em;
+  }
+
+  .dark {
+    --background: 224 20% 7%; /* Dark Mode Background: Deep Navy */
+    --foreground: 210 20% 98%;
+    --card: 224 18% 11%; /* Darker Card with subtle tint */
+    --card-foreground: 210 20% 98%;
+    --popover: 224 18% 11%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 224 76% 58%; /* Slightly brighter primary in dark mode */
+    --primary-foreground: 224 20% 7%;
+    --secondary: 224 18% 11%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 224 18% 11%;
+    --muted-foreground: 215 14% 65%; /* Enhanced contrast for muted text */
+    --accent: 224 18% 11%;
+    --accent-foreground: 210 20% 98%;
+    --destructive: 2 72% 60%; /* Brighter destructive in dark mode */
+    --destructive-foreground: 210 20% 98%;
+    --border: 224 16% 16%; /* Darker border */
+    --input: 224 16% 16%;
+    --ring: 224 76% 58%;
+
+    /* Custom Project Colors (Dark Mode) - Slightly desaturated for better contrast */
+    --gov-primary: 224 76% 58%;
+    --gov-foreground: 224 20% 7%;
+    --invest-green: 158 60% 46%;
+    --invest-foreground: 224 20% 7%;
+    --ai-amber: 36 100% 60%;
+    --ai-foreground: 224 20% 7%;
+
+    --success: 156 50% 42%;
+    --success-foreground: 210 20% 98%;
+    --warning: 34 80% 56%;
+    --warning-foreground: 210 20% 98%;
+    --info: 210 60% 56%;
+    --info-foreground: 210 20% 98%;
+    --error: 2 70% 58%;
+    --error-foreground: 210 20% 98%;
+  }
+
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "liga" 0, "calt" 0;
   }
+
+  /* Global Scroll Reveal Animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.17, 0.55, 0.55, 1) forwards,
+                transform 0.6s cubic-bezier(0.17, 0.55, 0.55, 1) forwards;
+  }
+
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Specific delays for staggered animation */
+  .reveal-delay-1 { transition-delay: 0.05s; }
+  .reveal-delay-2 { transition-delay: 0.1s; }
+  .reveal-delay-3 { transition-delay: 0.15s; }
+  .reveal-delay-4 { transition-delay: 0.2s; }
+  .reveal-delay-5 { transition-delay: 0.25s; }
+  .reveal-delay-6 { transition-delay: 0.3s; }
+  .reveal-delay-7 { transition-delay: 0.35s; }
+  .reveal-delay-8 { transition-delay: 0.4s; }
+  .reveal-delay-9 { transition-delay: 0.45s; }
+  .reveal-delay-10 { transition-delay: 0.5s; }
+}
+
+/* ── Layout ── */
+@layer components {
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8;
+  }
+
+  /* ── Hero Gradient ── */
+  .hero-gradient {
+    background: linear-gradient(135deg,
+      hsl(var(--primary)) 0%,
+      hsl(224 76% 38%) 40%,
+      hsl(224 60% 28%) 100%
+    );
+  }
+  .dark .hero-gradient {
+    background: linear-gradient(135deg,
+      hsl(224 50% 22%) 0%,
+      hsl(224 40% 16%) 40%,
+      hsl(224 30% 12%) 100%
+    );
+  }
+
+  .shadow-hero {
+    box-shadow:
+      0 20px 40px -12px rgba(30, 64, 175, 0.25),
+      0 0 0 1px rgba(30, 64, 175, 0.05);
+  }
+  .dark .shadow-hero {
+    box-shadow:
+      0 20px 40px -12px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* ── Icon Box ── */
+  .icon-box {
+    @apply flex items-center justify-center rounded-xl shrink-0;
+  }
+  .icon-box-sm {
+    @apply w-9 h-9;
+  }
+  .icon-box-md {
+    @apply w-11 h-11;
+  }
+  .icon-box-lg {
+    @apply w-14 h-14;
+  }
+
+  /* ── Section Number ── */
+  .section-number {
+    @apply block text-xs font-bold uppercase tracking-widest text-muted-foreground mb-1.5;
+  }
+
+  /* ── Card Interactivity ── */
+  .card-interactive {
+    @apply border border-border/60 rounded-2xl transition-all duration-300
+           hover:-translate-y-0.5 hover:shadow-custom-lg hover:border-border;
+  }
+
+  /* ── Card Left Border Accents ── */
+  .card-left-gov {
+    border-left: 3px solid hsl(var(--gov-primary));
+  }
+  .card-left-invest {
+    border-left: 3px solid hsl(var(--invest-green));
+  }
+  .card-left-ai {
+    border-left: 3px solid hsl(var(--ai-amber));
+  }
+
+  /* ── Meta Chip ── */
+  .meta-chip {
+    @apply inline-flex items-center gap-1.5 text-xs text-muted-foreground
+           bg-muted/60 rounded-full px-2.5 py-1;
+  }
+
+  /* ── Color Utility Aliases (for dark mode suffixes used in code) ── */
+  .text-gov-primary { color: hsl(var(--gov-primary)); }
+  .text-gov-primary-light { color: hsl(224 76% 68%); }
+  .text-invest-primary { color: hsl(var(--invest-green)); }
+  .text-invest-primary-light { color: hsl(158 60% 56%); }
+  .text-ai-primary { color: hsl(var(--ai-amber)); }
+  .text-ai-primary-light { color: hsl(36 100% 70%); }
+  .text-success-light { color: hsl(156 50% 52%); }
+  .text-warning-light { color: hsl(34 80% 66%); }
+  .text-info-light { color: hsl(210 60% 66%); }
+  .text-error-light { color: hsl(2 70% 68%); }
+
+  .bg-gov-primary\/5 { background-color: hsl(var(--gov-primary) / 0.05); }
+  .bg-gov-primary\/10 { background-color: hsl(var(--gov-primary) / 0.1); }
+  .bg-invest-primary\/10 { background-color: hsl(var(--invest-green) / 0.1); }
+  .bg-ai-primary\/5 { background-color: hsl(var(--ai-amber) / 0.05); }
+  .bg-ai-primary\/10 { background-color: hsl(var(--ai-amber) / 0.1); }
+  .border-ai-primary\/20 { border-color: hsl(var(--ai-amber) / 0.2); }
+
+  .bg-ai-primary {
+    background-color: hsl(var(--ai-amber));
+  }
+}
+
+/* ── Animations ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes slide-down {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 200px; }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out forwards;
 }
