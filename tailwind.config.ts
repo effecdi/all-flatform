@@ -8,6 +8,9 @@ const config = {
     './components/**/*.{ts,tsx}',
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
+    './client/src/**/*.{ts,tsx}',
+    './client/src/**/*.{js,jsx}',
+    './shared/**/*.{ts,tsx}',
   ],
   prefix: '',
   theme: {

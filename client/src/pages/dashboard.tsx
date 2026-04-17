@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import { PageTransition } from "@/components/page-transition";
 import { useAuth } from "@/hooks/use-auth";
 import { useBusinessProfile } from "@/hooks/use-business-profile";
@@ -39,11 +39,11 @@ export default function DashboardPage() {
   });
 
   const { data: govPrograms, isLoading: govLoading } = useGovernmentPrograms({
-    limit: 6,
+    limit: 8,
   });
 
   const { data: invPrograms, isLoading: invLoading } = useInvestmentPrograms({
-    limit: 4,
+    limit: 8,
   });
 
   const { data: recommendations } = useQuery<Array<{
@@ -55,6 +55,24 @@ export default function DashboardPage() {
   });
 
   const latestRecs = recommendations?.[0]?.recommendations?.slice(0, 3);
+
+  // 새로 등록된 사업 - 정부+투자 통합, createdAt 내림차순, 상위 8개
+  const newlyRegistered = useMemo(() => {
+    const combined: Array<
+      | { type: "government"; data: (typeof govPrograms)["data"] extends (infer T)[] | undefined ? T : never }
+      | { type: "investment"; data: (typeof invPrograms)["data"] extends (infer T)[] | undefined ? T : never }
+    > = [];
+    govPrograms?.data?.forEach((p) => combined.push({ type: "government", data: p }));
+    invPrograms?.data?.forEach((p) => combined.push({ type: "investment", data: p }));
+    return combined
+      .sort((a, b) => new Date(b.data.createdAt).getTime() - new Date(a.data.createdAt).getTime())
+      .slice(0, 8);
+  }, [govPrograms, invPrograms]);
+
+  // 추천사업 - 매칭점수 높은 순 상위 4개
+  const topRecommendations = recommendations?.[0]?.recommendations
+    ? [...recommendations[0].recommendations].sort((a, b) => b.matchScore - a.matchScore).slice(0, 4)
+    : undefined;
 
   // Scroll Reveal - IntersectionObserver
   useEffect(() => {
@@ -218,9 +236,73 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* ── 01 최신 정부지원사업 ── */}
+        {/* ── 01 새로 등록된 사업 ── */}
         <section className="mb-16 reveal">
-          <SectionHeader number="01" title="최신 정부지원사업" href="/programs/government" />
+          <SectionHeader number="01" title="새로 등록된 사업" href="/discover" />
+          {(govLoading || invLoading) ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : newlyRegistered.length > 0 ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {newlyRegistered.map((item, index) => (
+                <div key={`${item.type}-${item.data.id}`} className={`reveal reveal-delay-${Math.min(index + 1, 10)}`}>
+                  {item.type === "government" ? (
+                    <ProgramCard {...item.data} />
+                  ) : (
+                    <InvestmentCard {...item.data} />
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState text="새로 등록된 사업이 없습니다." icon={<Clock className="w-8 h-8 text-muted-foreground/30" />} />
+          )}
+        </section>
+
+        {/* ── 02 추천사업 ── */}
+        <section className="mb-16 reveal">
+          <SectionHeader number="02" title="추천사업" href="/recommendations" />
+          {topRecommendations && topRecommendations.length > 0 ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {topRecommendations.map((rec, i) => (
+                <div key={`rec-${rec.programType}-${rec.programId}`} className={`reveal reveal-delay-${Math.min(i + 1, 10)}`}>
+                  <RecommendationCard {...rec} />
+                </div>
+              ))}
+            </div>
+          ) : !profile ? (
+            <div className="text-center py-16 rounded-2xl border-2 border-dashed border-border bg-card/30">
+              <div className="flex justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-muted-foreground/30" />
+              </div>
+              <p className="text-lg text-muted-foreground mb-2">프로필을 작성하면 AI가 맞춤형 사업을 추천해드립니다</p>
+              <Link href="/onboarding">
+                <Button variant="outline" size="sm" className="mt-3 gap-2 rounded-xl">
+                  프로필 작성하기 <ArrowRight className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="text-center py-16 rounded-2xl border-2 border-dashed border-border bg-card/30">
+              <div className="flex justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-muted-foreground/30" />
+              </div>
+              <p className="text-lg text-muted-foreground mb-2">아직 추천 결과가 없습니다</p>
+              <Link href="/recommendations">
+                <Button variant="outline" size="sm" className="mt-3 gap-2 rounded-xl">
+                  AI 추천 받기 <Sparkles className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </section>
+
+        {/* ── 03 최신 정부지원사업 ── */}
+        <section className="mb-16 reveal">
+          <SectionHeader number="03" title="최신 정부지원사업" href="/programs/government" />
           {govLoading ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 6 }).map((_, i) => (
@@ -242,7 +324,7 @@ export default function DashboardPage() {
 
         {/* ── 02 최신 투자유치 프로그램 ── */}
         <section className="mb-16 reveal">
-          <SectionHeader number="02" title="최신 투자유치 프로그램" href="/programs/investment" />
+          <SectionHeader number="04" title="최신 투자유치 프로그램" href="/programs/investment" />
           {invLoading ? (
             <div className="grid gap-5 sm:grid-cols-2">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -265,7 +347,7 @@ export default function DashboardPage() {
         {/* ── 03 AI 추천 ── */}
         {latestRecs && latestRecs.length > 0 && (
           <section className="reveal">
-            <SectionHeader number="03" title="AI 추천 사업" href="/recommendations" />
+            <SectionHeader number="05" title="AI 추천 사업" href="/recommendations" />
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {latestRecs.map((rec, i) => (
                 <div key={i} className={`reveal reveal-delay-${Math.min(i + 1, 10)}`}>
