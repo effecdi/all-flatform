@@ -316,5 +316,127 @@ export async function registerRoutes(
     res.json({ ok: true, timestamp: new Date().toISOString() });
   });
 
+  // =====================
+  // Cron: K-Startup 자동 스크래핑 (Vercel Cron)
+  // =====================
+  app.get("/api/cron/scrape-programs", async (req, res) => {
+    // Vercel Cron은 Authorization: Bearer ${CRON_SECRET} 헤더를 자동으로 추가함
+    const cronSecret = process.env.CRON_SECRET;
+    if (cronSecret) {
+      const authHeader = req.headers["authorization"];
+      if (authHeader !== `Bearer ${cronSecret}`) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+    }
+
+    const startTime = Date.now();
+    let inserted = 0;
+    let errors = 0;
+
+    try {
+      const BASE_URL = "https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do";
+      const HEADERS = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "ko-KR,ko;q=0.9",
+      };
+
+      function classifySupportType(typeText: string): string {
+        const t = typeText.toLowerCase();
+        if (t.includes("예비창업")) return "예비창업패키지";
+        if (t.includes("초기창업")) return "초기창업패키지";
+        if (t.includes("도약")) return "도약패키지";
+        if (t.includes("사업화")) return "사업화지원";
+        if (t.includes("기술개발") || t.includes("r&d")) return "기술개발";
+        if (t.includes("멘토") || t.includes("컨설팅")) return "멘토링_컨설팅";
+        if (t.includes("시설") || t.includes("공간") || t.includes("입주")) return "시설_공간";
+        if (t.includes("해외") || t.includes("글로벌")) return "해외진출";
+        if (t.includes("융자") || t.includes("정책자금")) return "정책자금";
+        return "기타지원";
+      }
+
+      function determineStatus(endDate: string | null): string {
+        if (!endDate) return "모집중";
+        const end = new Date(endDate);
+        const now = new Date();
+        if (end < now) return "모집마감";
+        return "모집중";
+      }
+
+      for (let page = 1; page <= 15; page++) {
+        const url = page === 1
+          ? BASE_URL
+          : `${BASE_URL}?schM=list&page=${page}&pbancSn=&searchType=&bizTrgtAgeCdList=&bizEnyyCdList=&aplyTrgtCdList=&sprvInstSn=&indSn=&schStr=&pageIndex=${page}`;
+
+        const pageRes = await fetch(url, { headers: HEADERS });
+        if (!pageRes.ok) break;
+        const html = await pageRes.text();
+
+        const goViewRegex = /go_view\((\d+)\)/g;
+        let match;
+        while ((match = goViewRegex.exec(html)) !== null) {
+          const pbancSn = match[1];
+          if (parseInt(pbancSn) < 10000) continue;
+
+          const pos = match.index;
+          const blockStart = html.lastIndexOf("<a ", pos);
+          const blockEnd = html.indexOf("</a>", pos);
+          if (blockStart === -1 || blockEnd === -1) continue;
+          const block = html.substring(blockStart, blockEnd + 4);
+
+          const dateMatch = block.match(/마감일자\s*([\d-]+)/);
+          const endDate = dateMatch ? dateMatch[1] : null;
+
+          const titMatch = block.match(/<p class="tit">([\s\S]*?)(?:<span|<\/p>)/);
+          const title = titMatch ? titMatch[1].replace(/<[^>]+>/g, "").trim() : "";
+          if (!title) continue;
+
+          const typeMatch = block.match(/<span class="flag type\d+">\s*([^<]+)\s*<\/span>/);
+          const typeText = typeMatch ? typeMatch[1].trim() : "";
+          const liMatches = [...block.matchAll(/<li>([^<]+)<\/li>/g)];
+          const category = liMatches[0]?.[1]?.trim() || "";
+          const organization = liMatches[1]?.[1]?.trim() || "창업진흥원";
+
+          try {
+            await storage.upsertGovernmentProgram({
+              title,
+              organization,
+              supportType: classifySupportType(typeText || category) as any,
+              status: determineStatus(endDate) as any,
+              description: `${category} 사업입니다. 자세한 내용은 K-Startup 공고를 확인하세요.`,
+              applicationUrl: `https://www.k-startup.go.kr/web/contents/bizpbanc-ongoing.do?schM=view&pbancSn=${pbancSn}`,
+              sourceId: `kstartup-${pbancSn}`,
+              source: "k-startup",
+              region: "전국",
+              endDate,
+              targetAudience: null,
+              supportAmount: null,
+              applicationMethod: null,
+              startDate: null,
+              announcementDate: null,
+              requiredDocuments: null,
+              selectionProcess: null,
+              supportDetails: null,
+              contactInfo: null,
+              excludedTargets: null,
+              attachmentUrls: null,
+              sourceUrl: null,
+            });
+            inserted++;
+          } catch {
+            errors++;
+          }
+        }
+      }
+
+      const elapsed = Math.round((Date.now() - startTime) / 1000);
+      logger.info(`Cron scrape 완료: ${inserted}개 upsert, ${errors}개 오류, ${elapsed}초 소요`);
+      return res.json({ ok: true, inserted, errors, elapsed });
+    } catch (err: any) {
+      logger.error("Cron scrape 실패", err);
+      return res.status(500).json({ ok: false, message: err.message });
+    }
+  });
+
   return httpServer;
 }

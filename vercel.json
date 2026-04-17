@@ -5,9 +5,15 @@
   "framework": null,
   "functions": {
     "api/handler.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     }
   },
+  "crons": [
+    {
+      "path": "/api/cron/scrape-programs",
+      "schedule": "0 1 * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/:path*",
