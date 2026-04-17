@@ -363,7 +363,7 @@ export async function registerRoutes(
         return "모집중";
       }
 
-      for (let page = 1; page <= 15; page++) {
+      for (let page = 1; page <= 5; page++) {
         const url = page === 1
           ? BASE_URL
           : `${BASE_URL}?schM=list&page=${page}&pbancSn=&searchType=&bizTrgtAgeCdList=&bizEnyyCdList=&aplyTrgtCdList=&sprvInstSn=&indSn=&schStr=&pageIndex=${page}`;
