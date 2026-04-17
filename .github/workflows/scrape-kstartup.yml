@@ -1,0 +1,30 @@
+name: K-Startup 자동 스크래핑
+
+on:
+  schedule:
+    # 매일 KST 10:00 (UTC 01:00) 실행
+    - cron: '0 1 * * *'
+  workflow_dispatch: # 수동 실행 허용
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: K-Startup 스크래핑 실행
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx tsx script/scrape-kstartup.ts
