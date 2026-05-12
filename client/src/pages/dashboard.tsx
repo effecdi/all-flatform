@@ -1,170 +1,469 @@
-import { motion } from "framer-motion";
-import {
-  User,
-  CreditCard,
-  Wallet,
-  Star,
-  Plus,
-  Loader2,
-} from "lucide-react";
-import { useState } from "react";
-import { Link } from "wouter";
+import { useEffect, useRef, useMemo } from "react";
 import { PageTransition } from "@/components/page-transition";
-import { BentoGrid, BentoItem } from "@/components/bento-grid";
-import { StatsWidget } from "@/components/stats-widget";
-import { CategoryChart } from "@/components/category-chart";
-import { CostChart } from "@/components/cost-chart";
-import { GlassCard } from "@/components/glass-card";
-import { AccountFormDialog } from "@/components/account-form-dialog";
+import { useAuth } from "@/hooks/use-auth";
+import { useBusinessProfile } from "@/hooks/use-business-profile";
+import { useGovernmentPrograms, useInvestmentPrograms } from "@/hooks/use-programs";
+import { useQuery } from "@tanstack/react-query";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { useDashboardStats, useAccounts } from "@/hooks/use-accounts";
-import { formatCurrency } from "@/lib/utils";
-import { CategoryBadge } from "@/components/category-badge";
-import { getFaviconUrl } from "@/lib/favicon-fetcher";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ProgramCard } from "@/components/program-card";
+import { InvestmentCard } from "@/components/investment-card";
+import { RecommendationCard } from "@/components/recommendation-card";
+import {
+  FileText,
+  TrendingUp,
+  Clock,
+  Bookmark,
+  Sparkles,
+  ArrowRight,
+  Landmark,
+  Search,
+  ChevronRight,
+  BarChart3,
+  Shield,
+  Zap,
+} from "lucide-react";
+import type { DashboardStats } from "@shared/types";
+import type { RecommendationItem } from "@shared/schema";
 
 export default function DashboardPage() {
-  const { data: stats, isLoading: statsLoading } = useDashboardStats();
-  const { data: accounts, isLoading: accountsLoading } = useAccounts();
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const { data: user } = useAuth();
+  const { data: profile, isLoading: profileLoading } = useBusinessProfile();
+  const [, navigate] = useLocation();
+  const revealRef = useRef<HTMLDivElement>(null);
 
-  const isLoading = statsLoading || accountsLoading;
+  const { data: stats } = useQuery<DashboardStats>({
+    queryKey: ["/api/dashboard/stats"],
+  });
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-neon-purple" />
-      </div>
+  const { data: govPrograms, isLoading: govLoading } = useGovernmentPrograms({
+    limit: 8,
+  });
+
+  const { data: invPrograms, isLoading: invLoading } = useInvestmentPrograms({
+    limit: 8,
+  });
+
+  const { data: recommendations } = useQuery<Array<{
+    id: number;
+    recommendations: RecommendationItem[];
+    createdAt: string;
+  }>>({
+    queryKey: ["/api/recommendations"],
+  });
+
+  const latestRecs = recommendations?.[0]?.recommendations?.slice(0, 3);
+
+  // 새로 등록된 사업 - 정부+투자 통합, createdAt 내림차순, 상위 8개
+  const newlyRegistered = useMemo(() => {
+    const combined: Array<
+      | { type: "government"; data: (typeof govPrograms)["data"] extends (infer T)[] | undefined ? T : never }
+      | { type: "investment"; data: (typeof invPrograms)["data"] extends (infer T)[] | undefined ? T : never }
+    > = [];
+    govPrograms?.data?.forEach((p) => combined.push({ type: "government", data: p }));
+    invPrograms?.data?.forEach((p) => combined.push({ type: "investment", data: p }));
+    return combined
+      .sort((a, b) => new Date(b.data.createdAt).getTime() - new Date(a.data.createdAt).getTime())
+      .slice(0, 8);
+  }, [govPrograms, invPrograms]);
+
+  // 추천사업 - 매칭점수 높은 순 상위 4개
+  const topRecommendations = recommendations?.[0]?.recommendations
+    ? [...recommendations[0].recommendations].sort((a, b) => b.matchScore - a.matchScore).slice(0, 4)
+    : undefined;
+
+  // Scroll Reveal - IntersectionObserver
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
     );
-  }
 
-  const favoriteAccounts = accounts?.filter((a) => a.isFavorite).slice(0, 6) || [];
-  const recentAccounts = accounts?.slice(0, 5) || [];
+    const el = revealRef.current;
+    if (el) {
+      el.querySelectorAll(".reveal").forEach((node) => observer.observe(node));
+    }
+
+    return () => observer.disconnect();
+  }, [govPrograms, invPrograms, recommendations]);
 
   return (
     <PageTransition>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-20 pb-12">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold font-heading gradient-text">대시보드</h1>
-            <p className="text-sm text-muted-foreground mt-1">모든 계정을 한눈에 관리하세요</p>
+      <div className="page-container" ref={revealRef}>
+        {/* ── Hero Section ── */}
+        <div className="hero-gradient rounded-3xl p-8 sm:p-12 lg:p-16 mb-12 relative overflow-hidden shadow-hero reveal">
+          {/* 배경 장식 요소 */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/[0.04] rounded-full -translate-y-1/3 translate-x-1/4" />
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-white/[0.03] rounded-full translate-y-1/2 -translate-x-1/3" />
+          <div className="absolute top-1/2 right-1/4 w-2 h-2 bg-white/20 rounded-full animate-float" />
+          <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-white/15 rounded-full animate-float" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-1/4 right-1/5 w-1 h-1 bg-white/10 rounded-full animate-float" style={{ animationDelay: '2s' }} />
+
+          <div className="relative z-10 max-w-2xl">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
+              <Shield className="w-4 h-4 text-white/80" />
+              <span className="text-sm font-medium text-white/80">정부지원사업 & 투자유치 통합 플랫폼</span>
+            </div>
+            <h1 className="text-white mb-4 text-display">
+              {user?.name || "사용자"}님,<br />
+              환영합니다
+            </h1>
+            <p className="text-lg sm:text-xl text-white/75 leading-relaxed max-w-lg">
+              오늘의 지원사업과 투자유치 정보를 확인하고,
+              AI 맞춤 추천으로 최적의 기회를 찾아보세요.
+            </p>
           </div>
-          <Button
-            onClick={() => setDialogOpen(true)}
-            className="gap-1.5 bg-gradient-to-r from-neon-purple to-neon-blue hover:opacity-90"
-          >
-            <Plus className="w-4 h-4" /> 계정 추가
-          </Button>
         </div>
 
-        {/* Stats row */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <StatsWidget
-            icon={User}
-            label="전체 계정"
-            value={stats?.totalAccounts || 0}
-            color="#a855f7"
-            index={0}
-          />
-          <StatsWidget
-            icon={CreditCard}
-            label="구독 서비스"
-            value={stats?.subscriptionAccounts || 0}
-            color="#3b82f6"
-            index={1}
-          />
-          <StatsWidget
-            icon={Wallet}
-            label="월 구독 비용"
-            value={formatCurrency(stats?.monthlyCost || 0)}
-            color="#22c55e"
-            index={2}
-          />
-        </div>
-
-        {/* Bento grid */}
-        <BentoGrid className="md:grid-cols-2 lg:grid-cols-3">
-          {/* Category chart */}
-          <BentoItem className="lg:col-span-1">
-            <CategoryChart data={stats?.categoryBreakdown || []} />
-          </BentoItem>
-
-          {/* Cost chart */}
-          <BentoItem className="lg:col-span-2">
-            <CostChart accounts={accounts || []} />
-          </BentoItem>
-
-          {/* Favorites */}
-          <BentoItem className="md:col-span-2 lg:col-span-2">
-            <GlassCard hover={false}>
-              <div className="flex items-center gap-2 mb-4">
-                <Star className="w-4 h-4 text-yellow-400" />
-                <h3 className="text-sm font-medium">즐겨찾기</h3>
+        {/* ── Onboarding Prompt ── */}
+        {!profileLoading && !profile && (
+          <Link href="/onboarding">
+            <div className="glass-card rounded-2xl p-6 sm:p-8 mb-12 cursor-pointer hover:border-primary/30 transition-all duration-300 group reveal">
+              <div className="flex items-center gap-5">
+                <div className="icon-box icon-box-lg bg-primary/10 shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-lg">사업 프로필을 작성하세요</p>
+                  <p className="text-muted-foreground mt-1.5">
+                    프로필을 작성하면 AI가 맞춤형 지원사업을 추천해드립니다
+                  </p>
+                </div>
+                <ChevronRight className="w-6 h-6 text-primary shrink-0 group-hover:translate-x-1 transition-transform" />
               </div>
-              {favoriteAccounts.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  즐겨찾기한 계정이 없습니다
-                </p>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {favoriteAccounts.map((account) => {
-                    const favicon = getFaviconUrl(account.serviceUrl) || account.logoUrl;
-                    return (
-                      <div
-                        key={account.id}
-                        className="flex items-center gap-2 p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                      >
-                        <div className="w-6 h-6 rounded-md bg-white/10 flex items-center justify-center">
-                          {favicon ? (
-                            <img src={favicon} alt="" className="w-4 h-4" />
-                          ) : (
-                            <span className="text-xs font-bold text-muted-foreground">
-                              {account.serviceName.charAt(0)}
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-xs truncate">{account.serviceName}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </GlassCard>
-          </BentoItem>
+            </div>
+          </Link>
+        )}
 
-          {/* Recent */}
-          <BentoItem className="lg:col-span-1">
-            <GlassCard hover={false}>
-              <h3 className="text-sm font-medium mb-3">최근 추가</h3>
-              {recentAccounts.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-4">
-                  아직 계정이 없습니다
-                </p>
-              ) : (
-                <div className="space-y-2">
-                  {recentAccounts.map((a) => (
-                    <div key={a.id} className="flex items-center gap-2 text-xs">
-                      <div className="w-5 h-5 rounded bg-white/5 flex items-center justify-center">
-                        <span className="text-[10px] font-bold text-muted-foreground">
-                          {a.serviceName.charAt(0)}
-                        </span>
-                      </div>
-                      <span className="truncate flex-1">{a.serviceName}</span>
-                      <CategoryBadge category={a.category} />
-                    </div>
-                  ))}
+        {/* ── Stats Bento Grid ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 mb-12">
+          {/* Large stat - 전체사업 */}
+          <div className="col-span-2 sm:col-span-2 reveal reveal-delay-1">
+            <Card className="h-full overflow-hidden bg-gradient-to-br from-gov-primary/5 to-transparent card-interactive">
+              <CardContent className="p-6 sm:p-7">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="icon-box icon-box-md bg-gov-primary/10 text-gov-primary">
+                    <FileText className="w-5 h-5" />
+                  </div>
+                  <span className="text-sm font-semibold text-muted-foreground">전체 사업</span>
                 </div>
-              )}
-              <Link href="/accounts">
-                <Button variant="ghost" size="sm" className="w-full mt-3 text-xs">
-                  전체 보기
+                <p className="text-5xl sm:text-6xl font-extrabold tabular-nums tracking-tightest text-gov-primary">
+                  {stats?.totalGovernmentPrograms ?? 0}
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">정부지원사업 등록 수</p>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="reveal reveal-delay-2">
+            <StatCard
+              icon={<BarChart3 className="w-5 h-5" />}
+              label="모집중"
+              value={stats?.activeGovernmentPrograms ?? 0}
+              color="text-success"
+              iconBg="bg-success/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-3">
+            <StatCard
+              icon={<TrendingUp className="w-5 h-5" />}
+              label="투자 프로그램"
+              value={stats?.totalInvestmentPrograms ?? 0}
+              color="text-invest-primary"
+              iconBg="bg-invest-primary/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-4">
+            <StatCard
+              icon={<Clock className="w-5 h-5" />}
+              label="마감임박"
+              value={stats?.upcomingDeadlines ?? 0}
+              color="text-error"
+              iconBg="bg-error/10"
+              href={stats?.upcomingDeadlines ? "/programs/government?deadline=true" : undefined}
+            />
+          </div>
+        </div>
+
+        {/* ── Quick Actions ── */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-16">
+          <div className="reveal reveal-delay-1">
+            <QuickAction
+              href="/programs/government"
+              icon={<Landmark className="w-6 h-6" />}
+              label="정부지원사업"
+              desc="지원사업 전체 목록"
+              iconColor="text-gov-primary"
+              iconBg="bg-gov-primary/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-2">
+            <QuickAction
+              href="/programs/investment"
+              icon={<TrendingUp className="w-6 h-6" />}
+              label="투자유치"
+              desc="투자 프로그램 탐색"
+              iconColor="text-invest-primary"
+              iconBg="bg-invest-primary/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-3">
+            <QuickAction
+              href="/recommendations"
+              icon={<Zap className="w-6 h-6" />}
+              label="AI 맞춤 추천"
+              desc="나에게 맞는 사업"
+              iconColor="text-ai-primary"
+              iconBg="bg-ai-primary/10"
+            />
+          </div>
+          <div className="reveal reveal-delay-4">
+            <QuickAction
+              href="/discover"
+              icon={<Search className="w-6 h-6" />}
+              label="사업 검색"
+              desc="통합 검색으로 찾기"
+              iconColor="text-info"
+              iconBg="bg-info/10"
+            />
+          </div>
+        </div>
+
+        {/* ── 01 새로 등록된 사업 ── */}
+        <section className="mb-16 reveal">
+          <SectionHeader number="01" title="새로 등록된 사업" href="/discover" />
+          {(govLoading || invLoading) ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : newlyRegistered.length > 0 ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {newlyRegistered.map((item, index) => (
+                <div key={`${item.type}-${item.data.id}`} className={`reveal reveal-delay-${Math.min(index + 1, 10)}`}>
+                  {item.type === "government" ? (
+                    <ProgramCard {...item.data} />
+                  ) : (
+                    <InvestmentCard {...item.data} />
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState text="새로 등록된 사업이 없습니다." icon={<Clock className="w-8 h-8 text-muted-foreground/30" />} />
+          )}
+        </section>
+
+        {/* ── 02 추천사업 ── */}
+        <section className="mb-16 reveal">
+          <SectionHeader number="02" title="추천사업" href="/recommendations" />
+          {topRecommendations && topRecommendations.length > 0 ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+              {topRecommendations.map((rec, i) => (
+                <div key={`rec-${rec.programType}-${rec.programId}`} className={`reveal reveal-delay-${Math.min(i + 1, 10)}`}>
+                  <RecommendationCard {...rec} />
+                </div>
+              ))}
+            </div>
+          ) : !profile ? (
+            <div className="text-center py-16 rounded-2xl border-2 border-dashed border-border bg-card/30">
+              <div className="flex justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-muted-foreground/30" />
+              </div>
+              <p className="text-lg text-muted-foreground mb-2">프로필을 작성하면 AI가 맞춤형 사업을 추천해드립니다</p>
+              <Link href="/onboarding">
+                <Button variant="outline" size="sm" className="mt-3 gap-2 rounded-xl">
+                  프로필 작성하기 <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-            </GlassCard>
-          </BentoItem>
-        </BentoGrid>
+            </div>
+          ) : (
+            <div className="text-center py-16 rounded-2xl border-2 border-dashed border-border bg-card/30">
+              <div className="flex justify-center mb-4">
+                <Sparkles className="w-8 h-8 text-muted-foreground/30" />
+              </div>
+              <p className="text-lg text-muted-foreground mb-2">아직 추천 결과가 없습니다</p>
+              <Link href="/recommendations">
+                <Button variant="outline" size="sm" className="mt-3 gap-2 rounded-xl">
+                  AI 추천 받기 <Sparkles className="w-4 h-4" />
+                </Button>
+              </Link>
+            </div>
+          )}
+        </section>
 
-        <AccountFormDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+        {/* ── 03 최신 정부지원사업 ── */}
+        <section className="mb-16 reveal">
+          <SectionHeader number="03" title="최신 정부지원사업" href="/programs/government" />
+          {govLoading ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : govPrograms && govPrograms.data.length > 0 ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {govPrograms.data.map((p, index) => (
+                <div key={p.id} className={`reveal reveal-delay-${Math.min(index + 1, 10)}`}>
+                  <ProgramCard {...p} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState text="등록된 정부지원사업이 없습니다." icon={<Landmark className="w-8 h-8 text-muted-foreground/30" />} />
+          )}
+        </section>
+
+        {/* ── 02 최신 투자유치 프로그램 ── */}
+        <section className="mb-16 reveal">
+          <SectionHeader number="04" title="최신 투자유치 프로그램" href="/programs/investment" />
+          {invLoading ? (
+            <div className="grid gap-5 sm:grid-cols-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : invPrograms && invPrograms.data.length > 0 ? (
+            <div className="grid gap-5 sm:grid-cols-2">
+              {invPrograms.data.map((p, index) => (
+                <div key={p.id} className={`reveal reveal-delay-${Math.min(index + 1, 10)}`}>
+                  <InvestmentCard {...p} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <EmptyState text="등록된 투자유치 프로그램이 없습니다." icon={<TrendingUp className="w-8 h-8 text-muted-foreground/30" />} />
+          )}
+        </section>
+
+        {/* ── 03 AI 추천 ── */}
+        {latestRecs && latestRecs.length > 0 && (
+          <section className="reveal">
+            <SectionHeader number="05" title="AI 추천 사업" href="/recommendations" />
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {latestRecs.map((rec, i) => (
+                <div key={i} className={`reveal reveal-delay-${Math.min(i + 1, 10)}`}>
+                  <RecommendationCard {...rec} />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </PageTransition>
+  );
+}
+
+/* ── Sub Components ── */
+
+function SectionHeader({ number, title, href }: { number: string; title: string; href: string }) {
+  return (
+    <div className="flex items-center justify-between mb-8">
+      <div>
+        <span className="section-number">{number} — {title.split(" ")[0]}</span>
+        <h2 className="text-heading">{title}</h2>
+      </div>
+      <Link href={href}>
+        <Button variant="ghost" size="sm" className="gap-1.5 text-sm text-muted-foreground hover:text-foreground font-medium rounded-xl group">
+          전체보기 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
+function StatCard({
+  icon,
+  label,
+  value,
+  color,
+  iconBg,
+  href,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  color: string;
+  iconBg: string;
+  href?: string;
+}) {
+  const inner = (
+    <Card className={`${href ? "cursor-pointer" : ""} card-interactive overflow-hidden h-full`}>
+      <CardContent className="p-5 sm:p-6">
+        <div className={`icon-box icon-box-sm ${iconBg} ${color} mb-4`}>
+          {icon}
+        </div>
+        <p className={`text-3xl sm:text-4xl font-extrabold tabular-nums tracking-tightest ${color}`}>{value}</p>
+        <p className="text-sm text-muted-foreground mt-1.5 font-medium">{label}</p>
+      </CardContent>
+    </Card>
+  );
+
+  if (href) {
+    return <Link href={href}>{inner}</Link>;
+  }
+  return inner;
+}
+
+function QuickAction({
+  href,
+  icon,
+  label,
+  desc,
+  iconColor,
+  iconBg,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  desc: string;
+  iconColor: string;
+  iconBg: string;
+}) {
+  return (
+    <Link href={href}>
+      <Card className="cursor-pointer card-interactive h-full group">
+        <CardContent className="p-6">
+          <div className={`icon-box icon-box-lg ${iconBg} ${iconColor} mb-5 group-hover:scale-110 transition-transform duration-300`}>
+            {icon}
+          </div>
+          <p className="font-bold text-lg mb-1">{label}</p>
+          <p className="text-sm text-muted-foreground">{desc}</p>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}
+
+function SkeletonCard() {
+  return (
+    <Card className="card-interactive">
+      <CardContent className="p-6">
+        <div className="flex gap-2 mb-4">
+          <Skeleton className="w-16 h-6 rounded-full" />
+          <Skeleton className="w-12 h-6 rounded-full" />
+        </div>
+        <Skeleton className="w-full h-5 mb-2.5" />
+        <Skeleton className="w-3/4 h-5 mb-5" />
+        <Skeleton className="w-1/2 h-4" />
+      </CardContent>
+    </Card>
+  );
+}
+
+function EmptyState({ text, icon }: { text: string; icon?: React.ReactNode }) {
+  return (
+    <div className="text-center py-20 rounded-2xl border-2 border-dashed border-border bg-card/30">
+      {icon && <div className="flex justify-center mb-4">{icon}</div>}
+      <p className="text-lg text-muted-foreground">{text}</p>
+    </div>
   );
 }

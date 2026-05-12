@@ -13,7 +13,7 @@ async function build() {
     format: "cjs",
     bundle: true,
     minify: true,
-    external: ["pg-native"],
+    external: ["pg-native", "lightningcss", "fsevents"],
     alias: {
       "@shared": "./shared",
     },

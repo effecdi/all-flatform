@@ -17,6 +17,9 @@ export async function setupVite(server: Server, app: Express) {
   app.use(vite.middlewares);
 
   app.use("/{*path}", async (_req, res, next) => {
+    if (_req.originalUrl.startsWith("/api")) {
+      return next();
+    }
     try {
       const url = _req.originalUrl;
       const template = await vite.transformIndexHtml(

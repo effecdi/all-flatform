@@ -2,9 +2,22 @@ export const config = {
   databaseUrl: process.env.DATABASE_URL || "",
   port: parseInt(process.env.PORT || "5000", 10),
   nodeEnv: process.env.NODE_ENV || "development",
-  googleClientId: process.env.GOOGLE_CLIENT_ID || "",
-  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-  googleRedirectUri:
-    process.env.GOOGLE_REDIRECT_URI ||
-    `http://localhost:${process.env.PORT || "5000"}/api/auth/google/callback`,
+  dataGoKrApiKey: process.env.DATA_GO_KR_API_KEY || "",
+  bizinfoApiKey: process.env.BIZINFO_API_KEY || "",
 };
+
+export function validateProductionConfig() {
+  if (config.nodeEnv !== "production") return;
+
+  const errors: string[] = [];
+
+  if (!config.databaseUrl) {
+    errors.push("DATABASE_URL은 프로덕션 환경에서 필수입니다.");
+  }
+
+  if (errors.length > 0) {
+    console.error("환경변수 검증 실패:");
+    errors.forEach((e) => console.error(`  - ${e}`));
+    process.exit(1);
+  }
+}
